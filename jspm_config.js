@@ -1,11 +1,17 @@
 System.config({
+  baseURL: "/",
   defaultJSExtensions: true,
-  transpiler: "babel",
+  transpiler: "typescript",
   babelOptions: {
     "optional": [
       "runtime",
       "optimisation.modules.system"
     ]
+  },
+  packages: {
+    "app": {
+      "defaultExtension": "ts"
+    }
   },
   paths: {
     "github:*": "jspm_packages/github/*",

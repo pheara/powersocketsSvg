@@ -15,14 +15,23 @@ var ts = require("gulp-typescript");
 
 
 gulp.task('default', ['build']);
-gulp.task('build', ['bundlejs', 'typescript']);
-gulp.task('watch', ['bundlejs', 'typescript'], function() {
+gulp.task('build', ['bundlejs']);
+gulp.task('watch', ['bundlejs'], function() {
     gulp.watch('./app/**/*.js', ['bundlejs']);
     //gulp.watch('./style/**/*.scss', ['sass']);
     //gulp.watch('./style/**/_*.scss', ['sass']);
     //gulp.watch('./images/won-icons/**/*.svg', ['iconsprite']);
 });
 
+gulp.task('bundlejs', function(){
+    return gulp.src('app/test.ts')
+        .pipe(sourcemaps.init())
+        .pipe(gulp_jspm({inject: true}))
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest('./generated/'));
+});
+
+/*
 gulp.task('bundlejs', function(){
     return gulp.src('app/app_jspm.js')
         .pipe(sourcemaps.init())
@@ -38,3 +47,4 @@ gulp.task("typescript", function () {
         .pipe(tsProject())
         .js.pipe(gulp.dest("./generated/"));
 });
+*/
