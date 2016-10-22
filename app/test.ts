@@ -1,10 +1,28 @@
 import { foo } from 'test-import';
-import SVG from "wout/svg.js";
+//import SVG from "wout/svg.js";
 import "fetch";
 
-window.SVG4dbg = SVG;
 
 console.log('hello typescript', foo);
+
+fetch('demo.svg')
+.then(response => {
+})
+
+
+var blueprintSVG = document.getElementById('blueprint')
+window.blueprintSVG4dbg = blueprintSVG;
+
+/*
+window.SVG4dbg = SVG;
+var svgParent = document.getElementById('background');
+var draw = SVG(svgParent);
+window.draw4dbg = draw;
+var rect = draw.rect(100, 100).attr({ fill: '#f06' });
+
+var draw2 = SVG(blueprintSVG);
+window.draw2fordbg = draw2;
+*/
 
 
 /*
