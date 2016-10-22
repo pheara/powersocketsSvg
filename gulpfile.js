@@ -24,12 +24,25 @@ gulp.task('watch', ['bundlejs'], function() {
 });
 
 gulp.task('bundlejs', function(){
+    return gulp.src('app/**/*.ts')
+        .pipe(sourcemaps.init())
+        .pipe(ts({
+          out: 'bundle.js',
+          module: 'system'
+        }))
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest('./generated/'));
+});
+
+/*
+gulp.task('bundlejs', function(){
     return gulp.src('app/test.ts')
         .pipe(sourcemaps.init())
         .pipe(gulp_jspm({inject: true}))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('./generated/'));
 });
+*/
 
 /*
 gulp.task('bundlejs', function(){
