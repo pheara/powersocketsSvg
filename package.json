@@ -19,13 +19,15 @@
   "jspm": {
     "configFile": "jspm_config.js",
     "dependencies": {
-      "fetch": "github:github/fetch@^0.10.1",
-      "immutable": "npm:immutable@^3.7.5"
+      "fetch": "github:github/fetch@^1.0.0",
+      "immutable": "npm:immutable@^3.7.5",
+      "wout/svg.js": "github:wout/svg.js@^2.3.6"
     },
     "devDependencies": {
       "babel": "npm:babel-core@^5.8.24",
       "babel-runtime": "npm:babel-runtime@^5.8.24",
-      "core-js": "npm:core-js@^1.1.4"
+      "core-js": "npm:core-js@^1.1.4",
+      "typescript": "npm:typescript@^1.6.2"
     }
   }
 }

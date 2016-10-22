@@ -8,7 +8,7 @@ var ts = require("gulp-typescript");
 gulp.task('default', ['build']);
 gulp.task('build', ['bundlejs']);
 gulp.task('watch', ['bundlejs'], function() {
-    gulp.watch('./app/**/*.js', ['bundlejs']);
+    gulp.watch('./app/**/*', ['bundlejs']);
 });
 
 gulp.task('bundlejs', function(){
