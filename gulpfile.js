@@ -9,11 +9,14 @@ var gulp = require('gulp');
 //var sassImportOnce = require('node-sass-import-once');
 var gulp_jspm = require('gulp-jspm');
 var sourcemaps = require('gulp-sourcemaps');
+var ts = require("gulp-typescript");
+
+
 
 
 gulp.task('default', ['build']);
-gulp.task('build', ['bundlejs']);
-gulp.task('watch', ['bundlejs'], function() {
+gulp.task('build', ['bundlejs', 'typescript']);
+gulp.task('watch', ['bundlejs', 'typescript'], function() {
     gulp.watch('./app/**/*.js', ['bundlejs']);
     //gulp.watch('./style/**/*.scss', ['sass']);
     //gulp.watch('./style/**/_*.scss', ['sass']);
@@ -26,4 +29,12 @@ gulp.task('bundlejs', function(){
         .pipe(gulp_jspm({inject: true}))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('./generated/'));
+});
+
+
+var tsProject = ts.createProject("tsconfig.json");
+gulp.task("typescript", function () {
+    return tsProject.src()
+        .pipe(tsProject())
+        .js.pipe(gulp.dest("./generated/"));
 });

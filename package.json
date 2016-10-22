@@ -12,7 +12,9 @@
     "gulp": "^3.9.0",
     "gulp-jspm": "^0.5.7",
     "gulp-sourcemaps": "^1.6.0",
-    "jspm": "^0.16.15"
+    "gulp-typescript": "^3.0.2",
+    "jspm": "^0.16.15",
+    "typescript": "^2.0.3"
   },
   "jspm": {
     "configFile": "jspm_config.js",

@@ -1,0 +1,9 @@
+{
+    "files": [
+        "app/test.ts"
+    ],
+    "compilerOptions": {
+        "noImplicitAny": true,
+        "target": "es5"
+    }
+}
