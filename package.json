@@ -1,0 +1,29 @@
+{
+  "name": "won-owner-webapp",
+  "version": "0.2.0",
+  "dependencies": {},
+  "scripts": {
+    "postinstall": "jspm install && npm run build",
+    "build": "gulp build",
+    "watch": "gulp watch",
+    "clean": "gulp clean"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-jspm": "^0.5.7",
+    "gulp-sourcemaps": "^1.6.0",
+    "jspm": "^0.16.15"
+  },
+  "jspm": {
+    "configFile": "jspm_config.js",
+    "dependencies": {
+      "fetch": "github:github/fetch@^0.10.1",
+      "immutable": "npm:immutable@^3.7.5"
+    },
+    "devDependencies": {
+      "babel": "npm:babel-core@^5.8.24",
+      "babel-runtime": "npm:babel-runtime@^5.8.24",
+      "core-js": "npm:core-js@^1.1.4"
+    }
+  }
+}
