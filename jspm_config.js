@@ -25,6 +25,7 @@ System.config({
     "core-js": "npm:core-js@1.2.7",
     "fetch": "github:github/fetch@1.0.0",
     "immutable": "npm:immutable@3.8.1",
+    "svg-path-parser": "npm:svg-path-parser@1.0.1",
     "typescript": "npm:typescript@1.8.10",
     "wout/svg.js": "github:wout/svg.js@2.3.6",
     "github:jspm/nodelibs-assert@0.1.0": {

@@ -1,13 +1,14 @@
-import { foo } from "test-import";
-// import SVG from "wout/svg.js";
+
+/// <reference path="declarations.d.ts"/>
+// import fetch from "fetch";
 import "fetch";
 declare var fetch; // sadly there's no .d.ts file for fetch
 
-console.log("hello typescript", foo);
+import { foo } from "test-import";
+import { fetchMap } from "fetch-map";
+// declare var parseSvgPath: any; // no .d.ts supplied
 
-fetch("demo.svg")
-.then(response => {
-});
+// import SVG from "wout/svg.js";
 
 const blueprintSVG = document.getElementById("blueprint");
 
@@ -16,53 +17,10 @@ fetch("demo.svg")
 .then(resp => resp.blob())
 .then(blob => console.log(blob));
 
-
-const backgroundDiv = document.getElementById("background");
-
-const svgXmlPromise = new Promise<XMLHttpRequest>((resolve, reject) => {
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", "demo.svg");
-  // Following line is just to be on the safe side;
-  // not needed if your server delivers SVG with correct MIME type
-  xhr.overrideMimeType("image/svg+xml");
-  xhr.send("");
-  xhr.onload = function (e) {
-    if (xhr.readyState === 4) {
-      if (xhr.status === 200) {
-        // console.log(xhr.responseText);
-        console.log("SVG request successful", xhr);
-        resolve(xhr);
-      } else {
-        console.error(xhr.statusText);
-        reject(xhr);
-      }
-    }
-  };
-});
-
-svgXmlPromise.then((xhr: XMLHttpRequest) => {
-  const svgElement = xhr.responseXML.documentElement;
-  backgroundDiv.appendChild(svgElement);
-  return svgElement;
-})
-.then(svgElement => {
-  // start parsing the svg-path data
-  const pathElements = svgElement.getElementsByTagName("path");
-  const paths = [];
-  for (const el of pathElements) {
-    paths.push(el.getAttribute("d"));
-  }
-  console.log("Paths: ", paths);
-
-  const rectElements = svgElement.getElementsByTagName("rect");
-  for (const el of rectElements) {
-    const x = el.getAttribute("x");
-    const y = el.getAttribute("y");
-    const width = el.getAttribute("width");
-    const height = el.getAttribute("height");
-    console.log(`rect@(${x}, ${y}) of size ${width}x${height}`);
-  }
-
+fetchMap("demo.svg").then(data => {
+  console.log(data);
+  const backgroundDiv = document.getElementById("background");
+  backgroundDiv.appendChild(data.svgElement);
 });
 
 
