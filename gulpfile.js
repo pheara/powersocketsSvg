@@ -16,9 +16,9 @@ gulp.task('bundlejs', function(){
         .pipe(sourcemaps.init())
         .pipe(ts({
           out: 'bundle.js',
-          module: 'system'
+          module: 'system',
+          target: 'es6'
         }))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('./generated/'));
 });
-

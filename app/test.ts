@@ -19,7 +19,7 @@ fetch("demo.svg")
 
 const backgroundDiv = document.getElementById("background");
 
-new Promise((resolve, reject) => {
+const svgXmlPromise = new Promise<XMLHttpRequest>((resolve, reject) => {
   const xhr = new XMLHttpRequest();
   xhr.open("GET", "demo.svg");
   // Following line is just to be on the safe side;
@@ -38,8 +38,9 @@ new Promise((resolve, reject) => {
       }
     }
   };
-})
-.then(xhr => {
+});
+
+svgXmlPromise.then((xhr: XMLHttpRequest) => {
   const svgElement = xhr.responseXML.documentElement;
   backgroundDiv.appendChild(svgElement);
   return svgElement;
@@ -51,13 +52,15 @@ new Promise((resolve, reject) => {
   for (const el of pathElements) {
     paths.push(el.getAttribute("d"));
   }
+  console.log("Paths: ", paths);
 
   const rectElements = svgElement.getElementsByTagName("rect");
   for (const el of rectElements) {
-    el.getAttribute("x");
-    el.getAttribute("y");
-    el.getAttribute("height");
-    el.getAttribute("width");
+    const x = el.getAttribute("x");
+    const y = el.getAttribute("y");
+    const width = el.getAttribute("width");
+    const height = el.getAttribute("height");
+    console.log(`rect@(${x}, ${y}) of size ${width}x${height}`);
   }
 
 });
