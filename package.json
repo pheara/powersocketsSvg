@@ -14,7 +14,8 @@
     "gulp-sourcemaps": "^1.6.0",
     "gulp-typescript": "^3.0.2",
     "jspm": "^0.16.15",
-    "typescript": "^2.0.3"
+    "typescript": "^2.0.3",
+    "typings": "^1.4.0"
   },
   "jspm": {
     "configFile": "jspm_config.js",
