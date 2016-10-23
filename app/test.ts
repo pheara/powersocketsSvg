@@ -40,10 +40,25 @@ new Promise((resolve, reject) => {
   };
 })
 .then(xhr => {
-  backgroundDiv.appendChild(xhr.responseXML.documentElement);
+  const svgElement = xhr.responseXML.documentElement;
+  backgroundDiv.appendChild(svgElement);
+  return svgElement;
 })
-.then(() => {
+.then(svgElement => {
   // start parsing the svg-path data
+  const pathElements = svgElement.getElementsByTagName("path");
+  const paths = [];
+  for (const el of pathElements) {
+    paths.push(el.getAttribute("d"));
+  }
+
+  const rectElements = svgElement.getElementsByTagName("rect");
+  for (const el of rectElements) {
+    el.getAttribute("x");
+    el.getAttribute("y");
+    el.getAttribute("height");
+    el.getAttribute("width");
+  }
 
 });
 
