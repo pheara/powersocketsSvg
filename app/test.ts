@@ -4,7 +4,6 @@
 import "fetch";
 declare var fetch; // sadly there's no .d.ts file for fetch
 
-import { foo } from "test-import";
 import { fetchMap } from "fetch-map";
 // declare var parseSvgPath: any; // no .d.ts supplied
 
@@ -25,6 +24,8 @@ fetchMap("demo.svg").then(data => {
 
 
 /*
+
+//TODO: t-pieces. connector box?
 window.SVG4dbg = SVG;
 var svgParent = document.getElementById('background');
 var draw = SVG(svgParent);

@@ -27,13 +27,13 @@
      inkscape:window-height="1056"
      id="namedview9"
      showgrid="false"
-     inkscape:zoom="1.4388896"
-     inkscape:cx="24.473355"
-     inkscape:cy="177.23228"
+     inkscape:zoom="0.7194448"
+     inkscape:cx="-238.85724"
+     inkscape:cy="104.92147"
      inkscape:window-x="0"
      inkscape:window-y="24"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="svg2"
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
@@ -48,13 +48,13 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
      inkscape:groupmode="layer"
-     id="layer3"
+     id="powerlines"
      inkscape:label="powerlines">
     <path
        inkscape:connector-curvature="0"
@@ -69,7 +69,7 @@
   </g>
   <g
      inkscape:groupmode="layer"
-     id="layer1"
+     id="generators"
      inkscape:label="generators"
      transform="translate(73.336001,27.87878)">
     <rect
@@ -82,7 +82,7 @@
   </g>
   <g
      inkscape:groupmode="layer"
-     id="layer2"
+     id="sockets"
      inkscape:label="sockets"
      transform="translate(73.336001,27.87878)">
     <rect
