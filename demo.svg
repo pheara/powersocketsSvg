@@ -52,29 +52,21 @@
       </cc:Work>
     </rdf:RDF>
   </metadata>
-  <path
-     inkscape:connector-curvature="0"
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-     d="m 73.336001,28.37878 177.142849,0 0,87.14286"
-     id="path4136" />
-  <path
-     inkscape:connector-curvature="0"
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-     d="m 0.5,101.00609 0,88.89343 199.00005,0"
-     id="path4138" />
-  <rect
-     style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-     id="a_unique_id"
-     width="41.416256"
-     height="41.416256"
-     x="149.14514"
-     y="62.057755"
-     inkscape:label="spiffy label">
-    <desc
-       id="desc4142">funky description</desc>
-    <title
-       id="title4140">cool title</title>
-  </rect>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="powerlines">
+    <path
+       inkscape:connector-curvature="0"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 73.336001,28.37878 177.142849,0 0,87.14286"
+       id="path4136" />
+    <path
+       inkscape:connector-curvature="0"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 0.5,101.00609 0,88.89343 199.00005,0"
+       id="path4138" />
+  </g>
   <g
      inkscape:groupmode="layer"
      id="layer1"
