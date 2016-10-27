@@ -4,6 +4,18 @@ import parseSvgPath from "svg-path-parser";
 import "fetch";
 declare var fetch; // sadly there's no .d.ts file for fetch
 
+interface Rectangle {
+  x: number,
+  y: number,
+  width: number,
+  height: number
+}
+interface Powerline {
+  start: {x: number, y: number},
+  //end: {x: number, y: number}
+}
+
+
 export function fetchMap(url: string) {
 
   const svgPromise = fetchSvg(url);
@@ -35,15 +47,13 @@ function fetchSvg(url: string): Promise<SVGSVGElement> {
     xhr.overrideMimeType("image/svg+xml");
     xhr.send("");
     xhr.onload = (e) => {
-      if (xhr.readyState === 4) {
-        if (xhr.status === 200) {
-          // console.log(xhr.responseText);
-          console.log("SVG request successful", xhr);
-          resolve(xhr);
-        } else {
-          console.error(xhr.statusText);
-          reject(xhr);
-        }
+      if (xhr.status === 200) {
+        // console.log(xhr.responseText);
+        console.log("SVG request successful", xhr);
+        resolve(xhr);
+      } else {
+        console.error(xhr.statusText, xhr);
+        reject(xhr);
       }
     };
   });
@@ -54,33 +64,62 @@ function fetchSvg(url: string): Promise<SVGSVGElement> {
   return svgPromise;
 }
 
-function getPowerlines(svg: SVGSVGElement) {
+function getPowerlines(svg: SVGSVGElement): Powerline[] {
     const powerlinesLayer = svg.querySelector("#powerlines");
     const powerlineElements = powerlinesLayer.getElementsByTagName("path");
-    const powerlines = [];
+    const powerlines: Powerline[] = [];
     for (const el of powerlineElements) {
       const pathString = el.getAttribute("d");
       const pathList = parseSvgPath(pathString);
-      const start = { x: pathList[0].x, y: pathList[0].y };
-      const end; //need to deal with relative coords
-      powerlines.push(pathList);
+      const toAbs = makeConverterToAbsoluteCoords(svg, el);
+      const start = toAbs(pathList[0].x, pathList[0].y)
+
+      //const end; // TODO need to deal with relative coords
+
+      powerlines.push({start/*, end*/});
     }
     return powerlines;
 }
 
-function getRectanglesInLayer(svg: SVGSVGElement, layerId: string) {
+/**
+ * adapted from <http://stackoverflow.com/questions/26049488/how-to-get-absolute-coordinates-of-object-inside-a-g-group>
+ * Yields a function that converts from coordinates relative to the element to
+ * those relative to the svg’s root.
+ */
+function makeConverterToAbsoluteCoords(svgRoot, element) {
+  return function(x,y) {
+    let offset = svgRoot.getBoundingClientRect();
+    let matrix = element.getScreenCTM();
+    return {
+      x: (matrix.a * x) + (matrix.c * y) + matrix.e - offset.left,
+      y: (matrix.b * x) + (matrix.d * y) + matrix.f - offset.top
+    };
+  };
+}
+
+function getRectanglesInLayer(svg: SVGSVGElement, layerId: string): Rectangle[] {
   const layer = svg.querySelector("#" + layerId);
   const rectangleElements = layer.getElementsByTagName("rect");
-  const rectangleData = [];
+  const rectangleData:Rectangle[] = [];
   for (const el of rectangleElements) {
-    const x = el.getAttribute("x");
-    const y = el.getAttribute("y");
-    const width = el.getAttribute("width");
-    const height = el.getAttribute("height");
-    rectangleData.push({x, y, width, height});
+    const getAttr = (attr:string) => {
+      const attrAsStr = valueOr(el.getAttribute(attr), "");
+      return valueOr(Number.parseInt(attrAsStr), 0); //parse to number
+    };
+    const width = getAttr("width");
+    const height = getAttr("height");
+    const relX = getAttr("x");
+    const relY = getAttr("y");
+    const toAbs = makeConverterToAbsoluteCoords(svg, el);
+    const absCoords = toAbs(relX, relY)
+    rectangleData.push({x: absCoords.x, y: absCoords.y, width, height});
   }
   //console.log(hasType(rectangleData));
   return rectangleData;
+}
+
+function valueOr<T>(value: T | undefined | null, deflt: T): T {
+  return value? value : deflt;
 }
 
 function hasType(obj: any) {
