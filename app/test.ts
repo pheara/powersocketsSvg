@@ -24,6 +24,14 @@ fetchMap("demo.svg").then(data => {
 
 
 /*
+//TODO how to do collision? also: run box-collision first
+<http://www.kevlindev.com/geometry/2D/intersections/index.htm>
+http://stackoverflow.com/questions/5396657/event-when-two-svg-elements-touch
+raphael js has collision detection ([source](http://stackoverflow.com/questions/12550635/how-can-i-improve-on-this-javascript-collision-detection))
+
+http://stackoverflow.com/questions/2174640/hit-testing-svg-shapes
+var nodelist = svgroot.getIntersectionList(hitrect, null);
+[working example](http://xn--dahlstrm-t4a.net/svg/interactivity/intersection/sandbox_hover.svg)
 
 //TODO: t-pieces. connector box?
 window.SVG4dbg = SVG;
