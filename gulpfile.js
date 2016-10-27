@@ -17,7 +17,8 @@ gulp.task('bundlejs', function(){
         .pipe(ts({
           out: 'bundle.js',
           module: 'system',
-          target: 'es6'
+          target: 'es6',
+          strictNullChecks: true
         }))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('./generated/'));
