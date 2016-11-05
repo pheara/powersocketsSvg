@@ -25,8 +25,10 @@ fetchMap("demo.svg").then(data => {
   console.log(data);
   const backgroundDiv = document.getElementById("background");
   if(backgroundDiv) {
-    backgroundDiv.appendChild(data.svgElement);
+    backgroundDiv.appendChild(data.element);
   }
+  //const map = SVG(data.element);
+  //console.log('map: ', map);
 });
 
 
