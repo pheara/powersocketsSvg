@@ -76,6 +76,10 @@ fetchMap("demo.svg").then(data => {
 
 // ------------- //
 
+/**
+  * adapted from source of 
+  * <http://xn--dahlstrm-t4a.net/svg/interactivity/intersection/sandbox_hover.svg>
+  */
 function elementsAt(svg: SVGSVGElement, x: number, y: number) {
     var svgRect = svg.createSVGRect();
     svgRect.x = x;
