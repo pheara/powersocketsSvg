@@ -1,5 +1,9 @@
-
+// custom declarations / headers like for `svg-path-parser`
 /// <reference path="declarations.d.ts"/>
+
+// declarations/headers installed via `./node_modules/.bin/typings install <pkg>`
+/// <reference path="../typings/index.d.ts"/>
+
 // import fetch from "fetch";
 import "fetch";
 declare var fetch; // sadly there's no .d.ts file for fetch
@@ -7,7 +11,8 @@ declare var fetch; // sadly there's no .d.ts file for fetch
 import { fetchMap } from "fetch-map";
 // declare var parseSvgPath: any; // no .d.ts supplied
 
-// import SVG from "wout/svg.js";
+import "wout/svg.js";
+//import SVG from "jspm_packages/svg.js@2.3.6/svg.js.d.ts";
 
 const blueprintSVG = document.getElementById("blueprint");
 
