@@ -30,9 +30,10 @@ export function fetchMap(url: string) {
     const generators = getRectanglesInLayer(svg, "generators");
 
     return {
-      powerlines: powerlines,
-      sockets: sockets,
-      svgElement: svg,
+      powerlines,
+      generators,
+      sockets,
+      element: svg,
     };
 
   });
