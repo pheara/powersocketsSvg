@@ -16,6 +16,10 @@ import "wout/svg.js";
 
 const blueprintSVG = document.getElementById("blueprint");
 
+
+//To enable automatic sub-pixel offset correction when the window is resized:
+//SVG.on(window, 'resize', function() { draw.spof() })
+
 fetch("demo.svg")
 .then(resp => resp.text())
 //.then(resp => resp.blob())
@@ -42,7 +46,7 @@ fetchMap("demo.svg").then(data => {
 /*
 //TODO how to do collision? also: run box-collision first
 
-[svg.js has intersections](http://paperjs.org/reference/path/))
+[svg.js has intersections](https://github.com/amatiash/svg.intersections.js)
 
 // <http://www.kevlindev.com/geometry/2D/intersections/index.htm>
 // http://stackoverflow.com/questions/5396657/event-when-two-svg-elements-touch
