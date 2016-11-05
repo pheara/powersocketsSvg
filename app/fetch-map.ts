@@ -8,11 +8,13 @@ interface Rectangle {
   x: number,
   y: number,
   width: number,
-  height: number
+  height: number,
+  element: SVGRectElement
 }
 interface Powerline {
   start: {x: number, y: number},
-  //end: {x: number, y: number}
+  //end: {x: number, y: number},
+  element: SVGPathElement
 }
 
 
@@ -76,7 +78,11 @@ function getPowerlines(svg: SVGSVGElement): Powerline[] {
 
       //const end; // TODO need to deal with relative coords
 
-      powerlines.push({start/*, end*/});
+      powerlines.push({
+        start,
+        // end,
+        element: el,
+    });
     }
     return powerlines;
 }
@@ -112,7 +118,13 @@ function getRectanglesInLayer(svg: SVGSVGElement, layerId: string): Rectangle[] 
     const relY = getAttr("y");
     const toAbs = makeConverterToAbsoluteCoords(svg, el);
     const absCoords = toAbs(relX, relY)
-    rectangleData.push({x: absCoords.x, y: absCoords.y, width, height});
+    rectangleData.push({
+      x: absCoords.x,
+      y: absCoords.y,
+      width,
+      height,
+      element: el,
+    });
   }
   //console.log(hasType(rectangleData));
   return rectangleData;
