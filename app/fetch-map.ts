@@ -4,6 +4,10 @@ import parseSvgPath from "svg-path-parser";
 import "fetch";
 declare var fetch; // sadly there's no .d.ts file for fetch
 
+import {
+  valueOr,
+  hasJSType,
+ } from "utils";
 interface Rectangle {
   x: number,
   y: number,
@@ -126,12 +130,4 @@ function getRectanglesInLayer(svg: SVGSVGElement, layerId: string): Rectangle[] 
   }
   //console.log(hasType(rectangleData));
   return rectangleData;
-}
-
-function valueOr<T>(value: T | undefined | null, deflt: T): T {
-  return value? value : deflt;
-}
-
-function hasType(obj: any) {
-  return Object.prototype.toString.call(obj).slice(8, -1);
 }
