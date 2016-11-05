@@ -90,6 +90,13 @@ function elementsAt(svg: SVGSVGElement, x: number, y: number) {
 }
 
 
+/* TODO extend so it takes all elements
+  generator -> true
+  powerline -> true if connected to a generator or powered switch
+  switch | socket -> true if connected to a powered line
+
+    where connected: a powerline-endpoints is within the rect-element/switch-path-element
+*/
 function isPowered(s : Socket, data): boolean {
   const attachedLines = data.powerlines.filter(p =>
       attached(s, p)
