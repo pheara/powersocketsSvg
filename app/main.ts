@@ -14,6 +14,8 @@ import { fetchMap } from "fetch-map";
 import "wout/svg.js";
 //import SVG from "jspm_packages/svg.js@2.3.6/svg.js.d.ts";
 
+import { hasJSType } from "utils";
+
 const blueprintSVG = document.getElementById("blueprint");
 
 
@@ -40,7 +42,55 @@ fetchMap("demo.svg").then(data => {
   }
   //const map = SVG(data.element);
   //console.log('map: ', map);
+
+  // naive collision (only works with paths and rectangles)
+
+  for(const s of data.sockets) {
+
+    if(isPowered(s, data)) {
+      markCoords(data.element, s.pos.x, s.pos.y);
+    }
+    s.element.addEventListener("click", e => {
+      if(isPowered(s, data)) {
+        console.log("clicked powered socket *brzzl*");
+      } else {
+        console.log("that socket is safe *phew*");
+      }
+    })
+  }
 });
+
+
+// ------------- //
+
+
+function isPowered(s : Socket, data): boolean {
+  const attachedLines = data.powerlines.filter(p =>
+      attached(s, p)
+    )
+
+  for(const p of attachedLines) {
+    for(const g of data.generators) {
+      if(attached(g, p)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+function attached(rect: Rectangle, powerline: Powerline): boolean {
+    return insideRect(rect, powerline.start) || insideRect(rect, powerline.end);
+}
+
+function insideRect(rect: Rectangle, point: Point): boolean {
+    return rect.pos.x <= point.x &&
+           point.x <= rect.pos.x + rect.width &&
+           rect.pos.y <= point.y &&
+           point.y <= rect.pos.y + rect.height;
+}
+
 
 /**
  * Draws a dark-red circle at the specified coordinates.
@@ -53,6 +103,9 @@ function markCoords(svg: SVGSVGElement, x: number, y: number) {
   circle.style.fill = "#900";
   svg.appendChild(circle);
 }
+
+
+// ------------- //
 
 
 /*
