@@ -8,19 +8,6 @@ import {
   valueOr,
   hasJSType,
  } from "utils";
-interface Rectangle {
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  element: SVGRectElement
-}
-interface Powerline {
-  start: {x: number, y: number},
-  end: {x: number, y: number},
-  element: SVGPathElement
-}
-
 
 export function fetchMap(url: string) {
 
@@ -121,8 +108,10 @@ function getRectanglesInLayer(svg: SVGSVGElement, layerId: string): Rectangle[] 
     const toAbs = makeConverterToAbsoluteCoords(svg, el);
     const absCoords = toAbs(relX, relY)
     rectangleData.push({
-      x: absCoords.x,
-      y: absCoords.y,
+      pos: {
+        x: absCoords.x,
+        y: absCoords.y,
+      },
       width,
       height,
       element: el,
