@@ -51,6 +51,7 @@ fetchMap("demo.svg").then(data => {
   data.element.addEventListener("click", e => {
     var elements = elementsAt(data.element, e.clientX, e.clientY);
     console.log("intersectionList: ", elements);
+    //TODO try to get checkIntersection working
   })
 
   /*
