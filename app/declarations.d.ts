@@ -11,6 +11,10 @@ interface Rectangle {
   height: number,
   element: SVGRectElement
 }
+
+interface Generator extends Rectangle {}
+interface Socket extends Rectangle {}
+
 interface Powerline {
   start: Point
   end: Point
