@@ -42,6 +42,18 @@ fetchMap("demo.svg").then(data => {
   //console.log('map: ', map);
 });
 
+/**
+ * Draws a dark-red circle at the specified coordinates.
+ */
+function markCoords(svg: SVGSVGElement, x: number, y: number) {
+  var circle = document.createElementNS("http://www.w3.org/2000/svg", 'circle'); //Create a path in SVG's namespace
+  circle.setAttribute("cx", x.toString());
+  circle.setAttribute("cy", y.toString());
+  circle.setAttribute("r", "8");
+  circle.style.fill = "#900";
+  svg.appendChild(circle);
+}
+
 
 /*
 //TODO how to do collision? also: run box-collision first
