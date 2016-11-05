@@ -43,8 +43,11 @@ fetchMap("demo.svg").then(data => {
   //const map = SVG(data.element);
   //console.log('map: ', map);
 
-  // naive collision (only works with paths and rectangles)
 
+  /*
+   * naive collision (only works with sockets that
+   * are directly connected to a generator)
+   */
   for(const s of data.sockets) {
 
     if(isPowered(s, data)) {
