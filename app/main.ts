@@ -45,6 +45,15 @@ fetchMap("demo.svg").then(data => {
 
 
   /*
+   * demo that checks which svg elements
+   * are at a given point
+   */
+  data.element.addEventListener("click", e => {
+    var elements = elementsAt(data.element, e.clientX, e.clientY);
+    console.log("intersectionList: ", elements);
+  })
+
+  /*
    * naive collision (only works with sockets that
    * are directly connected to a generator)
    */
@@ -65,6 +74,15 @@ fetchMap("demo.svg").then(data => {
 
 
 // ------------- //
+
+function elementsAt(svg: SVGSVGElement, x: number, y: number) {
+    var svgRect = svg.createSVGRect();
+    svgRect.x = x;
+    svgRect.y = y;
+    svgRect.width = svgRect.height = 1;
+    //let list = svg.getIntersectionList(svgRect, null);
+    return svg.getIntersectionList(svgRect, svg);
+}
 
 
 function isPowered(s : Socket, data): boolean {
