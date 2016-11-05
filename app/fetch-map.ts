@@ -13,7 +13,7 @@ interface Rectangle {
 }
 interface Powerline {
   start: {x: number, y: number},
-  //end: {x: number, y: number},
+  end: {x: number, y: number},
   element: SVGPathElement
 }
 
@@ -71,16 +71,13 @@ function getPowerlines(svg: SVGSVGElement): Powerline[] {
     const powerlineElements = powerlinesLayer.getElementsByTagName("path");
     const powerlines: Powerline[] = [];
     for (const el of powerlineElements) {
-      const pathString = el.getAttribute("d");
-      const pathList = parseSvgPath(pathString);
-      const toAbs = makeConverterToAbsoluteCoords(svg, el);
-      const start = toAbs(pathList[0].x, pathList[0].y)
 
-      //const end; // TODO need to deal with relative coords
+      const start = el.getPointAtLength(0);
+      const end = el.getPointAtLength(el.getTotalLength());
 
       powerlines.push({
         start,
-        // end,
+        end,
         element: el,
     });
     }
