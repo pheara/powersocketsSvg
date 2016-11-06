@@ -5,6 +5,10 @@
 
 declare module "svg-path-parser";
 
+interface Switch {
+  element: SVGPathElement,
+}
+
 interface Rectangle {
   pos: Point, // left-upper corner
   width: number,

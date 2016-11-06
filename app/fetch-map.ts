@@ -17,6 +17,7 @@ export function fetchMap(url: string) {
 
     // start parsing the svg-path data
     const powerlines = getPowerlines(svg);
+    const switches = getSwitches(svg)
     const sockets = getRectanglesInLayer(svg, "sockets");
     const generators = getRectanglesInLayer(svg, "generators");
 
@@ -24,6 +25,7 @@ export function fetchMap(url: string) {
       powerlines,
       generators,
       sockets,
+      switches,
       element: svg,
     };
 
@@ -56,6 +58,18 @@ function fetchSvg(url: string): Promise<SVGSVGElement> {
     .then(xhr => xhr.responseXML.documentElement);
 
   return svgPromise;
+}
+
+function getSwitches(svg: SVGSVGElement): Switch[] {
+  const layer = svg.querySelector("#switches");
+  const elements = layer.getElementsByTagName("path");
+  const switches: Switch[] = [];
+  for(const el of elements) {
+    switches.push({
+      element: el,
+    });
+  }
+  return switches;
 }
 
 function getPowerlines(svg: SVGSVGElement): Powerline[] {
