@@ -23,7 +23,7 @@
       "fetch": "github:github/fetch@^1.0.0",
       "immutable": "npm:immutable@^3.7.5",
       "svg-path-parser": "npm:svg-path-parser@^1.0.1",
-      "wout/svg.js": "github:wout/svg.js@^2.3.6"
+      "wout/svg.js": "github:svgdotjs/svg.js@^2.3.6"
     },
     "devDependencies": {
       "babel": "npm:babel-core@^5.8.24",
