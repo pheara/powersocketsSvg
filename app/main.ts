@@ -52,7 +52,7 @@ fetchMap("demo.svg").then(data => {
    * are at a given point
    */
   data.element.addEventListener("click", e => {
-    const elements = elementsAt({x: e.clientX, y: e.clientY}, data.element);
+    const elements = svgElementsAt({x: e.clientX, y: e.clientY}, data.element);
     console.log("intersectionList: ", elements);
     const pieces = piecesAt(data, {x: e.clientX, y: e.clientY});
     console.log("pieces clicked: ", pieces);
@@ -111,7 +111,7 @@ function isPowered2(s: Socket, map): boolean {
 
 function piecesAt(map, pt: Point) {
   const svg = map.element;
-  const intersectedElements = elementsAt(pt, svg);
+  const intersectedElements = svgElementsAt(pt, svg);
   return {
     generators: map.generators.filter(g =>
       contains(intersectedElements, g.element)
@@ -129,7 +129,7 @@ function piecesAt(map, pt: Point) {
   * adapted from source of
   * <http://xn--dahlstrm-t4a.net/svg/interactivity/intersection/sandbox_hover.svg>
   */
-function elementsAt(pt: Point, svg: SVGSVGElement) {
+function svgElementsAt(pt: Point, svg: SVGSVGElement) {
     const svgRect = svg.createSVGRect();
     svgRect.x = pt.x;
     svgRect.y = pt.y;
@@ -172,7 +172,7 @@ function attachedToShape(powerline: Powerline, shape: Rectangle | Switch, svg: S
 
 function insideShape(point: Point, shape: Rectangle | Switch, svg: SVGSVGElement): boolean {
   return contains(
-    elementsAt(point, svg),
+    svgElementsAt(point, svg),
     shape.element
   );
 }
