@@ -12,7 +12,7 @@ import { fetchMap } from "fetch-map";
 // declare var parseSvgPath: any; // no .d.ts supplied
 
 import "wout/svg.js";
-//import SVG from "jspm_packages/svg.js@2.3.6/svg.js.d.ts";
+// import SVG from "jspm_packages/svg.js@2.3.6/svg.js.d.ts";
 
 import {
   hasJSType,
@@ -22,12 +22,12 @@ import {
 const blueprintSVG = document.getElementById("blueprint");
 
 
-//To enable automatic sub-pixel offset correction when the window is resized:
-//SVG.on(window, 'resize', function() { draw.spof() })
+// To enable automatic sub-pixel offset correction when the window is resized:
+// SVG.on(window, 'resize', function() { draw.spof() })
 
 fetch("demo.svg")
 .then(resp => resp.text())
-//.then(resp => resp.blob())
+// .then(resp => resp.blob())
 .then(svgAsText => {
   // console.log(svgAsText);
   const draw = SVG("svgJsMount");
@@ -40,11 +40,11 @@ fetch("demo.svg")
 fetchMap("demo.svg").then(data => {
   console.log(data);
   const backgroundDiv = document.getElementById("background");
-  if(backgroundDiv) {
+  if (backgroundDiv) {
     backgroundDiv.appendChild(data.element);
   }
-  //const map = SVG(data.element);
-  //console.log('map: ', map);
+  // const map = SVG(data.element);
+  // console.log('map: ', map);
 
 
   /*
@@ -52,29 +52,29 @@ fetchMap("demo.svg").then(data => {
    * are at a given point
    */
   data.element.addEventListener("click", e => {
-    var elements = elementsAt(data.element, e.clientX, e.clientY);
+    const elements = elementsAt(data.element, e.clientX, e.clientY);
     console.log("intersectionList: ", elements);
-    var pieces = piecesAt(data, e.clientX, e.clientY);
+    const pieces = piecesAt(data, e.clientX, e.clientY);
     console.log("pieces clicked: ", pieces);
-    //TODO try to get checkIntersection working
-  })
+    // TODO try to get checkIntersection working
+  });
 
   /*
    * naive collision (only works with sockets that
    * are directly connected to a generator)
    */
-  for(const s of data.sockets) {
+  for (const s of data.sockets) {
 
-    if(isPowered(s, data)) {
+    if (isPowered(s, data)) {
       markCoords(data.element, s.pos.x, s.pos.y);
     }
     s.element.addEventListener("click", e => {
-      if(isPowered(s, data)) {
+      if (isPowered(s, data)) {
         console.log("clicked powered socket *brzzl*");
       } else {
         console.log("that socket is safe *phew*");
       }
-    })
+    });
   }
 });
 
@@ -94,7 +94,7 @@ function piecesAt(map, x: number, y: number) {
     switches: map.switches.filter(s =>
       contains(intersectedElements, s.element)
     ),
-  }
+  };
 }
 
 /**
@@ -102,11 +102,11 @@ function piecesAt(map, x: number, y: number) {
   * <http://xn--dahlstrm-t4a.net/svg/interactivity/intersection/sandbox_hover.svg>
   */
 function elementsAt(svg: SVGSVGElement, x: number, y: number) {
-    var svgRect = svg.createSVGRect();
+    const svgRect = svg.createSVGRect();
     svgRect.x = x;
     svgRect.y = y;
     svgRect.width = svgRect.height = 1;
-    //let list = svg.getIntersectionList(svgRect, null);
+    // let list = svg.getIntersectionList(svgRect, null);
     return svg.getIntersectionList(svgRect, svg);
 }
 
@@ -118,14 +118,14 @@ function elementsAt(svg: SVGSVGElement, x: number, y: number) {
 
     where connected: a powerline-endpoints is within the rect-element/switch-path-element
 */
-function isPowered(s : Socket, data): boolean {
+function isPowered(s: Socket, data): boolean {
   const attachedLines = data.powerlines.filter(p =>
-      attached(s, p)
-    )
+    attached(s, p)
+  );
 
-  for(const p of attachedLines) {
-    for(const g of data.generators) {
-      if(attached(g, p)) {
+  for (const p of attachedLines) {
+    for (const g of data.generators) {
+      if (attached(g, p)) {
         return true;
       }
     }
@@ -150,7 +150,7 @@ function insideRect(rect: Rectangle, point: Point): boolean {
  * Draws a dark-red circle at the specified coordinates.
  */
 function markCoords(svg: SVGSVGElement, x: number, y: number) {
-  var circle = document.createElementNS("http://www.w3.org/2000/svg", 'circle'); //Create a path in SVG's namespace
+  const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle"); // Create a path in SVG's namespace
   circle.setAttribute("cx", x.toString());
   circle.setAttribute("cy", y.toString());
   circle.setAttribute("r", "8");

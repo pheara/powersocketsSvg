@@ -17,7 +17,7 @@ export function fetchMap(url: string) {
 
     // start parsing the svg-path data
     const powerlines = getPowerlines(svg);
-    const switches = getSwitches(svg)
+    const switches = getSwitches(svg);
     const sockets = getRectanglesInLayer(svg, "sockets");
     const generators = getRectanglesInLayer(svg, "generators");
 
@@ -64,7 +64,7 @@ function getSwitches(svg: SVGSVGElement): Switch[] {
   const layer = svg.querySelector("#switches");
   const elements = layer.getElementsByTagName("path");
   const switches: Switch[] = [];
-  for(const el of elements) {
+  for (const el of elements) {
     switches.push({
       element: el,
     });
@@ -96,7 +96,7 @@ function getPowerlines(svg: SVGSVGElement): Powerline[] {
  * those relative to the svg’s root.
  */
 function makeConverterToAbsoluteCoords(svgRoot, element) {
-  return function(x,y) {
+  return function(x, y) {
     let offset = svgRoot.getBoundingClientRect();
     let matrix = element.getScreenCTM();
     return {
@@ -109,18 +109,18 @@ function makeConverterToAbsoluteCoords(svgRoot, element) {
 function getRectanglesInLayer(svg: SVGSVGElement, layerId: string): Rectangle[] {
   const layer = svg.querySelector("#" + layerId);
   const rectangleElements = layer.getElementsByTagName("rect");
-  const rectangleData:Rectangle[] = [];
+  const rectangleData: Rectangle[] = [];
   for (const el of rectangleElements) {
-    const getAttr = (attr:string) => {
+    const getAttr = (attr: string) => {
       const attrAsStr = valueOr(el.getAttribute(attr), "");
-      return valueOr(Number.parseInt(attrAsStr), 0); //parse to number
+      return valueOr(Number.parseInt(attrAsStr), 0); // parse to number
     };
     const width = getAttr("width");
     const height = getAttr("height");
     const relX = getAttr("x");
     const relY = getAttr("y");
     const toAbs = makeConverterToAbsoluteCoords(svg, el);
-    const absCoords = toAbs(relX, relY)
+    const absCoords = toAbs(relX, relY);
     rectangleData.push({
       pos: {
         x: absCoords.x,
@@ -131,6 +131,6 @@ function getRectanglesInLayer(svg: SVGSVGElement, layerId: string): Rectangle[] 
       element: el,
     });
   }
-  //console.log(hasType(rectangleData));
+  // console.log(hasType(rectangleData));
   return rectangleData;
 }
