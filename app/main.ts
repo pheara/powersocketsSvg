@@ -14,7 +14,10 @@ import { fetchMap } from "fetch-map";
 import "wout/svg.js";
 //import SVG from "jspm_packages/svg.js@2.3.6/svg.js.d.ts";
 
-import { hasJSType } from "utils";
+import {
+  hasJSType,
+  contains,
+} from "utils";
 
 const blueprintSVG = document.getElementById("blueprint");
 
@@ -51,6 +54,8 @@ fetchMap("demo.svg").then(data => {
   data.element.addEventListener("click", e => {
     var elements = elementsAt(data.element, e.clientX, e.clientY);
     console.log("intersectionList: ", elements);
+    var pieces = piecesAt(data, e.clientX, e.clientY);
+    console.log("pieces clicked: ", pieces);
     //TODO try to get checkIntersection working
   })
 
@@ -76,8 +81,24 @@ fetchMap("demo.svg").then(data => {
 
 // ------------- //
 
+function piecesAt(map, x: number, y: number) {
+  const svg = map.element;
+  const intersectedElements = elementsAt(svg, x, y);
+  return {
+    generators: map.generators.filter(g =>
+      contains(intersectedElements, g.element)
+    ),
+    sockets: map.sockets.filter(s =>
+      contains(intersectedElements, s.element)
+    ),
+    switches: map.switches.filter(s =>
+      contains(intersectedElements, s.element)
+    ),
+  }
+}
+
 /**
-  * adapted from source of 
+  * adapted from source of
   * <http://xn--dahlstrm-t4a.net/svg/interactivity/intersection/sandbox_hover.svg>
   */
 function elementsAt(svg: SVGSVGElement, x: number, y: number) {
