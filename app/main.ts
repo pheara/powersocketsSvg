@@ -52,13 +52,17 @@ fetchMap("demo.svg").then(data => {
    * are at a given point
    */
   data.element.addEventListener("click", e => {
-    const elements = elementsAt(data.element, e.clientX, e.clientY);
+    const elements = elementsAt({x: e.clientX, y: e.clientY}, data.element);
     console.log("intersectionList: ", elements);
-    const pieces = piecesAt(data, e.clientX, e.clientY);
+    const pieces = piecesAt(data, {x: e.clientX, y: e.clientY});
     console.log("pieces clicked: ", pieces);
     // TODO try to get checkIntersection working
   });
 
+
+  for (const s of data.sockets) {
+    isPowered2(s, data);
+  }
   /*
    * naive collision (only works with sockets that
    * are directly connected to a generator)
@@ -81,9 +85,33 @@ fetchMap("demo.svg").then(data => {
 
 // ------------- //
 
-function piecesAt(map, x: number, y: number) {
+function isPowered2(s: Socket, map): boolean {
+  const attachedLines = map.powerlines.filter(p =>
+    attachedToShape(p, s, map.element)
+  );
+  for (const p of attachedLines) {
+    const otherEnd: Point = insideRect(s, p.end) ? p.start : p.end;
+    const connectedWith = piecesAt(map, otherEnd);
+    console.log("socket attached to: ", connectedWith.generators, connectedWith.switches);
+      markCoords(map.element, otherEnd.x, otherEnd.y);
+    if (connectedWith.generators.length > 0) {
+      // return true;
+    } else if (connectedWith.switches.length > 0) {
+      for (const s of connectedWith.switches) {
+        1; // TODO stopped here
+      }
+      // recurse into the switch (but avoid going back)
+    } else {
+      // return false;
+    }
+  }
+
+  return false;
+}
+
+function piecesAt(map, pt: Point) {
   const svg = map.element;
-  const intersectedElements = elementsAt(svg, x, y);
+  const intersectedElements = elementsAt(pt, svg);
   return {
     generators: map.generators.filter(g =>
       contains(intersectedElements, g.element)
@@ -101,15 +129,14 @@ function piecesAt(map, x: number, y: number) {
   * adapted from source of
   * <http://xn--dahlstrm-t4a.net/svg/interactivity/intersection/sandbox_hover.svg>
   */
-function elementsAt(svg: SVGSVGElement, x: number, y: number) {
+function elementsAt(pt: Point, svg: SVGSVGElement) {
     const svgRect = svg.createSVGRect();
-    svgRect.x = x;
-    svgRect.y = y;
+    svgRect.x = pt.x;
+    svgRect.y = pt.y;
     svgRect.width = svgRect.height = 1;
     // let list = svg.getIntersectionList(svgRect, null);
     return svg.getIntersectionList(svgRect, svg);
 }
-
 
 /* TODO extend so it takes all elements
   generator -> true
@@ -136,6 +163,18 @@ function isPowered(s: Socket, data): boolean {
 
 function attached(rect: Rectangle, powerline: Powerline): boolean {
     return insideRect(rect, powerline.start) || insideRect(rect, powerline.end);
+}
+
+function attachedToShape(powerline: Powerline, shape: Rectangle | Switch, svg: SVGSVGElement) {
+  return insideShape(powerline.start, shape, svg) ||
+         insideShape(powerline.end, shape, svg);
+}
+
+function insideShape(point: Point, shape: Rectangle | Switch, svg: SVGSVGElement): boolean {
+  return contains(
+    elementsAt(point, svg),
+    shape.element
+  );
 }
 
 function insideRect(rect: Rectangle, point: Point): boolean {
