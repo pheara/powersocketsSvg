@@ -85,20 +85,25 @@ fetchMap("demo.svg").then(data => {
 
 // ------------- //
 
-function isPowered2(s: Socket, map): boolean {
-  const attachedLines = map.powerlines.filter(p =>
-    attachedToShape(p, s, map.element)
-  );
-  for (const p of attachedLines) {
-    const otherEnd: Point = insideRect(s, p.end) ? p.start : p.end;
+function isPowered2(socket: Socket, map): boolean {
+  const attachedLines = selectAttachedLines(socket, map);
+  for (const powLine of attachedLines) {
+    const otherEnd: Point =
+      insideShape(powLine.end, socket, map.element) ?
+        powLine.start :
+        powLine.end;
     const connectedWith = piecesAt(map, otherEnd);
+
     console.log("socket attached to: ", connectedWith.generators, connectedWith.switches);
-      markCoords(map.element, otherEnd.x, otherEnd.y);
+    markCoords(map.element, otherEnd.x, otherEnd.y);
+
     if (connectedWith.generators.length > 0) {
       // return true;
     } else if (connectedWith.switches.length > 0) {
-      for (const s of connectedWith.switches) {
-        1; // TODO stopped here
+      for (const swtch of connectedWith.switches) {
+        for (const powLine2 of selectAttachedLines(swtch, map)) {
+          // ...const otherEnd... (recurses)
+        }
       }
       // recurse into the switch (but avoid going back)
     } else {
@@ -159,6 +164,15 @@ function isPowered(s: Socket, data): boolean {
   }
 
   return false;
+}
+
+/**
+ * Returns the powerlines connectected to a Generator/Socket/Switch
+ */
+function selectAttachedLines(piece: Rectangle | Switch, map): Powerline[] {
+  return map.powerlines.filter(p =>
+    attachedToShape(p, piece, map.element)
+  );
 }
 
 function attached(rect: Rectangle, powerline: Powerline): boolean {
