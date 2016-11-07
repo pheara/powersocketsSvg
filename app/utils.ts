@@ -17,3 +17,9 @@ export function contains<T>( xs: T[] | Iterable<T>, x: T): boolean {
     return false;
   }
 }
+
+export function delay(milliseconds: number): Promise<void> {
+    return new Promise((resolve, reject) =>
+            window.setTimeout(() => resolve(), milliseconds)
+    );
+}

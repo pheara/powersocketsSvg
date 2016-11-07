@@ -7,6 +7,7 @@ declare var fetch; // sadly there's no .d.ts file for fetch
 import {
   valueOr,
   hasJSType,
+  delay,
  } from "utils";
 
 export function fetchMap(url: string) {
@@ -69,11 +70,34 @@ function getSwitches(svg: SVGSVGElement): Switch[] {
   const elements = layer.getElementsByTagName("path");
   const switches: Switch[] = [];
   for (const el of elements) {
+    //
+    const getAttr = (attr: string) => {
+      const attrAsStr = valueOr(el.getAttribute(attr), "");
+      return valueOr(Number.parseInt(attrAsStr), 0); // parse to number
+    };
+    const cx = getAttr("inkscape:transform-center-x");
+    const cy = getAttr("inkscape:transform-center-y");
+    console.log("switch center: ", cx, cy);
+    console.log("switch element: ", { el });
+    delay(1).then(() => addClientRect(el, svg));
     switches.push({
       element: el,
     });
   }
   return switches;
+}
+
+function addClientRect(el: SVGElement, svg: SVGSVGElement) {
+  const crData = el.getBoundingClientRect()
+  const clientRect = document.createElementNS("http://www.w3.org/2000/svg", "rect"); // Create a path in SVG's namespace
+  clientRect.setAttribute("x", crData.left.toString());
+  clientRect.setAttribute("y", crData.top.toString());
+  clientRect.setAttribute("height", crData.height.toString());
+  clientRect.setAttribute("width", crData.width.toString());
+  clientRect.style.fill = "#0000";
+  clientRect.style.stroke = "#900";
+  svg.appendChild(clientRect);
+  console.log("Added clientRectangle ", clientRect, crData);
 }
 
 function getPowerlines(svg: SVGSVGElement): Powerline[] {
