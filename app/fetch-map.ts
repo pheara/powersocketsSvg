@@ -11,6 +11,8 @@ import {
 
 export function fetchMap(url: string) {
 
+  console.log("Fetching map: ", url);
+
   const svgPromise = fetchSvg(url);
 
   const dataPromise = svgPromise.then((svg: SVGSVGElement) => {
@@ -20,6 +22,8 @@ export function fetchMap(url: string) {
     const switches = getSwitches(svg);
     const sockets = getRectanglesInLayer(svg, "sockets");
     const generators = getRectanglesInLayer(svg, "generators");
+
+    console.log("Map import complete for ", url);
 
     return {
       powerlines,
