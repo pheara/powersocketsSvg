@@ -100,12 +100,12 @@ function getPowerlines(svg: SVGSVGElement): Powerline[] {
  * those relative to the svg’s root.
  */
 function makeConverterToAbsoluteCoords(svgRoot, element) {
-  return function(x, y) {
-    let offset = svgRoot.getBoundingClientRect();
-    let matrix = element.getScreenCTM();
+  return function(p: Point): Point {
+    const offset = svgRoot.getBoundingClientRect();
+    const matrix = element.getScreenCTM();
     return {
-      x: (matrix.a * x) + (matrix.c * y) + matrix.e - offset.left,
-      y: (matrix.b * x) + (matrix.d * y) + matrix.f - offset.top
+      x: (matrix.a * p.x) + (matrix.c * p.y) + matrix.e - offset.left,
+      y: (matrix.b * p.x) + (matrix.d * p.y) + matrix.f - offset.top
     };
   };
 }
@@ -124,7 +124,7 @@ function getRectanglesInLayer(svg: SVGSVGElement, layerId: string): Rectangle[] 
     const relX = getAttr("x");
     const relY = getAttr("y");
     const toAbs = makeConverterToAbsoluteCoords(svg, el);
-    const absCoords = toAbs(relX, relY);
+    const absCoords = toAbs({x: relX, y: relY});
     rectangleData.push({
       pos: {
         x: absCoords.x,
