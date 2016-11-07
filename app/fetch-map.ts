@@ -82,8 +82,9 @@ function getPowerlines(svg: SVGSVGElement): Powerline[] {
     const powerlines: Powerline[] = [];
     for (const el of powerlineElements) {
 
-      const start = el.getPointAtLength(0);
-      const end = el.getPointAtLength(el.getTotalLength());
+      const toAbs = makeConverterToAbsoluteCoords(svg, el);
+      const start = toAbs(el.getPointAtLength(0));
+      const end = toAbs(el.getPointAtLength(el.getTotalLength()));
 
       powerlines.push({
         start,
