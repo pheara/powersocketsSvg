@@ -21,7 +21,6 @@
     "configFile": "jspm_config.js",
     "dependencies": {
       "fetch": "github:github/fetch@^1.0.0",
-      "immutable": "npm:immutable@3.8.1",
       "svg-path-parser": "npm:svg-path-parser@^1.0.1",
       "wout/svg.js": "github:svgdotjs/svg.js@^2.3.6"
     },

@@ -11,7 +11,7 @@ declare var fetch; // sadly there's no .d.ts file for fetch
 import { fetchMap } from "fetch-map";
 // declare var parseSvgPath: any; // no .d.ts supplied
 
-import Immutable from "immutable";
+// import Immutable from "immutable";
 
 import "wout/svg.js";
 // import SVG from "jspm_packages/svg.js@2.3.6/svg.js.d.ts";
