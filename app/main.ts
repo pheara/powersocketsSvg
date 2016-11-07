@@ -47,21 +47,6 @@ fetchMap("demo.svg").then(data => {
   if (backgroundDiv) {
     backgroundDiv.appendChild(data.element);
   }
-  // const map = SVG(data.element);
-  // console.log('map: ', map);
-
-
-  /*
-   * demo that checks which svg elements
-   * are at a given point
-   */
-  data.element.addEventListener("click", e => {
-    const elements = svgElementsAt({x: e.clientX, y: e.clientY}, data.element);
-    console.log("intersectionList: ", elements);
-    const pieces = piecesAt(data, {x: e.clientX, y: e.clientY});
-    console.log("pieces clicked: ", pieces);
-    // TODO try to get checkIntersection working
-  });
 
   /*
    * naive collision (only works with sockets that
