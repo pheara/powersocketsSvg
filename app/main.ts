@@ -32,10 +32,12 @@ fetch("demo.svg")
 // .then(resp => resp.blob())
 .then(svgAsText => {
   // console.log(svgAsText);
+  /*
   const draw = SVG("svgJsMount");
   console.log("Draw: ", draw);
   const svg = draw.svg(svgAsText);
   console.log("Svg: ", svg);
+  */
   // TODO the mounted svg is 0x0 of size but contains all the necessary DOM
 });
 
