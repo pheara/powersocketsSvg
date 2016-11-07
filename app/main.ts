@@ -106,6 +106,8 @@ function isPowered2(socket: Socket, map): boolean {
         for (const powLine2 of selectAttachedLines(swtch, map)) {
           // ...const otherEnd... (recurses)
           // make this a recursive function and merge everything into a set of visited nodes.
+          // TODO a) we don't need immutable, there's `Set`s in vanilla-js
+          // TODO b) isPowered should be a function that accepts anything (powline/socket/gen/switch)
         }
       }
       // recurse into the switch (but avoid going back)
