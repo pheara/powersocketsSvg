@@ -61,10 +61,6 @@ fetchMap("demo.svg").then(data => {
     // TODO try to get checkIntersection working
   });
 
-
-  for (const s of data.sockets) {
-    isPowered2(s, data);
-  }
   /*
    * naive collision (only works with sockets that
    * are directly connected to a generator)
@@ -87,36 +83,53 @@ fetchMap("demo.svg").then(data => {
 
 // ------------- //
 
-function isPowered2(socket: Socket, map): boolean {
-  const attachedLines = selectAttachedLines(socket, map);
-  for (const powLine of attachedLines) {
-    const otherEnd: Point =
-      insideShape(powLine.end, socket, map.element) ?
-        powLine.start :
-        powLine.end;
-    const connectedWith = piecesAt(map, otherEnd);
+function isPowered(
+  powerable: Rectangle | Switch,
+  map,
+  visited = new Set<Rectangle | Switch>()
+): boolean {
+  if( contains(map.generators, powerable)) {
+    // reached a generator, stuff is powered.
+    return true;
+  } else { // switch or socket
 
-    console.log("socket attached to: ", connectedWith.generators, connectedWith.switches);
-    markCoords(map.element, otherEnd.x, otherEnd.y);
+    visited.add(powerable);
+    const attachedLines = selectAttachedLines(powerable, map);
+    for (const powLine of attachedLines) {
+      const otherEnd: Point =
+        insideShape(powLine.end, powerable, map.element) ?
+          powLine.start :
+          powLine.end;
+      const connectedWith = piecesAt(map, otherEnd);
 
-    if (connectedWith.generators.length > 0) {
-      // return true;
-    } else if (connectedWith.switches.length > 0) {
-      for (const swtch of connectedWith.switches) {
-        for (const powLine2 of selectAttachedLines(swtch, map)) {
+      console.log("powerable attached to: ", connectedWith.generators, connectedWith.switches);
+      markCoords(map.element, otherEnd.x, otherEnd.y);
+
+      if (connectedWith.generators.length > 0) {
+         return true;
+      } else if (connectedWith.switches.length > 0) {
+        for (const swtch of connectedWith.switches) {
+          // recurse into the switch (but avoid going back)
+          if(!visited.has(swtch) && isPowered(swtch, map, visited)) {
+            return true;
+          }
           // ...const otherEnd... (recurses)
           // make this a recursive function and merge everything into a set of visited nodes.
           // TODO a) we don't need immutable, there's `Set`s in vanilla-js
           // TODO b) isPowered should be a function that accepts anything (powline/socket/gen/switch)
+          /* TODO extend so it takes all elements
+            generator -> true
+            powerline -> true if connected to a generator or powered switch
+            switch | socket -> true if connected to a powered line
+
+              where connected: a powerline-endpoints is within the rect-element/switch-path-element
+          */
         }
       }
-      // recurse into the switch (but avoid going back)
-    } else {
-      // return false;
     }
-  }
 
-  return false;
+    return false;
+  }
 }
 
 function piecesAt(map, pt: Point) {
@@ -146,29 +159,6 @@ function svgElementsAt(pt: Point, svg: SVGSVGElement) {
     svgRect.width = svgRect.height = 1;
     // let list = svg.getIntersectionList(svgRect, null);
     return svg.getIntersectionList(svgRect, svg);
-}
-
-/* TODO extend so it takes all elements
-  generator -> true
-  powerline -> true if connected to a generator or powered switch
-  switch | socket -> true if connected to a powered line
-
-    where connected: a powerline-endpoints is within the rect-element/switch-path-element
-*/
-function isPowered(s: Socket, data): boolean {
-  const attachedLines = data.powerlines.filter(p =>
-    attached(s, p)
-  );
-
-  for (const p of attachedLines) {
-    for (const g of data.generators) {
-      if (attached(g, p)) {
-        return true;
-      }
-    }
-  }
-
-  return false;
 }
 
 /**
