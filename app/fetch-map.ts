@@ -15,8 +15,32 @@ export function loadMap(url: string, mountpoint: string) {
   const mapDataPromise = fetchSvg(url).then(svg => {
     const backgroundDiv = document.getElementById(mountpoint);
     if (backgroundDiv) {
+      /**
+       * Some parsing needs to happen before mounting,
+       * e.g. there's some additional tranformation
+       * (a scaling) coming to bear on everything
+       * after mounting, that skews position extraction.
+       */
+      const data = extractMapData(svg);
+      // let rect = data.generators[0];
+      // let toAbs = makeConverterToAbsoluteCoords(svg, rect.element);
+      // console.log("to abs 1: ", toAbs(rect.pos));
+
+      /*
+       * mount the svg
+       */
       backgroundDiv.appendChild(svg);
-      return extractMapData(svg);
+      // toAbs = makeConverterToAbsoluteCoords(svg, rect.element);
+      // console.log("to abs 2: ", toAbs(rect.pos)); // doesn't match up with the same vec above
+
+      /*
+       * some parsing needs to happen after mounting,
+       * e.g. clientRectangles (~bounding boxes) only
+       * have a non-zero size then.
+       */
+      parseAndSetRotationPivots(data);
+
+      return data;
     } else {
       throw new Error(
         `Couldn't mount map "${url}" at mountpoint with id "${mountpoint}".`
@@ -67,21 +91,39 @@ function extractMapData(svg: SVGSVGElement) {
   };
 }
 
+function parseAndSetRotationPivots(data) {
+  for (const s of data.switches) {
+    const el = s.element;
+
+    const getAttr = (attr: string) => {
+      const attrAsStr = valueOr(el.getAttribute(attr), "");
+      return valueOr(Number.parseInt(attrAsStr), 0); // parse to number
+    };
+    /*
+     * offset of rotation pivot from center (not the left-upper corner)
+     * positive y is up(!), positive x is to the right
+     */
+    const center2pivot = {
+      x: getAttr("inkscape:transform-center-x"),
+      y: getAttr("inkscape:transform-center-y"),
+    }
+    const bounds = el.getBoundingClientRect()
+    const transformOrigin = { // preparation for the css class
+      x: 1 / 2 + (center2pivot.x / bounds.width),
+      y: 1 / 2 - (center2pivot.y / bounds.height),
+    }
+    el.style.transformOrigin =
+      (transformOrigin.x * 100).toString() + "% " +
+      (transformOrigin.y * 100).toString() + "%";
+  }
+}
+
+
 function getSwitches(svg: SVGSVGElement): Switch[] {
   const layer = svg.querySelector("#switches");
   const elements = layer.getElementsByTagName("path");
   const switches: Switch[] = [];
   for (const el of elements) {
-    //
-    const getAttr = (attr: string) => {
-      const attrAsStr = valueOr(el.getAttribute(attr), "");
-      return valueOr(Number.parseInt(attrAsStr), 0); // parse to number
-    };
-    const cx = getAttr("inkscape:transform-center-x");
-    const cy = getAttr("inkscape:transform-center-y");
-    console.log("switch center: ", cx, cy);
-    console.log("switch element: ", { el });
-    delay(1).then(() => addClientRect(el, svg));
     switches.push({
       element: el,
     });
