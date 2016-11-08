@@ -16,30 +16,11 @@ export function fetchMap(url: string) {
 
   const svgPromise = fetchSvg(url);
 
-  const dataPromise = svgPromise.then((svg: SVGSVGElement) => {
-
-    // start parsing the svg-path data
-    const powerlines = getPowerlines(svg);
-    const switches = getSwitches(svg);
-    const sockets = getRectanglesInLayer(svg, "sockets");
-    const generators = getRectanglesInLayer(svg, "generators");
-
-    console.log("Map import complete for ", url);
-
-    return {
-      powerlines,
-      generators,
-      sockets,
-      switches,
-      element: svg,
-    };
-
-  });
-
-  return dataPromise;
+  return svgPromise.then(svg => extractMapData(svg));
 }
 
-function fetchSvg(url: string): Promise<SVGSVGElement> {
+
+export function fetchSvg(url: string): Promise<SVGSVGElement> {
   const svgXhrPromise = new Promise<XMLHttpRequest>((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", url);
@@ -63,6 +44,21 @@ function fetchSvg(url: string): Promise<SVGSVGElement> {
     .then(xhr => xhr.responseXML.documentElement);
 
   return svgPromise;
+}
+
+export function extractMapData(svg: SVGSVGElement) {
+  const powerlines = getPowerlines(svg);
+  const switches = getSwitches(svg);
+  const sockets = getRectanglesInLayer(svg, "sockets");
+  const generators = getRectanglesInLayer(svg, "generators");
+
+  return {
+    powerlines,
+    generators,
+    sockets,
+    switches,
+    element: svg,
+  };
 }
 
 function getSwitches(svg: SVGSVGElement): Switch[] {
