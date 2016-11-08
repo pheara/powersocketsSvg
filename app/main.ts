@@ -8,7 +8,9 @@
 import "fetch";
 declare var fetch; // sadly there's no .d.ts file for fetch
 
-import { fetchMap } from "fetch-map";
+import {
+  loadMap,
+} from "fetch-map";
 // declare var parseSvgPath: any; // no .d.ts supplied
 
 // import Immutable from "immutable";
@@ -41,13 +43,7 @@ fetch("demo.svg")
   // TODO the mounted svg is 0x0 of size but contains all the necessary DOM
 });
 
-fetchMap("demo.svg").then(data => {
-  console.log(data);
-  const backgroundDiv = document.getElementById("background");
-  if (backgroundDiv) {
-    backgroundDiv.appendChild(data.element);
-  }
-
+loadMap("demo.svg", "background").then(data => {
   /*
    * naive collision (only works with sockets that
    * are directly connected to a generator)

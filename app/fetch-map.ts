@@ -10,17 +10,23 @@ import {
   delay,
  } from "utils";
 
-export function fetchMap(url: string) {
 
-  console.log("Fetching map: ", url);
-
-  const svgPromise = fetchSvg(url);
-
-  return svgPromise.then(svg => extractMapData(svg));
+export function loadMap(url: string, mountpoint: string) {
+  const mapDataPromise = fetchSvg(url).then(svg => {
+    const backgroundDiv = document.getElementById(mountpoint);
+    if (backgroundDiv) {
+      backgroundDiv.appendChild(svg);
+      return extractMapData(svg);
+    } else {
+      throw new Error(
+        `Couldn't mount map "${url}" at mountpoint with id "${mountpoint}".`
+      );
+    }
+  });
+  return mapDataPromise;
 }
 
-
-export function fetchSvg(url: string): Promise<SVGSVGElement> {
+function fetchSvg(url: string): Promise<SVGSVGElement> {
   const svgXhrPromise = new Promise<XMLHttpRequest>((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", url);
@@ -46,7 +52,7 @@ export function fetchSvg(url: string): Promise<SVGSVGElement> {
   return svgPromise;
 }
 
-export function extractMapData(svg: SVGSVGElement) {
+function extractMapData(svg: SVGSVGElement) {
   const powerlines = getPowerlines(svg);
   const switches = getSwitches(svg);
   const sockets = getRectanglesInLayer(svg, "sockets");
