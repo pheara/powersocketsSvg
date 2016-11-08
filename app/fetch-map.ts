@@ -138,12 +138,8 @@ function getRectanglesInLayer(svg: SVGSVGElement, layerId: string): Rectangle[] 
     const relX = getAttr("x");
     const relY = getAttr("y");
     const toAbs = makeConverterToAbsoluteCoords(svg, el);
-    const absCoords = toAbs({x: relX, y: relY});
     rectangleData.push({
-      pos: {
-        x: absCoords.x,
-        y: absCoords.y,
-      },
+      pos: toAbs({x: relX, y: relY}),
       width,
       height,
       element: el,
