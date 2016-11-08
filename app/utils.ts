@@ -23,3 +23,17 @@ export function delay(milliseconds: number): Promise<void> {
             window.setTimeout(() => resolve(), milliseconds)
     );
 }
+
+
+export function addClientRect(el: SVGElement, svg: SVGSVGElement) {
+  const crData = el.getBoundingClientRect()
+  const clientRect = document.createElementNS("http://www.w3.org/2000/svg", "rect"); // Create a path in SVG's namespace
+  clientRect.setAttribute("x", crData.left.toString());
+  clientRect.setAttribute("y", crData.top.toString());
+  clientRect.setAttribute("height", crData.height.toString());
+  clientRect.setAttribute("width", crData.width.toString());
+  clientRect.style.fill = "#0000";
+  clientRect.style.stroke = "#900";
+  svg.appendChild(clientRect);
+  console.log("Added clientRectangle ", /*clientRect,*/ crData);
+}

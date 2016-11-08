@@ -89,19 +89,6 @@ function getSwitches(svg: SVGSVGElement): Switch[] {
   return switches;
 }
 
-function addClientRect(el: SVGElement, svg: SVGSVGElement) {
-  const crData = el.getBoundingClientRect()
-  const clientRect = document.createElementNS("http://www.w3.org/2000/svg", "rect"); // Create a path in SVG's namespace
-  clientRect.setAttribute("x", crData.left.toString());
-  clientRect.setAttribute("y", crData.top.toString());
-  clientRect.setAttribute("height", crData.height.toString());
-  clientRect.setAttribute("width", crData.width.toString());
-  clientRect.style.fill = "#0000";
-  clientRect.style.stroke = "#900";
-  svg.appendChild(clientRect);
-  console.log("Added clientRectangle ", clientRect, crData);
-}
-
 function getPowerlines(svg: SVGSVGElement): Powerline[] {
     const powerlinesLayer = svg.querySelector("#powerlines");
     const powerlineElements = powerlinesLayer.getElementsByTagName("path");
