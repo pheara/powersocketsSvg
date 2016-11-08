@@ -24,6 +24,17 @@ export function delay(milliseconds: number): Promise<void> {
     );
 }
 
+/**
+ * Draws a dark-red circle at the specified coordinates.
+ */
+export function markCoords(svg: SVGSVGElement, x: number, y: number) {
+  const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle"); // Create a path in SVG's namespace
+  circle.setAttribute("cx", x.toString());
+  circle.setAttribute("cy", y.toString());
+  circle.setAttribute("r", "8");
+  circle.style.fill = "#900";
+  svg.appendChild(circle);
+}
 
 export function addClientRect(el: SVGElement, svg: SVGSVGElement) {
   const crData = el.getBoundingClientRect()

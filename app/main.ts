@@ -21,6 +21,7 @@ import "wout/svg.js";
 import {
   hasJSType,
   contains,
+  markCoords,
 } from "utils";
 
 const blueprintSVG = document.getElementById("blueprint");
@@ -88,10 +89,10 @@ function isPowered(
       // console.log("powerable attached to: ", connectedWith.generators, connectedWith.switches);
 
       if (connectedWith.generators.length > 0) {
-        markCoords(map.element, otherEnd.x, otherEnd.y);
+        // markCoords(map.element, otherEnd.x, otherEnd.y);
         return true;
       } else if (connectedWith.switches.length > 0) {
-        markCoords(map.element, otherEnd.x, otherEnd.y);
+        // markCoords(map.element, otherEnd.x, otherEnd.y);
         for (const swtch of connectedWith.switches) {
           // recurse into the switch (but avoid going back)
           if(!visited.has(swtch) && isPowered(swtch, map, visited)) {
@@ -176,20 +177,6 @@ function insideRect(rect: Rectangle, point: Point): boolean {
            rect.pos.y <= point.y &&
            point.y <= rect.pos.y + rect.height;
 }
-
-
-/**
- * Draws a dark-red circle at the specified coordinates.
- */
-function markCoords(svg: SVGSVGElement, x: number, y: number) {
-  const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle"); // Create a path in SVG's namespace
-  circle.setAttribute("cx", x.toString());
-  circle.setAttribute("cy", y.toString());
-  circle.setAttribute("r", "8");
-  circle.style.fill = "#900";
-  svg.appendChild(circle);
-}
-
 
 // ------------- //
 
