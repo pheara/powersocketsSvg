@@ -51,36 +51,43 @@
   100% { transform: rotate(360deg);}
 }
 
-/*TODO animation should bounce */
 @-webkit-keyframes tick1 {
   0% { -webkit-transform: rotate(0deg); }
 
-  15% { -webkit-transform: rotate(0deg); }
-  25% { -webkit-transform: rotate(90deg); }
+  15% { -webkit-transform: rotate(0deg); } /* tick start*/
+  23% { -webkit-transform: rotate(100deg); } /* bounce */
+  25% { -webkit-transform: rotate(90deg); } /* tick end */
 
   40% { -webkit-transform: rotate(90deg); }
+  48% { -webkit-transform: rotate(190deg); }
   50% { -webkit-transform: rotate(180deg); }
 
   65% { -webkit-transform: rotate(180deg); }
+  73% { -webkit-transform: rotate(280deg); }
   75% { -webkit-transform: rotate(270deg); }
 
   90% { -webkit-transform: rotate(270deg); }
+  98% { -webkit-transform: rotate(370deg);}
   100% { -webkit-transform: rotate(360deg);}
 }
 
 @-keyframes tick1 {
   0% { transform: rotate(0deg); }
 
-  15% { transform: rotate(0deg); }
-  25% { transform: rotate(90deg); }
+  15% { transform: rotate(0deg); } /* tick start*/
+  23% { transform: rotate(100deg); } /* bounce */
+  25% { transform: rotate(90deg); } /* tick end */
 
   40% { transform: rotate(90deg); }
+  48% { transform: rotate(190deg); }
   50% { transform: rotate(180deg); }
 
   65% { transform: rotate(180deg); }
+  73% { transform: rotate(280deg); }
   75% { transform: rotate(270deg); }
 
   90% { transform: rotate(270deg); }
+  98% { transform: rotate(370deg);}
   100% { transform: rotate(360deg);}
 }
 
