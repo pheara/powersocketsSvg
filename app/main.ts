@@ -72,7 +72,7 @@ function isPowered(
   map,
   visited = new Set<Rectangle | Switch>()
 ): boolean {
-  if( contains(map.generators, powerable)) {
+  if (contains(map.generators, powerable)) {
     // reached a generator, stuff is powered.
     return true;
   } else { // switch or socket
@@ -95,7 +95,7 @@ function isPowered(
         // markCoords(map.element, otherEnd.x, otherEnd.y);
         for (const swtch of connectedWith.switches) {
           // recurse into the switch (but avoid going back)
-          if(!visited.has(swtch) && isPowered(swtch, map, visited)) {
+          if (!visited.has(swtch) && isPowered(swtch, map, visited)) {
             return true;
           }
           // ...const otherEnd... (recurses)

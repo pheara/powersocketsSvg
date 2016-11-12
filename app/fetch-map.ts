@@ -110,12 +110,12 @@ function parseAndSetRotationPivots(data) {
     const center2pivot = {
       x: getAttr("inkscape:transform-center-x"),
       y: getAttr("inkscape:transform-center-y"),
-    }
-    const bounds = el.getBoundingClientRect()
+    };
+    const bounds = el.getBoundingClientRect();
     const transformOrigin = { // preparation for the css class
       x: 1 / 2 + (center2pivot.x / bounds.width),
       y: 1 / 2 - (center2pivot.y / bounds.height),
-    }
+    };
     el.style.transformOrigin =
       (transformOrigin.x * 100).toString() + "% " +
       (transformOrigin.y * 100).toString() + "%";
