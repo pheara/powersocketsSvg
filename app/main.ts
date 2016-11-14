@@ -89,10 +89,10 @@ function isPowered(
       // console.log("powerable attached to: ", connectedWith.generators, connectedWith.switches);
 
       if (connectedWith.generators.length > 0) {
-        // markCoords(map.element, otherEnd.x, otherEnd.y);
+        markCoords(map.element, otherEnd.x, otherEnd.y);
         return true;
       } else if (connectedWith.switches.length > 0) {
-        // markCoords(map.element, otherEnd.x, otherEnd.y);
+        markCoords(map.element, otherEnd.x, otherEnd.y);
         for (const swtch of connectedWith.switches) {
           // recurse into the switch (but avoid going back)
           if (!visited.has(swtch) && isPowered(swtch, map, visited)) {

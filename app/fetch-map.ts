@@ -15,6 +15,8 @@ export function loadMap(url: string, mountpoint: string) {
   const mapDataPromise = fetchSvg(url).then(svg => {
     const backgroundDiv = document.getElementById(mountpoint);
     if (backgroundDiv) {
+      // backgroundDiv.appendChild(svg);
+      // height/width vs viewBox might be the difference
       /**
        * Some parsing needs to happen before mounting,
        * e.g. there's some additional tranformation
@@ -22,6 +24,7 @@ export function loadMap(url: string, mountpoint: string) {
        * after mounting, that skews position extraction.
        */
       const data = extractMapData(svg);
+
       let rect = data.sockets[0];
       let toAbs = makeConverterToAbsoluteCoords(svg, rect.element);
       console.log("to abs 1: ", toAbs(rect.pos));
@@ -32,6 +35,7 @@ export function loadMap(url: string, mountpoint: string) {
        * mount the svg
        */
       backgroundDiv.appendChild(svg);
+
       toAbs = makeConverterToAbsoluteCoords(svg, rect.element);
       console.log("to abs 2: ", toAbs(rect.pos)); // doesn't match up with the same vec above
       console.log("to abs 2: ", toAbs({x: 0, y: 0}));
@@ -85,6 +89,11 @@ function extractMapData(svg: SVGSVGElement) {
   const switches = getSwitches(svg);
   const sockets = getRectanglesInLayer(svg, "sockets");
   const generators = getRectanglesInLayer(svg, "generators");
+
+  console.log("before mount: ", powerlines[0]);
+  delay(1000).then(() => {
+    console.log("after mount: ", getPowerlines(svg)[0]);
+  });
 
   return {
     powerlines,
