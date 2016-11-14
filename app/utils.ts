@@ -36,6 +36,37 @@ export function markCoords(svg: SVGSVGElement, x: number, y: number) {
   svg.appendChild(circle);
 }
 
+/**
+* Sets up a mark that gets painted every 100ms if the condition
+* function returns true.
+* Returns a function to stop painting the mark.
+*/
+export function markCoordsLive(svg: SVGSVGElement, x: number, y: number, condition: () => boolean) {
+  let mark;
+  const clearMark = () => {
+    if(mark) {
+      svg.removeChild(mark);
+      mark = undefined;
+    }
+  }
+  const updateMark = () => {
+    clearMark();
+    if(condition()) {
+      mark = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      mark.setAttribute("cx", x.toString());
+      mark.setAttribute("cy", y.toString());
+      mark.setAttribute("r", "8");
+      mark.style.fill = "#900";
+      svg.appendChild(mark);
+    }
+  }
+  const intervalId = setInterval(updateMark, 100);
+  return () => {
+    clearMark();
+    clearInterval(intervalId);
+  }
+}
+
 export function addClientRect(el: SVGElement, svg: SVGSVGElement) {
   const crData = el.getBoundingClientRect()
   const clientRect = document.createElementNS("http://www.w3.org/2000/svg", "rect"); // Create a path in SVG's namespace

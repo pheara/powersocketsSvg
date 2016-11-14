@@ -22,6 +22,7 @@ import {
   hasJSType,
   contains,
   markCoords,
+  markCoordsLive,
 } from "utils";
 
 const blueprintSVG = document.getElementById("blueprint");
@@ -51,8 +52,10 @@ loadMap("demo.svg", "background").then(data => {
    */
   for (const s of data.sockets) {
 
+    markCoordsLive(data.element, s.pos.x, s.pos.y, () => isPowered(s, data));
+
     if (isPowered(s, data)) {
-      markCoords(data.element, s.pos.x, s.pos.y);
+      // markCoords(data.element, s.pos.x, s.pos.y);
     }
     s.element.addEventListener("click", e => {
       if (isPowered(s, data)) {
