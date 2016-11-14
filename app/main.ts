@@ -52,7 +52,7 @@ loadMap("demo.svg", "background").then(data => {
    */
   for (const s of data.sockets) {
 
-    // markCoordsLive(data.element, s.pos.x, s.pos.y, () => isPowered(s, data));
+    markCoordsLive(data.element, s.pos.x, s.pos.y, () => isPowered(s, data));
 
     if (isPowered(s, data)) {
       // markCoords(data.element, s.pos.x, s.pos.y);

@@ -42,27 +42,23 @@ export function markCoords(svg: SVGSVGElement, x: number, y: number) {
 * Returns a function to stop painting the mark.
 */
 export function markCoordsLive(svg: SVGSVGElement, x: number, y: number, condition: () => boolean) {
-  let mark;
-  const clearMark = () => {
-    if(mark) {
-      svg.removeChild(mark);
-      mark = undefined;
-    }
-  }
+  let mark = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  mark.setAttribute("cx", x.toString());
+  mark.setAttribute("cy", y.toString());
+  mark.setAttribute("r", "8");
+  mark.style.fill = "#900";
+  svg.appendChild(mark);
+
   const updateMark = () => {
-    clearMark();
     if(condition()) {
-      mark = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-      mark.setAttribute("cx", x.toString());
-      mark.setAttribute("cy", y.toString());
-      mark.setAttribute("r", "8");
-      mark.style.fill = "#900";
-      svg.appendChild(mark);
+      mark.style.display = ""; // not "none"
+    } else {
+      mark.style.display = "none";
     }
   }
   const intervalId = setInterval(updateMark, 100);
   return () => {
-    clearMark();
+    svg.removeChild(mark);
     clearInterval(intervalId);
   }
 }
