@@ -52,7 +52,7 @@ loadMap("demo.svg", "background").then(data => {
    */
   for (const s of data.sockets) {
 
-    markCoordsLive(data.element, s.pos.x, s.pos.y, () => isPowered(s, data));
+    // markCoordsLive(data.element, s.pos.x, s.pos.y, () => isPowered(s, data));
 
     if (isPowered(s, data)) {
       // markCoords(data.element, s.pos.x, s.pos.y);
@@ -92,10 +92,10 @@ function isPowered(
       // console.log("powerable attached to: ", connectedWith.generators, connectedWith.switches);
 
       if (connectedWith.generators.length > 0) {
-        markCoords(map.element, otherEnd.x, otherEnd.y);
+        // markCoords(map.element, otherEnd.x, otherEnd.y);
         return true;
       } else if (connectedWith.switches.length > 0) {
-        markCoords(map.element, otherEnd.x, otherEnd.y);
+        // markCoords(map.element, otherEnd.x, otherEnd.y);
         for (const swtch of connectedWith.switches) {
           // recurse into the switch (but avoid going back)
           if (!visited.has(swtch) && isPowered(swtch, map, visited)) {
