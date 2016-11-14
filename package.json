@@ -4,6 +4,7 @@
   "dependencies": {},
   "scripts": {
     "postinstall": "jspm install && npm run build",
+    "serve": "npm run build && nws",
     "build": "gulp build",
     "watch": "gulp watch",
     "clean": "gulp clean"
@@ -14,6 +15,7 @@
     "gulp-sourcemaps": "^1.6.0",
     "gulp-typescript": "^3.0.2",
     "jspm": "^0.16.15",
+    "nws": "^1.1.1",
     "typescript": "^2.0.3",
     "typings": "^1.4.0"
   },
