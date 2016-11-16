@@ -22,6 +22,7 @@ import {
   hasJSType,
   contains,
   markCoords,
+  markCoordsLive,
 } from "utils";
 
 const blueprintSVG = document.getElementById("blueprint");
@@ -51,8 +52,10 @@ loadMap("demo.svg", "background").then(data => {
    */
   for (const s of data.sockets) {
 
+    markCoordsLive(data.element, s.pos.x, s.pos.y, () => isPowered(s, data));
+
     if (isPowered(s, data)) {
-      markCoords(data.element, s.pos.x, s.pos.y);
+      // markCoords(data.element, s.pos.x, s.pos.y);
     }
     s.element.addEventListener("click", e => {
       if (isPowered(s, data)) {
@@ -72,7 +75,7 @@ function isPowered(
   map,
   visited = new Set<Rectangle | Switch>()
 ): boolean {
-  if( contains(map.generators, powerable)) {
+  if (contains(map.generators, powerable)) {
     // reached a generator, stuff is powered.
     return true;
   } else { // switch or socket
@@ -95,7 +98,7 @@ function isPowered(
         // markCoords(map.element, otherEnd.x, otherEnd.y);
         for (const swtch of connectedWith.switches) {
           // recurse into the switch (but avoid going back)
-          if(!visited.has(swtch) && isPowered(swtch, map, visited)) {
+          if (!visited.has(swtch) && isPowered(swtch, map, visited)) {
             return true;
           }
           // ...const otherEnd... (recurses)
