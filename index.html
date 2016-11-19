@@ -3,8 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- see http://getbootstrap.com/css/#overview-mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <!-- user should not scale the game  https://www.html5rocks.com/en/mobile/touch/
+    https://www.html5rocks.com/en/mobile/mobifying/#toc-meta-viewport  -->
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> --> <!-- see http://getbootstrap.com/css/#overview-mobile -->
     <title>Typescript test</title>
+
+    <div id="points">
+      Points: 0
+    </div>
+
     <style>
     /*
 #switches path {
@@ -99,7 +107,7 @@
     <div id="background"></div>
     <div id="svgJsMount"></div>
 
-    <img src="./demo.svg" id="blueprint" alt="blueprint for the level" />
+  <!--  <img src="./demo.svg" id="blueprint" alt="blueprint for the level" /> -->
 
 
 <script src="./jspm_packages/system.js"></script>

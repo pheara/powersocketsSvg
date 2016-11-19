@@ -23,10 +23,20 @@ import {
   contains,
   markCoords,
   markCoordsLive,
+  vibrate,
 } from "utils";
 
 const blueprintSVG = document.getElementById("blueprint");
+let points: number = 0; ///points, adding according to how long someone is pressing the right socket
+var timer /*= setInterval( addpoints(), 1000 )*/;
 
+//var timer1 = setInterval(function() { points++; console.log(points) }, 2000);
+
+/*function addpoints(){
+
+  points++;
+  console.log("lulu" + points);
+}*/
 
 // To enable automatic sub-pixel offset correction when the window is resized:
 // SVG.on(window, 'resize', function() { draw.spof() })
@@ -50,6 +60,7 @@ loadMap("demo.svg", "background").then(data => {
    * naive collision (only works with sockets that
    * are directly connected to a generator)
    */
+
   for (const s of data.sockets) {
 
     markCoordsLive(data.element, s.pos.x, s.pos.y, () => isPowered(s, data));
@@ -58,14 +69,60 @@ loadMap("demo.svg", "background").then(data => {
       // markCoords(data.element, s.pos.x, s.pos.y);
     }
     s.element.addEventListener("click", e => {
-      if (isPowered(s, data)) {
+      /*if (isPowered(s, data)) {
+        vibrate();
         console.log("clicked powered socket *brzzl*");
       } else {
         console.log("that socket is safe *phew*");
-      }
+      }*/
+      //setInterval ( "checkAndAddPoints()", 100 ); //check every 0.1s
+
     });
+
+    s.element.addEventListener('touchstart', e => {
+
+      timer = setInterval( function() {
+
+        //console.log("spustiala ma janka");
+
+        if (isPowered(s, data)) {
+          //not good should vibrate
+
+          vibrate();
+          console.log("clicked powered socket *brzzl*");
+        } else {
+          console.log("that socket is safe *phew*");
+
+          //add points for every touch for every 0.1 second
+          points++;
+
+          //console.log(points + "  points");
+          document.getElementById("points").innerHTML = "Points " + points;
+        }
+
+      }, 100 ); //check every 0.1s
+
+
+    }, false);
+
+    s.element.addEventListener('touchend', e => {
+      ///tbd
+      clearInterval(timer);
+      //console.log("janka pustila");
+
+    }, false);
+
+
+    /*
+    http://www.elated.com/articles/javascript-timers-with-settimeout-and-setinterval/
+
+    */
+
+
+
   }
 });
+
 
 
 // ------------- //

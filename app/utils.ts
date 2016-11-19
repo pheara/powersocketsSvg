@@ -75,3 +75,20 @@ export function addClientRect(el: SVGElement, svg: SVGSVGElement) {
   svg.appendChild(clientRect);
   console.log("Added clientRectangle ", /*clientRect,*/ crData);
 }
+
+
+/*
+  https://www.sitepoint.com/use-html5-vibration-api/
+  https://davidwalsh.name/vibration-api
+*/
+export function vibrate(){
+  // enable vibration support
+  navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
+
+
+  if ("vibrate" in navigator) {
+	// vibration API supported
+    navigator.vibrate([500, 300, 100]);
+    console.log("I am vibrating!!");
+  }
+}
