@@ -28,8 +28,11 @@ import {
 
 const blueprintSVG = document.getElementById("blueprint");
 let points: number = 0; ///points, adding according to how long someone is pressing the right socket
-var timer;
+let timeLevel: number = 100;
+var timer, levelTimer;
 let touchedSockets: Array<Socket> = [];
+
+levelTimer = setInterval(() => {timeLevel--; document.getElementById("timeLeft").innerHTML = "Time left: " + timeLevel;}, 1000 );
 
 // To enable automatic sub-pixel offset correction when the window is resized:
 // SVG.on(window, 'resize', function() { draw.spof() })
@@ -95,7 +98,7 @@ loadMap("demo.svg", "background").then(data => {
 
       touchedSockets.splice(touchedSockets.indexOf(s));
 
-      document.getElementById("touches").innerHTML += " touch end " + touchedSockets.length;
+      document.getElementById("touches").innerHTML = " touch end " + touchedSockets.length;
 
       if (touchedSockets.length == 0){
         clearInterval(timer);
@@ -103,7 +106,7 @@ loadMap("demo.svg", "background").then(data => {
 
     }, false);
   }
-  
+
 });
 
 
@@ -125,6 +128,20 @@ function addpoints(touchedSockets, data){
       console.log("that socket is safe *phew*");
 
       points += touchedSockets.length;
+
+      document.getElementById("progress").innerHTML = points + "%";
+      document.getElementById("progress").style = "width:" + points + "%";
+
+      if (points > 20 && points < 50) {
+        document.getElementById("progress").classList.remove('progress-bar-danger');
+        document.getElementById("progress").classList.add('progress-bar-warning');
+      } else if (points > 50) {
+        document.getElementById("progress").classList.remove('progress-bar-warning');
+        document.getElementById("progress").classList.add('progress-bar-success');
+      } else {
+        //
+      }
+
 
       document.getElementById("points").innerHTML = "Points " + points;
     }
