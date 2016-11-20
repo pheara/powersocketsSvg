@@ -28,15 +28,8 @@ import {
 
 const blueprintSVG = document.getElementById("blueprint");
 let points: number = 0; ///points, adding according to how long someone is pressing the right socket
-var timer /*= setInterval( addpoints(), 1000 )*/;
-
-//var timer1 = setInterval(function() { points++; console.log(points) }, 2000);
-
-/*function addpoints(){
-
-  points++;
-  console.log("lulu" + points);
-}*/
+var timer;
+let touchedSockets: Array<Socket> = [];
 
 // To enable automatic sub-pixel offset correction when the window is resized:
 // SVG.on(window, 'resize', function() { draw.spof() })
@@ -61,6 +54,9 @@ loadMap("demo.svg", "background").then(data => {
    * are directly connected to a generator)
    */
 
+
+  let pointAdd: number = 0; //points add according to how many sockets are pressed
+
   for (const s of data.sockets) {
 
     markCoordsLive(data.element, s.pos.x, s.pos.y, () => isPowered(s, data));
@@ -83,58 +79,58 @@ loadMap("demo.svg", "background").then(data => {
 
       e.preventDefault();
 
-      timer = setInterval( function() {
+      touchedSockets.push(s);
 
-        //console.log("spustiala ma janka");
-
-        if (isPowered(s, data)) {
-          //not good should vibrate
-
-          vibrate();
-          console.log("clicked powered socket *brzzl*");
-
-          //has to stop timer otherwise it would not stop
-          clearInterval(timer);
-
-        } else {
-          console.log("that socket is safe *phew*");
-
-          //add points for every touch for every 0.1 second
-          points++;
-
-          //console.log(points + "  points");
-          document.getElementById("points").innerHTML = "Points " + points;
-        }
-
-
-      }, 100 ); //check every 0.1s
+      if (touchedSockets.length > 1){
+        document.getElementById("touches").innerHTML += " touches " + + touchedSockets.length;
+      } else {
+        timer = setInterval(() => addpoints(touchedSockets, data), 100 ); /// () => has to be there
+        document.getElementById("touches").innerHTML += touchedSockets.length;
+      }
 
 
     }, false);
 
     s.element.addEventListener('touchend', e => {
 
-      e.preventDefault();
+      touchedSockets.splice(touchedSockets.indexOf(s));
 
-      clearInterval(timer);
-      //console.log("janka pustila");
+      document.getElementById("touches").innerHTML += " touch end " + touchedSockets.length;
+
+      if (touchedSockets.length == 0){
+        clearInterval(timer);
+      }
 
     }, false);
-
-
-    /*
-    http://www.elated.com/articles/javascript-timers-with-settimeout-and-setinterval/
-
-    */
-
-
-
   }
+  
 });
 
 
 
 // ------------- //
+function addpoints(touchedSockets, data){
+
+  for	(let ts	of	touchedSockets)	{
+
+    if (isPowered(ts, data)) {
+
+      vibrate();
+      console.log("clicked powered socket *brzzl*");
+
+      clearInterval(timer);
+      //touchedSockets.splice(touchedSockets.indexOf(ts));
+
+    } else {
+      console.log("that socket is safe *phew*");
+
+      points += touchedSockets.length;
+
+      document.getElementById("points").innerHTML = "Points " + points;
+    }
+  }
+}
+
 
 function isPowered(
   powerable: Rectangle | Switch,
