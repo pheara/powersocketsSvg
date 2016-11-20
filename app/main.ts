@@ -81,6 +81,8 @@ loadMap("demo.svg", "background").then(data => {
 
     s.element.addEventListener('touchstart', e => {
 
+      e.preventDefault();
+
       timer = setInterval( function() {
 
         //console.log("spustiala ma janka");
@@ -90,6 +92,10 @@ loadMap("demo.svg", "background").then(data => {
 
           vibrate();
           console.log("clicked powered socket *brzzl*");
+
+          //has to stop timer otherwise it would not stop
+          clearInterval(timer);
+
         } else {
           console.log("that socket is safe *phew*");
 
@@ -100,13 +106,16 @@ loadMap("demo.svg", "background").then(data => {
           document.getElementById("points").innerHTML = "Points " + points;
         }
 
+
       }, 100 ); //check every 0.1s
 
 
     }, false);
 
     s.element.addEventListener('touchend', e => {
-      ///tbd
+
+      e.preventDefault();
+
       clearInterval(timer);
       //console.log("janka pustila");
 
