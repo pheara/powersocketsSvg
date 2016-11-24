@@ -51,7 +51,7 @@ fetch("demo.svg")
   // TODO the mounted svg is 0x0 of size but contains all the necessary DOM
 });
 
-loadMap("level1.svg", "background").then(data => {
+loadMap("level4.svg", "background").then(data => {
   /*
    * naive collision (only works with sockets that
    * are directly connected to a generator)
