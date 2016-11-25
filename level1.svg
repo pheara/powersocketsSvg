@@ -23,17 +23,17 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1301"
-     inkscape:window-height="744"
+     inkscape:window-width="1920"
+     inkscape:window-height="1056"
      id="namedview4153"
      showgrid="true"
-     inkscape:zoom="1.6794956"
-     inkscape:cx="189.16409"
-     inkscape:cy="155.17799"
-     inkscape:window-x="65"
+     inkscape:zoom="3.3589912"
+     inkscape:cx="82.300756"
+     inkscape:cy="163.0462"
+     inkscape:window-x="0"
      inkscape:window-y="24"
      inkscape:window-maximized="1"
-     inkscape:current-layer="powerlines"
+     inkscape:current-layer="svg2"
      inkscape:object-paths="true"
      inkscape:snap-intersection-paths="true"
      inkscape:object-nodes="true"
@@ -72,9 +72,10 @@
      id="powerlines">
     <path
        id="path4152"
-       d="m 109.15214,55.189092 0,33.107226 64.86815,0 0,19.379832"
+       d="m 109.15214,55.189092 0,33.107226 64.86815,0 0,10"
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.04663455px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccc" />
     <path
        id="path4154"
        d="m 184.07984,118.29632 49.1572,0 0,65.6462"
@@ -102,6 +103,13 @@
        width="54.208466"
        id="rect4209"
        style="opacity:1;fill:#ffa300;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <rect
+       style="opacity:1;fill:#ffa300;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect4150"
+       width="54.208466"
+       height="54.208466"
+       x="-76.05526"
+       y="58.95356" />
   </g>
   <g
      transform="translate(83.22023,36.810041)"
@@ -133,16 +141,5 @@
        inkscape:transform-center-x="-10.86527"
        inkscape:transform-center-y="2.0434903"
        sodipodi:nodetypes="ccccc" />
-  </g>
-  <g
-     id="g3370"
-     transform="translate(32.014378,123.14239)">
-    <rect
-       style="opacity:1;fill:#ffa300;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       id="rect3372"
-       width="54.208466"
-       height="54.208466"
-       x="-24.849411"
-       y="-27.378788" />
   </g>
 </svg>
