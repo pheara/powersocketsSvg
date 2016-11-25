@@ -33,6 +33,10 @@ var timer, levelTimer;
 let touchedSockets: Array<Socket> = [];
 
 const timeLeftEl = document.getElementById("timeLeft");
+const touchesEl = document.getElementById("touches");
+const progressEl = document.getElementById("progress");
+const pointsEl = document.getElementById("points");
+
 levelTimer = setInterval(() => {
   timeLevel--;
   if(timeLeftEl) {
@@ -91,10 +95,11 @@ loadMap("level0.svg", "background").then(data => {
       touchedSockets.push(s);
 
       if (touchedSockets.length > 1){
-        document.getElementById("touches").innerHTML += " touches " + + touchedSockets.length;
+        if(touchesEl) touchesEl.innerHTML +=
+          " touches " + touchedSockets.length;
       } else {
         timer = setInterval(() => addpoints(touchedSockets, data), 100 ); /// () => has to be there
-        document.getElementById("touches").innerHTML += touchedSockets.length;
+        if(touchesEl) touchesEl.innerHTML += touchedSockets.length;
       }
 
 
@@ -104,7 +109,7 @@ loadMap("level0.svg", "background").then(data => {
 
       touchedSockets.splice(touchedSockets.indexOf(s));
 
-      document.getElementById("touches").innerHTML = " touch end " + touchedSockets.length;
+      if(touchesEl) touchesEl.innerHTML = " touch end " + touchedSockets.length;
 
       if (touchedSockets.length == 0){
         clearInterval(timer);
@@ -135,21 +140,21 @@ function addpoints(touchedSockets, data){
 
       points += touchedSockets.length;
 
-      document.getElementById("progress").innerHTML = points + "%";
-      document.getElementById("progress").style = "width:" + points + "%";
-
-      if (points > 20 && points < 50) {
-        document.getElementById("progress").classList.remove('progress-bar-danger');
-        document.getElementById("progress").classList.add('progress-bar-warning');
-      } else if (points > 50) {
-        document.getElementById("progress").classList.remove('progress-bar-warning');
-        document.getElementById("progress").classList.add('progress-bar-success');
-      } else {
-        //
+      if(progressEl) {
+        progressEl.innerHTML = points + "%";
+        progressEl.style.width = points + "%";
+        if (points > 20 && points < 50) {
+          progressEl.classList.remove('progress-bar-danger');
+          progressEl.classList.add('progress-bar-warning');
+        } else if (points > 50) {
+          progressEl.classList.remove('progress-bar-warning');
+          progressEl.classList.add('progress-bar-success');
+        } else {
+          //
+        }
       }
 
-
-      document.getElementById("points").innerHTML = "Points " + points;
+      if(pointsEl) pointsEl.innerHTML = "Points " + points;
     }
   }
 }
