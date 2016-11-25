@@ -11,7 +11,7 @@ import {
  } from "utils";
 
 
-export function loadMap(url: string, mountpoint: string) {
+export function loadMap(url: string, mountpoint: string) : Promise<MapData> {
   const mapDataPromise = fetchSvg(url).then(svg => {
     const backgroundDiv = document.getElementById(mountpoint);
     if (backgroundDiv) {
@@ -84,7 +84,7 @@ function fetchSvg(url: string): Promise<SVGSVGElement> {
   return svgPromise;
 }
 
-function extractMapData(svg: SVGSVGElement) {
+function extractMapData(svg: SVGSVGElement): MapData {
   const powerlines = getPowerlines(svg);
   const switches = getSwitches(svg);
   const sockets = getRectanglesInLayer(svg, "sockets");
@@ -104,7 +104,7 @@ function extractMapData(svg: SVGSVGElement) {
   };
 }
 
-function parseAndSetRotationPivots(data) {
+function parseAndSetRotationPivots(data: MapData) {
   for (const s of data.switches) {
     const el = s.element;
 

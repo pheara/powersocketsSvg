@@ -5,6 +5,14 @@
 
 declare module "svg-path-parser";
 
+interface MapData {
+  element: SVGSVGElement,
+  generators: Generator[],
+  sockets: Socket[],
+  switches: Switch[],
+  powerlines: Powerline[],
+}
+
 interface Switch {
   element: SVGPathElement;
 }
