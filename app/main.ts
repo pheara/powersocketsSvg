@@ -61,20 +61,6 @@ levelTimer = setInterval(() => {
 // To enable automatic sub-pixel offset correction when the window is resized:
 // SVG.on(window, 'resize', function() { draw.spof() })
 
-fetch("demo.svg")
-.then(resp => resp.text())
-// .then(resp => resp.blob())
-.then(svgAsText => {
-  // console.log(svgAsText);
-  /*
-  const draw = SVG("svgJsMount");
-  console.log("Draw: ", draw);
-  const svg = draw.svg(svgAsText);
-  console.log("Svg: ", svg);
-  */
-  // TODO the mounted svg is 0x0 of size but contains all the necessary DOM
-});
-
 loadMap("level0.svg", "background").then(data => {
   /*
    * naive collision (only works with sockets that
