@@ -76,15 +76,19 @@ export function addClientRect(el: SVGElement, svg: SVGSVGElement) {
   console.log("Added clientRectangle ", /*clientRect,*/ crData);
 }
 
-
-/*
-  https://www.sitepoint.com/use-html5-vibration-api/
-  https://davidwalsh.name/vibration-api
+/**
+* https://www.sitepoint.com/use-html5-vibration-api/
+* https://davidwalsh.name/vibration-api
 */
 export function vibrate(){
-  // enable vibration support
-  navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
-
+  /* the cast is necessary to silence type-checking
+   * errors as the prefixed variants aren't defined
+   * in lib.d.ts and adding new types to Navigator
+   * didn't seem to work.
+  */
+  const n = (navigator as any);
+  // ensure vibrate is defined
+  n.vibrate = n.vibrate || n.webkitVibrate || n.mozVibrate || n.msVibrate;
 
   if ("vibrate" in navigator) {
 	// vibration API supported
