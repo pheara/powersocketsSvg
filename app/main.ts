@@ -47,7 +47,7 @@ import {
  */
 const blueprintSVG = document.getElementById("blueprint");
 let points: number = 0; ///points, adding according to how long someone is pressing the right socket
-var timer;
+let pointsTimerId;
 
 const timeLeftEl = document.getElementById("timeLeft");
 const touchesEl = document.getElementById("touches");
@@ -120,7 +120,8 @@ function registerInputHandlers(s: Socket, data: MapData) {
       if(touchesEl) touchesEl.innerHTML +=
         " touches " + touchedSockets.length;
     } else {
-      timer = setInterval(() => addpoints(touchedSockets, data), 100 ); /// () => has to be there
+      clearInterval(pointsTimerId);
+      pointsTimerId = setInterval(() => addpoints(touchedSockets, data), 100 ); /// () => has to be there
       if(touchesEl) touchesEl.innerHTML += touchedSockets.length;
     }
 
@@ -134,7 +135,7 @@ function registerInputHandlers(s: Socket, data: MapData) {
     if(touchesEl) touchesEl.innerHTML = " touch end " + touchedSockets.length;
 
     if (touchedSockets.length == 0){
-      clearInterval(timer);
+      clearInterval(pointsTimerId);
     }
 
   }, false);
@@ -177,7 +178,7 @@ function addpoints(touchedSockets, data){
       vibrate();
       console.log("clicked powered socket *brzzl*");
 
-      clearInterval(timer);
+      clearInterval(pointsTimerId);
       //touchedSockets.splice(touchedSockets.indexOf(ts));
 
     } else {
