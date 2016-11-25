@@ -107,15 +107,3 @@ export function getIn(obj:any , path: string[]) {
             return obj && obj[path[0]] && getIn( obj[path[0]] , path.slice(1) )
     }
 }
-
-/**
-* https://www.sitepoint.com/use-html5-vibration-api/
-* https://davidwalsh.name/vibration-api
-*/
-export function vibrate(){
-  if ("vibrate" in navigator) {
-	// vibration API supported
-    navigator.vibrate([500, 300, 100]);
-    console.log("I am vibrating!!");
-  }
-}

@@ -13,7 +13,6 @@ import {
   markCoords,
   markCoordsLive,
   svgElementsAt,
-  vibrate,
 } from "utils";
 
 export function isPowered(

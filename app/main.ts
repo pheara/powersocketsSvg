@@ -36,7 +36,6 @@ import {
   contains,
   markCoords,
   markCoordsLive,
-  vibrate,
   getIn,
   svgElementsAt,
 } from "utils";
@@ -142,6 +141,61 @@ function registerInputHandlers(s: Socket, data: MapData) {
 
 }
 
+// ------------- //
+function addpoints(touchedSockets, data){
+
+  for	(let ts	of	touchedSockets)	{
+
+    if (isPowered(ts, data)) {
+
+      brrzzzl();
+      console.log("clicked powered socket *brzzl*");
+
+      clearInterval(pointsTimerId);
+      //touchedSockets.splice(touchedSockets.indexOf(ts));
+
+    } else {
+      console.log("that socket is safe *phew*");
+
+      points += touchedSockets.length;
+
+      updateProgressBar(points);
+
+      if(pointsEl) pointsEl.innerHTML = "Points " + points;
+    }
+  }
+}
+
+
+function updateProgressBar(points: number): void {
+  if(progressEl) {
+    progressEl.innerHTML = points + "%";
+    progressEl.style.width = points + "%";
+    if (points > 20 && points < 50) {
+      progressEl.classList.remove('progress-bar-danger');
+      progressEl.classList.add('progress-bar-warning');
+    } else if (points > 50) {
+      progressEl.classList.remove('progress-bar-warning');
+      progressEl.classList.add('progress-bar-success');
+    } else {
+      //
+    }
+  }
+}
+
+/**
+* https://www.sitepoint.com/use-html5-vibration-api/
+* https://davidwalsh.name/vibration-api
+*/
+export function brrzzzl(){
+  //TODO visual effect for same duration
+  if ("vibrate" in navigator) {
+	// vibration API supported
+    navigator.vibrate([500, 300, 100]);
+    console.log("I am vibrating!!");
+  }
+}
+
 /**
  * Function to visualise the sockets
  * that are powered (for debug-purposes)
@@ -166,45 +220,6 @@ function unregisterDebugMarkers() {
     }
   }
 }
-
-
-// ------------- //
-function addpoints(touchedSockets, data){
-
-  for	(let ts	of	touchedSockets)	{
-
-    if (isPowered(ts, data)) {
-
-      vibrate();
-      console.log("clicked powered socket *brzzl*");
-
-      clearInterval(pointsTimerId);
-      //touchedSockets.splice(touchedSockets.indexOf(ts));
-
-    } else {
-      console.log("that socket is safe *phew*");
-
-      points += touchedSockets.length;
-
-      if(progressEl) {
-        progressEl.innerHTML = points + "%";
-        progressEl.style.width = points + "%";
-        if (points > 20 && points < 50) {
-          progressEl.classList.remove('progress-bar-danger');
-          progressEl.classList.add('progress-bar-warning');
-        } else if (points > 50) {
-          progressEl.classList.remove('progress-bar-warning');
-          progressEl.classList.add('progress-bar-success');
-        } else {
-          //
-        }
-      }
-
-      if(pointsEl) pointsEl.innerHTML = "Points " + points;
-    }
-  }
-}
-
 
 
 // ------------- //

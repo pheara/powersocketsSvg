@@ -3,7 +3,6 @@ import {
   contains,
   markCoords,
   markCoordsLive,
-  vibrate,
   svgElementsAt,
 } from "utils";
 
