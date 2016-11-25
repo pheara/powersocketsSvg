@@ -32,7 +32,13 @@ let timeLevel: number = 100;
 var timer, levelTimer;
 let touchedSockets: Array<Socket> = [];
 
-levelTimer = setInterval(() => {timeLevel--; document.getElementById("timeLeft").innerHTML = "Time left: " + timeLevel;}, 1000 );
+const timeLeftEl = document.getElementById("timeLeft");
+levelTimer = setInterval(() => {
+  timeLevel--;
+  if(timeLeftEl) {
+    timeLeftEl.innerHTML = "Time left: " + timeLevel;
+  }
+}, 1000 );
 
 // To enable automatic sub-pixel offset correction when the window is resized:
 // SVG.on(window, 'resize', function() { draw.spof() })
