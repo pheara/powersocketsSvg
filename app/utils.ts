@@ -2,7 +2,7 @@ export function valueOr<T>(value: T | undefined | null, deflt: T): T {
   return value? value : deflt;
 }
 
-export function hasJSType(obj: any) {
+export function hasJSType(type: string, obj: any) {
   return Object.prototype.toString.call(obj).slice(8, -1);
 }
 
@@ -87,6 +87,25 @@ export function addClientRect(el: SVGElement, svg: SVGSVGElement) {
   clientRect.style.stroke = "#900";
   svg.appendChild(clientRect);
   console.log("Added clientRectangle ", /*clientRect,*/ crData);
+}
+
+/**
+ * Tries to look up a property-path on a nested object-structure.
+ * Where `obj.x.y` would throw an exception if `x` wasn't defined
+ * `get(obj, ['x','y'])` would return undefined.
+ * @param obj
+ * @param path
+ * @return {*}
+ */
+export function getIn(obj:any , path: string[]) {
+    switch(path.length){
+        case 0:
+            return undefined;
+        case 1:
+            return obj && obj[path[0]];
+        default:
+            return obj && obj[path[0]] && getIn( obj[path[0]] , path.slice(1) )
+    }
 }
 
 /**

@@ -37,89 +37,134 @@ import {
   markCoords,
   markCoordsLive,
   vibrate,
+  getIn,
   svgElementsAt,
 } from "utils";
 
+
+/**
+ * GLOBAL STATE :|
+ */
 const blueprintSVG = document.getElementById("blueprint");
 let points: number = 0; ///points, adding according to how long someone is pressing the right socket
-let timeLevel: number = 100;
-var timer, levelTimer;
-let touchedSockets: Array<Socket> = [];
+var timer;
 
 const timeLeftEl = document.getElementById("timeLeft");
 const touchesEl = document.getElementById("touches");
 const progressEl = document.getElementById("progress");
 const pointsEl = document.getElementById("points");
+let timeLevel: number = 100;
+let currentMapData: MapData;
+let unregisterDebugMarker: Array<() => void> = [];
+let touchedSockets: Array<Socket> = [];
+let levelTimerId: number | undefined;
 
-levelTimer = setInterval(() => {
-  timeLevel--;
-  if(timeLeftEl) {
-    timeLeftEl.innerHTML = "Time left: " + timeLevel;
-  }
-}, 1000 );
 
 // To enable automatic sub-pixel offset correction when the window is resized:
 // SVG.on(window, 'resize', function() { draw.spof() })
 
-loadMap("level0.svg", "background").then(data => {
-  /*
-   * naive collision (only works with sockets that
-   * are directly connected to a generator)
-   */
+/*
+ * START GAME
+ */
+gotoLevelN(0);
 
+// debugging: test level switch
+// setTimeout(() => gotoLevelN(1), 5000);
 
-  let pointAdd: number = 0; //points add according to how many sockets are pressed
-
-  for (const s of data.sockets) {
-
-    markCoordsLive(data.element, s.pos.x, s.pos.y, () => isPowered(s, data));
-
-    if (isPowered(s, data)) {
-      // markCoords(data.element, s.pos.x, s.pos.y);
+function gotoLevelN(levelNr: number) {
+  cleanMap();
+  console.log(`Loading level ${levelNr}`);
+  loadMap(`level${levelNr}.svg`, "background").then((data: MapData) => {
+    setupLevelTimer();
+    currentMapData = data;
+    markPoweredSockets(data);
+    for (const s of data.sockets) {
+      registerInputHandlers(s, data);
     }
-    s.element.addEventListener("click", e => {
-      /*if (isPowered(s, data)) {
-        vibrate();
-        console.log("clicked powered socket *brzzl*");
-      } else {
-        console.log("that socket is safe *phew*");
-      }*/
-      //setInterval ( "checkAndAddPoints()", 100 ); //check every 0.1s
+  })
+}
 
-    });
+function cleanMap() {
+  unregisterDebugMarkers();
 
-    s.element.addEventListener('touchstart', e => {
-
-      e.preventDefault();
-
-      touchedSockets.push(s);
-
-      if (touchedSockets.length > 1){
-        if(touchesEl) touchesEl.innerHTML +=
-          " touches " + touchedSockets.length;
-      } else {
-        timer = setInterval(() => addpoints(touchedSockets, data), 100 ); /// () => has to be there
-        if(touchesEl) touchesEl.innerHTML += touchedSockets.length;
-      }
-
-
-    }, false);
-
-    s.element.addEventListener('touchend', e => {
-
-      touchedSockets.splice(touchedSockets.indexOf(s));
-
-      if(touchesEl) touchesEl.innerHTML = " touch end " + touchedSockets.length;
-
-      if (touchedSockets.length == 0){
-        clearInterval(timer);
-      }
-
-    }, false);
+  if(levelTimerId) {
+    clearInterval(levelTimerId);
   }
 
-});
+  // make sure svg is removed from DOM
+  if(currentMapData) {
+    currentMapData.element.remove();
+  }
+}
 
+function setupLevelTimer() {
+  levelTimerId = setInterval(() => {
+    timeLevel--;
+    if(timeLevel <= 0) {
+      // TODO timeout
+    }
+    if(timeLeftEl) {
+      timeLeftEl.innerHTML = "Time left: " + Math.max(timeLevel, 0);
+    }
+  }, 1000 );
+}
+
+function registerInputHandlers(s: Socket, data: MapData) {
+  s.element.addEventListener('touchstart', e => {
+
+    e.preventDefault();
+
+    touchedSockets.push(s);
+
+    if (touchedSockets.length > 1){
+      if(touchesEl) touchesEl.innerHTML +=
+        " touches " + touchedSockets.length;
+    } else {
+      timer = setInterval(() => addpoints(touchedSockets, data), 100 ); /// () => has to be there
+      if(touchesEl) touchesEl.innerHTML += touchedSockets.length;
+    }
+
+
+  }, false);
+
+  s.element.addEventListener('touchend', e => {
+
+    touchedSockets.splice(touchedSockets.indexOf(s));
+
+    if(touchesEl) touchesEl.innerHTML = " touch end " + touchedSockets.length;
+
+    if (touchedSockets.length == 0){
+      clearInterval(timer);
+    }
+
+  }, false);
+
+}
+
+/**
+ * Function to visualise the sockets
+ * that are powered (for debug-purposes)
+ */
+function markPoweredSockets(mapData: MapData) {
+  for (const s of mapData.sockets) {
+    // mark powered sockets
+    const unregister = markCoordsLive(
+      mapData.element, s.pos.x, s.pos.y,
+      () => isPowered(s, mapData)
+    );
+    unregisterDebugMarker.push(unregister);
+  }
+}
+
+function unregisterDebugMarkers() {
+  let unregister;
+  while(unregister = unregisterDebugMarker.pop()){
+    if(unregister && hasJSType("Function", unregister)) {
+      console.log("Unregistering debug mark");
+      unregister();
+    }
+  }
+}
 
 
 // ------------- //
