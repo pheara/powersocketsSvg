@@ -37,6 +37,19 @@ export function markCoords(svg: SVGSVGElement, x: number, y: number) {
 }
 
 /**
+  * adapted from source of
+  * <http://xn--dahlstrm-t4a.net/svg/interactivity/intersection/sandbox_hover.svg>
+  */
+export function svgElementsAt(pt: Point, svg: SVGSVGElement) {
+    const svgRect = svg.createSVGRect();
+    svgRect.x = pt.x;
+    svgRect.y = pt.y;
+    svgRect.width = svgRect.height = 1;
+    // let list = svg.getIntersectionList(svgRect, null);
+    return svg.getIntersectionList(svgRect, svg);
+}
+
+/**
 * Sets up a mark that gets painted every 100ms if the condition
 * function returns true.
 * Returns a function to stop painting the mark.

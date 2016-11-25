@@ -4,6 +4,7 @@ import {
   markCoords,
   markCoordsLive,
   vibrate,
+  svgElementsAt,
 } from "utils";
 
 export function piecesAt(map, pt: Point) {
@@ -22,18 +23,6 @@ export function piecesAt(map, pt: Point) {
   };
 }
 
-/**
-  * adapted from source of
-  * <http://xn--dahlstrm-t4a.net/svg/interactivity/intersection/sandbox_hover.svg>
-  */
-export function svgElementsAt(pt: Point, svg: SVGSVGElement) {
-    const svgRect = svg.createSVGRect();
-    svgRect.x = pt.x;
-    svgRect.y = pt.y;
-    svgRect.width = svgRect.height = 1;
-    // let list = svg.getIntersectionList(svgRect, null);
-    return svg.getIntersectionList(svgRect, svg);
-}
 
 /**
  * Returns the powerlines connectected to a Generator/Socket/Switch
