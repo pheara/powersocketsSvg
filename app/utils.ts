@@ -81,15 +81,6 @@ export function addClientRect(el: SVGElement, svg: SVGSVGElement) {
 * https://davidwalsh.name/vibration-api
 */
 export function vibrate(){
-  /* the cast is necessary to silence type-checking
-   * errors as the prefixed variants aren't defined
-   * in lib.d.ts and adding new types to Navigator
-   * didn't seem to work.
-  */
-  const n = (navigator as any);
-  // ensure vibrate is defined
-  n.vibrate = n.vibrate || n.webkitVibrate || n.mozVibrate || n.msVibrate;
-
   if ("vibrate" in navigator) {
 	// vibration API supported
     navigator.vibrate([500, 300, 100]);
