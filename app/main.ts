@@ -67,7 +67,7 @@ resetLevelData(); // establish default values
 /*
  * START GAME
  */
-gotoLevelN(0);
+gotoLevelN(currentLevelNr);
 
 
 
@@ -105,6 +105,11 @@ function unregisterPrevious() {
 
 // debugging: test level switch
 // setTimeout(() => gotoLevelN(1), 5000);
+
+function gotoNextLevel() {
+  currentLevelNr++;
+  return gotoLevelN(currentLevelNr);
+}
 
 function gotoLevelN(levelNr: number) {
   resetLevelData();
@@ -183,6 +188,9 @@ function addpoints(touchedSockets, data){
       points += touchedSockets.length * 2;
       points = Math.min(points, 100);
 
+      if(points >= 100) {
+        gotoNextLevel();
+      }
 
       updateProgressBar(points);
 
