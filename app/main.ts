@@ -158,6 +158,8 @@ function addpoints(touchedSockets, data){
       console.log("that socket is safe *phew*");
 
       points += touchedSockets.length * 2;
+      points = Math.min(points, 100);
+
 
       updateProgressBar(points);
 
