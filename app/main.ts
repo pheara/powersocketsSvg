@@ -45,19 +45,21 @@ import {
  * GLOBAL STATE :|
  */
 const blueprintSVG = document.getElementById("blueprint");
-let points: number = 0; ///points, adding according to how long someone is pressing the right socket
+let points: number; ///points, adding according to how long someone is pressing the right socket
 let pointsTimerId;
 
 const timeLeftEl = document.getElementById("timeLeft");
 const touchesEl = document.getElementById("touches");
 const progressEl = document.getElementById("progress");
 const pointsEl = document.getElementById("points");
-let timeLevel: number = 100;
+let timeLevel: number;
 let currentMapData: MapData;
 let unregisterDebugMarker: Array<() => void> = [];
-let touchedSockets: Array<Socket> = [];
+let touchedSockets: Array<Socket>;
 let levelTimerId: number | undefined;
+let currentLevelNr: number = 0;
 
+resetLevelData(); // establish default values
 
 // To enable automatic sub-pixel offset correction when the window is resized:
 // SVG.on(window, 'resize', function() { draw.spof() })
@@ -67,11 +69,45 @@ let levelTimerId: number | undefined;
  */
 gotoLevelN(0);
 
+
+
+function resetLevelData() {
+  unregisterPrevious();
+
+  /*
+   * establish default values
+   */
+  timeLevel = 100;
+  touchedSockets = [];
+  points = 0;
+}
+
+/*
+ * unregister previous callbacks and unmount
+ * the map if they're set
+ */
+function unregisterPrevious() {
+
+  unregisterDebugMarkers();
+
+  if(pointsTimerId !== undefined) {
+    clearInterval(pointsTimerId);
+  }
+  if(levelTimerId !== undefined) {
+    clearInterval(levelTimerId);
+  }
+
+  // make sure svg is removed from DOM
+  if(currentMapData) {
+    currentMapData.element.remove();
+  }
+}
+
 // debugging: test level switch
 // setTimeout(() => gotoLevelN(1), 5000);
 
 function gotoLevelN(levelNr: number) {
-  cleanMap();
+  resetLevelData();
   console.log(`Loading level ${levelNr}`);
   loadMap(`level${levelNr}.svg`, "background").then((data: MapData) => {
     setupLevelTimer();
@@ -81,19 +117,6 @@ function gotoLevelN(levelNr: number) {
       registerInputHandlers(s, data);
     }
   })
-}
-
-function cleanMap() {
-  unregisterDebugMarkers();
-
-  if(levelTimerId) {
-    clearInterval(levelTimerId);
-  }
-
-  // make sure svg is removed from DOM
-  if(currentMapData) {
-    currentMapData.element.remove();
-  }
 }
 
 function setupLevelTimer() {
