@@ -34,6 +34,7 @@ export function isPowered(
           powLine.end;
       const connectedWith = piecesAt(map, otherEnd);
 
+      // markCoords(map.element, otherEnd.x, otherEnd.y);
       // console.log("powerable attached to: ", connectedWith.generators, connectedWith.switches);
 
       if (connectedWith.generators.length > 0) {

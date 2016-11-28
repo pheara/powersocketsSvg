@@ -153,11 +153,27 @@ function registerInputHandlers(s: Socket, data: MapData) {
 
   console.log("registering input handlers");
   data.element.addEventListener("click", e => {
-    console.log("clicked on map ", e);
-    /* 
+    console.log("clicked on map \n", e);
+    const x = e.clientX;
+    const y = e.clientY;
+    // const x = 95; // in generator of level0 (using it's parsed pos)
+    // const y = 6;
+    const elements = svgElementsAt({x, y}, data.element);
+    console.log("intersectionList: ", elements);
+    const pieces = piecesAt(data, {x, y});
+    console.log("pieces clicked: ", pieces);
+    /*
      * TODO stopped here
      * what is at a point that i click at? (collision
      * probably has problem with transformations, probably)
+     * might it be the scaling? px coords on screen vs px coords in svg?
+     *
+     * hmm, nvm, with clientRect coords it works. they don't start
+     * at (0,0) though. maybe it's also just the rotation.
+     *
+     * possible work-arounds:
+     * - reparse map data on scale?
+     * - multiply the scale onto all coordinates / lookups(!)
      */
   });
 
