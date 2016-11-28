@@ -137,6 +137,7 @@ function setupLevelTimer() {
     timeLevel--;
     if(timeLevel <= 0) {
       // timed out everything gets reset to the start of the level
+      brrzzzl();
       resetLevelData();
     }
     if(timeLeftEl) {
