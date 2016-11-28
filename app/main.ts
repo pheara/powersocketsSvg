@@ -40,6 +40,13 @@ import {
   svgElementsAt,
 } from "utils";
 
+/**
+ * CONFIG
+ */
+
+const SHOCK_PENALTY = 30;
+
+
 
 /**
  * GLOBAL STATE :|
@@ -148,7 +155,7 @@ function registerInputHandlers(s: Socket, data: MapData) {
         " touches " + touchedSockets.length;
     } else {
       clearInterval(pointsTimerId);
-      pointsTimerId = setInterval(() => addpoints(touchedSockets, data), 100 ); /// () => has to be there
+      pointsTimerId = setInterval(() => updatePoints(touchedSockets, data), 100 ); /// () => has to be there
       if(touchesEl) touchesEl.innerHTML += touchedSockets.length;
     }
 
@@ -170,11 +177,13 @@ function registerInputHandlers(s: Socket, data: MapData) {
 }
 
 // ------------- //
-function addpoints(touchedSockets, data){
+function updatePoints(touchedSockets, data){
 
   for	(let ts	of	touchedSockets)	{
 
     if (isPowered(ts, data)) {
+
+      points = Math.max(0, points - SHOCK_PENALTY); //alternative: = max(points - X, 0)
 
       brrzzzl();
       console.log("clicked powered socket *brzzl*");
@@ -191,11 +200,12 @@ function addpoints(touchedSockets, data){
       if(points >= 100) {
         gotoNextLevel();
       }
-
-      updateProgressBar(points);
-
-      if(pointsEl) pointsEl.innerHTML = "Points " + points;
     }
+
+    updateProgressBar(points);
+
+    if(pointsEl) pointsEl.innerHTML = "Points " + points;
+
   }
 }
 
