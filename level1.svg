@@ -27,20 +27,21 @@
      inkscape:window-height="1056"
      id="namedview4153"
      showgrid="true"
-     inkscape:zoom="3.3589912"
-     inkscape:cx="82.300756"
-     inkscape:cy="163.0462"
+     inkscape:zoom="5.6568542"
+     inkscape:cx="117.26046"
+     inkscape:cy="148.18415"
      inkscape:window-x="0"
      inkscape:window-y="24"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg2"
+     inkscape:current-layer="switches"
      inkscape:object-paths="true"
      inkscape:snap-intersection-paths="true"
      inkscape:object-nodes="true"
      inkscape:snap-smooth-nodes="true"
      inkscape:snap-midpoints="true"
      showguides="true"
-     inkscape:guide-bbox="true">
+     inkscape:guide-bbox="true"
+     inkscape:snap-nodes="false">
     <sodipodi:guide
        position="91.677822,160.55058"
        orientation="0,1"
@@ -72,23 +73,25 @@
      id="powerlines">
     <path
        id="path4152"
-       d="m 109.15214,55.189092 0,33.107226 64.86815,0 0,10"
+       d="m 109.15214,55.189092 0,33.107226 64.86815,0 0,7.701903"
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.04663455px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccc" />
     <path
        id="path4154"
-       d="m 184.07984,118.29632 49.1572,0 0,65.6462"
+       d="m 194.20193,118.29632 39.03511,0 0,65.6462"
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.11293662px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccc" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.99885213px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 173.4623,138.29632 0.18571,87.04532 -68.29956,0"
+       d="m 173.4623,140.77119 0.18571,84.57045 -68.29956,0"
        id="path4173"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccc" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.17789209px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 74.07984,118.29632 90,0"
+       d="m 74.07984,118.29632 80.47333,0"
        id="path3368"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
@@ -131,15 +134,14 @@
        transform="translate(0,1.4128419e-6)" />
   </g>
   <g
-     transform="matrix(-0.00883671,-0.99996096,0.84568561,-0.00747337,54.223171,259.76242)"
      id="switches">
     <path
        id="path4148"
-       d="m 135.61441,88.065934 10.84795,0 c 0.6512,64.344876 0.0428,11.489116 0,53.209186 l -10.84795,0 z"
-       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 142.47406,92.339416 15.97548,0 c 0.95901,64.089564 0.063,11.443524 0,52.998054 l -15.97548,0 z"
+       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.21112764px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        inkscape:connector-curvature="0"
-       inkscape:transform-center-x="-10.86527"
-       inkscape:transform-center-y="2.0434903"
+       inkscape:transform-center-x="0.14561108"
+       inkscape:transform-center-y="3.9065039"
        sodipodi:nodetypes="ccccc" />
   </g>
 </svg>
