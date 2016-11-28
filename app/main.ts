@@ -147,6 +147,14 @@ function setupLevelTimer() {
 }
 
 function registerInputHandlers(s: Socket, data: MapData) {
+
+  console.log("registering input handlers");
+  data.element.addEventListener("click", e => {
+    console.log("clicked on map ", e);
+
+  });
+
+
   s.element.addEventListener('touchstart', e => {
 
     e.preventDefault();
