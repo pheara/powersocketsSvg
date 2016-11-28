@@ -4,7 +4,7 @@
   "dependencies": {},
   "scripts": {
     "postinstall": "jspm install && npm run build",
-    "prestart" : "npm run build",
+    "prestart" : "npm install && npm run build",
     "start": "nws",
     "build": "gulp build",
     "watch": "gulp watch",
