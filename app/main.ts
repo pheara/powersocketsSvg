@@ -154,6 +154,11 @@ function registerInputHandlers(s: Socket, data: MapData) {
   console.log("registering input handlers");
   data.element.addEventListener("click", e => {
     console.log("clicked on map ", e);
+    /* 
+     * TODO stopped here
+     * what is at a point that i click at? (collision
+     * probably has problem with transformations, probably)
+     */
   });
 
 
