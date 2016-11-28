@@ -5,6 +5,11 @@
 }
 */
 
+#levelMountPoint > svg {
+  width: 100%;
+  height: 100%;
+}
+
 /**
 * code adapted from http://stackoverflow.com/questions/22908242/rotate-image-around-center-css3
 */
