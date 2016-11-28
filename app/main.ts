@@ -122,13 +122,16 @@ function gotoLevelN(levelNr: number) {
   unregisterPrevious();
   console.log(`Loading level ${levelNr}`);
   loadMap(`level${levelNr}.svg`, "levelMountPoint").then((data: MapData) => {
+    markElementPositions(data);
     resetLevelData();
     setupLevelTimer();
     currentMapData = data;
-    markPoweredSockets(data);
+    // markPoweredSockets(data);
     for (const s of data.sockets) {
       registerInputHandlers(s, data);
     }
+
+    console.log(`Successfully imported level ${levelNr}: `, data);
   })
 }
 
@@ -151,7 +154,6 @@ function registerInputHandlers(s: Socket, data: MapData) {
   console.log("registering input handlers");
   data.element.addEventListener("click", e => {
     console.log("clicked on map ", e);
-
   });
 
 
@@ -247,6 +249,28 @@ export function brrzzzl(){
 	// vibration API supported
     navigator.vibrate([500, 300, 100]);
     console.log("I am vibrating!!");
+  }
+}
+
+/**
+ * Function for debugging the coordinate
+ * system tranformation. Marks the origin of
+ * all svg-elements and all path-ends in the
+ * map with a circle.
+ */
+
+function markElementPositions(mapData: MapData) {
+  for(const s of mapData.sockets) {
+    markCoords(mapData.element, s.pos.x, s.pos.y);
+  }
+
+  for(const g of mapData.generators) {
+    markCoords(mapData.element, g.pos.x, g.pos.y);
+  }
+
+  for(const p of mapData.powerlines) {
+    markCoords(mapData.element, p.start.x, p.start.y);
+    markCoords(mapData.element, p.end.x, p.end.y);
   }
 }
 
