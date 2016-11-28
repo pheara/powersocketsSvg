@@ -46,17 +46,6 @@ export function isPowered(
           if (!visited.has(swtch) && isPowered(swtch, map, visited)) {
             return true;
           }
-          // ...const otherEnd... (recurses)
-          // make this a recursive function and merge everything into a set of visited nodes.
-          // TODO a) we don't need immutable, there's `Set`s in vanilla-js
-          // TODO b) isPowered should be a function that accepts anything (powline/socket/gen/switch)
-          /* TODO extend so it takes all elements
-            generator -> true
-            powerline -> true if connected to a generator or powered switch
-            switch | socket -> true if connected to a powered line
-
-              where connected: a powerline-endpoints is within the rect-element/switch-path-element
-          */
         }
       }
     }
