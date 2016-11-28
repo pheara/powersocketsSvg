@@ -6,7 +6,7 @@ import {
   svgElementsAt,
 } from "utils";
 
-export function piecesAt(map, pt: Point) {
+export function piecesAt(map: MapData, pt: Point) {
   const svg = map.element;
   const intersectedElements = svgElementsAt(pt, svg);
   return {

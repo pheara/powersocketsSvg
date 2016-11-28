@@ -17,7 +17,7 @@ import {
 
 export function isPowered(
   powerable: Rectangle | Switch,
-  map,
+  map: MapData,
   visited = new Set<Rectangle | Switch>()
 ): boolean {
   if (contains(map.generators, powerable)) {
