@@ -125,7 +125,7 @@ function gotoLevelN(levelNr: number) {
     resetLevelData();
     setupLevelTimer();
     currentMapData = data;
-    markPoweredSockets(data);
+    // markPoweredSockets(data);
     for (const s of data.sockets) {
       registerInputHandlers(s, data);
     }
