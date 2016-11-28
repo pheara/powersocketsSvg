@@ -121,7 +121,7 @@ function gotoNextLevel() {
 function gotoLevelN(levelNr: number) {
   resetLevelData();
   console.log(`Loading level ${levelNr}`);
-  loadMap(`level${levelNr}.svg`, "background").then((data: MapData) => {
+  loadMap(`level${levelNr}.svg`, "levelMountPoint").then((data: MapData) => {
     setupLevelTimer();
     currentMapData = data;
     markPoweredSockets(data);
