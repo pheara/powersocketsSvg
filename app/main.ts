@@ -45,6 +45,7 @@ import {
  */
 
 const SHOCK_PENALTY = 30;
+const TIME_LIMIT_PER_LEVEL = 100;
 
 
 
@@ -77,16 +78,15 @@ resetLevelData(); // establish default values
 gotoLevelN(currentLevelNr);
 
 
-
+/*
+ * establish default values to what they should
+ * be at the start of a level.
+ */
 function resetLevelData() {
-  unregisterPrevious();
-
-  /*
-   * establish default values
-   */
-  timeLevel = 100;
+  timeLevel = TIME_LIMIT_PER_LEVEL;
   touchedSockets = [];
   points = 0;
+  updateProgressBar(points);
 }
 
 /*
@@ -119,9 +119,10 @@ function gotoNextLevel() {
 }
 
 function gotoLevelN(levelNr: number) {
-  resetLevelData();
+  unregisterPrevious();
   console.log(`Loading level ${levelNr}`);
   loadMap(`level${levelNr}.svg`, "levelMountPoint").then((data: MapData) => {
+    resetLevelData();
     setupLevelTimer();
     currentMapData = data;
     markPoweredSockets(data);
@@ -135,7 +136,8 @@ function setupLevelTimer() {
   levelTimerId = setInterval(() => {
     timeLevel--;
     if(timeLevel <= 0) {
-      // TODO timeout
+      // timed out everything gets reset to the start of the level
+      resetLevelData();
     }
     if(timeLeftEl) {
       timeLeftEl.innerHTML = "Time left: " + Math.max(timeLevel, 0);
