@@ -8,6 +8,7 @@ import {
   valueOr,
   hasJSType,
   delay,
+  deepFreeze,
   makeConverterToAbsoluteCoords,
  } from "utils";
 

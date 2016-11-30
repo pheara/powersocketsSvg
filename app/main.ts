@@ -39,6 +39,7 @@ import {
   getIn,
   svgElementsAt,
   delay,
+  deepFreeze,
 } from "utils";
 
 /**
@@ -123,6 +124,10 @@ function gotoLevelN(levelNr: number) {
   unregisterPrevious();
   console.log(`Loading level ${levelNr}`);
   loadMap(`level${levelNr}.svg`, "levelMountPoint").then((data: MapData) => {
+
+    // ensure that no further changes are made to the map data
+    deepFreeze(data);
+
     // markElementPositions(data);
     resetLevelData();
     setupLevelTimer();
@@ -183,7 +188,6 @@ function registerInputHandlers(s: Socket, data: MapData) {
      * powerline-coordinates change post-import!!
      */
   });
-
 
   s.element.addEventListener('touchstart', e => {
 

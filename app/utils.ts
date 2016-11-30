@@ -137,3 +137,27 @@ export function getIn(obj:any , path: string[]) {
             return obj && obj[path[0]] && getIn( obj[path[0]] , path.slice(1) )
     }
 }
+
+/*
+ * Freezes an object recursively.
+ *
+ * Taken from:
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze
+ */
+export function deepFreeze(obj) {
+
+    // Retrieve the property names defined on obj
+    var propNames = Object.getOwnPropertyNames(obj);
+
+    // Freeze properties before freezing self
+    propNames.forEach(function(name) {
+        var prop = obj[name];
+
+        // Freeze prop if it is an object
+        if (typeof prop == 'object' && !Object.isFrozen(prop))
+            deepFreeze(prop);
+    });
+
+    // Freeze self
+    return Object.freeze(obj);
+}
