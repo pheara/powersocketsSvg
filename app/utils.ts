@@ -80,6 +80,47 @@ export function makeConverterToAbsoluteCoords(svgRoot, element) {
 }
 
 /**
+  * adapted from <https://www.sitepoint.com/how-to-translate-from-dom-to-svg-coordinates-and-back-again/>
+  */
+export function makeDOM2VBox(svg: SVGSVGElement) {
+  return (pt: Point): Point => {
+    const svgPoint = svg.createSVGPoint();
+    svgPoint.x = pt.x;
+    svgPoint.y = pt.y;
+    return svgPoint.matrixTransform(svg.getScreenCTM().inverse());
+  }
+}
+
+/**
+ * Returns the bounding rectangle of the element
+ * but in viewbox-coordinates (instead of the usual
+ * DOM-coordinates).
+ */
+export function boundingRectVBox(el: SVGElement, svg: SVGSVGElement) {
+    const boundsClientRect = el.getBoundingClientRect();
+
+    const dom2vbox = makeDOM2VBox(svg)
+    const leftUpper = dom2vbox({
+      x: boundsClientRect.left,
+      y: boundsClientRect.top
+    });
+    const rightLower = dom2vbox({
+      x: boundsClientRect.left + boundsClientRect.width,
+      y: boundsClientRect.top + boundsClientRect.height,
+    });
+
+    const width = rightLower.x - leftUpper.x;
+    const height = rightLower.y - leftUpper.y;
+
+    return {
+      x: leftUpper.x,
+      y: leftUpper.y,
+      height,
+      width,
+    }
+}
+
+/**
 * Sets up a mark that gets painted every 100ms if the condition
 * function returns true.
 * Returns a function to stop painting the mark.

@@ -10,6 +10,8 @@ import {
   delay,
   deepFreeze,
   makeConverterToAbsoluteCoords,
+  makeDOM2VBox,
+  boundingRectVBox,
  } from "utils";
 
 
@@ -116,7 +118,6 @@ function extractMapData(svg: SVGSVGElement): MapData {
     element: svg,
   };
 }
-
 function parseAndSetRotationPivots(data: MapData) {
   for (const s of data.switches) {
     const el = s.element;
@@ -133,7 +134,9 @@ function parseAndSetRotationPivots(data: MapData) {
       x: getAttr("inkscape:transform-center-x"),
       y: getAttr("inkscape:transform-center-y"),
     };
-    const bounds = el.getBoundingClientRect();
+
+    const bounds = boundingRectVBox(el, data.element);
+
     const transformOrigin = { // preparation for the css class
       x: 1 / 2 + (center2pivot.x / bounds.width),
       y: 1 / 2 - (center2pivot.y / bounds.height),
