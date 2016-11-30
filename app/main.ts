@@ -154,14 +154,45 @@ function registerInputHandlers(s: Socket, data: MapData) {
   console.log("registering input handlers");
   data.element.addEventListener("click", e => {
     console.log("clicked on map \n", e);
-    const x = e.clientX;
-    const y = e.clientY;
+    //const x = e.clientX;
+    //const y = e.clientY;
+
+    var x;
+    var y;
+    if (e.pageX || e.pageY) {
+      x = e.pageX;
+      y = e.pageY;
+    }
+    else {
+      x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+      y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+    }
+    //x -= data.element.offsetLeft;
+    //y -= data.element.offsetTop;
+
+
+
     // const x = 95; // in generator of level0 (using it's parsed pos)
     // const y = 6;
     const elements = svgElementsAt({x, y}, data.element);
-    console.log("intersectionList: ", elements);
+    console.log(`intersectionList (${x}, ${y}): `, elements);
     const pieces = piecesAt(data, {x, y});
-    console.log("pieces clicked: ", pieces);
+    console.log(`pieces at (${x}, ${y}): `, pieces);
+    // markCoords(data.element, x, y);
+
+    // https://www.sitepoint.com/how-to-translate-from-dom-to-svg-coordinates-and-back-again/
+    const svg = data.element;
+    const NS = svg.getAttribute('xmlns');
+    const pt = svg.createSVGPoint();
+    let svgP, circle;
+    pt.x = e.clientX;
+    pt.y = e.clientY;
+    svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
+    circle = document.createElementNS(NS, 'circle');
+    circle.setAttributeNS(null, 'cx', svgP.x);
+    circle.setAttributeNS(null, 'cy', svgP.y);
+    circle.setAttributeNS(null, 'r', 10);
+    svg.appendChild(circle);
     /*
      * TODO stopped here
      * what is at a point that i click at? (collision
