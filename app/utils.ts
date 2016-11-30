@@ -25,28 +25,58 @@ export function delay(milliseconds: number): Promise<void> {
 }
 
 /**
- * Draws a dark-red circle at the specified coordinates.
+ * Draws a dark-red circle at the specified coordinates
+ * using the viewBox (= pre-mounting) coordinate-system.
  */
 export function markCoords(svg: SVGSVGElement, x: number, y: number) {
+  //const NS = svg.getAttribute('xmlns'); ---v
   const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle"); // Create a path in SVG's namespace
   circle.setAttribute("cx", x.toString());
   circle.setAttribute("cy", y.toString());
   circle.setAttribute("r", "8");
   circle.style.fill = "#900";
   svg.appendChild(circle);
+  // console.log(`Marked coordinates (${x}, ${y})`);
 }
 
 /**
+  * @param pt the point in viewbox-coordinates (=pre-scaling coords).
+  * @param svg the svg-root-element
   * adapted from source of
   * <http://xn--dahlstrm-t4a.net/svg/interactivity/intersection/sandbox_hover.svg>
   */
 export function svgElementsAt(pt: Point, svg: SVGSVGElement) {
+    /*
+     * getIntersectionList works on viewport-coordinates
+     * we need to transform the svgRects coordinats from
+     * viebox (=original) to viewport (=svg after scaling)
+     * coordinates.
+     */
+    const vbox2vportCoords = makeConverterToAbsoluteCoords(svg, svg);
+    const vportPt = vbox2vportCoords(pt);
+
     const svgRect = svg.createSVGRect();
-    svgRect.x = pt.x;
-    svgRect.y = pt.y;
+    svgRect.x = vportPt.x;
+    svgRect.y = vportPt.y;
     svgRect.width = svgRect.height = 1;
-    // let list = svg.getIntersectionList(svgRect, null);
+
     return svg.getIntersectionList(svgRect, svg);
+}
+
+/**
+ * adapted from <http://stackoverflow.com/questions/26049488/how-to-get-absolute-coordinates-of-object-inside-a-g-group>
+ * Yields a function that converts from coordinates relative to the element to
+ * those relative to the svg’s root.
+ */
+export function makeConverterToAbsoluteCoords(svgRoot, element) {
+  return function(p: Point): Point {
+    const offset = svgRoot.getBoundingClientRect();
+    const matrix = element.getScreenCTM();
+    return {
+      x: (matrix.a * p.x) + (matrix.c * p.y) + matrix.e - offset.left,
+      y: (matrix.b * p.x) + (matrix.d * p.y) + matrix.f - offset.top
+    };
+  };
 }
 
 /**

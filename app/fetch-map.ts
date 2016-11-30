@@ -8,6 +8,7 @@ import {
   valueOr,
   hasJSType,
   delay,
+  makeConverterToAbsoluteCoords,
  } from "utils";
 
 
@@ -15,15 +16,20 @@ export function loadMap(url: string, mountpoint: string) : Promise<MapData> {
   const mapDataPromise = fetchSvg(url).then(svg => {
     const backgroundDiv = document.getElementById(mountpoint);
     if (backgroundDiv) {
-      // backgroundDiv.appendChild(svg);
-      // height/width vs viewBox might be the difference
       /**
        * Some parsing needs to happen before mounting,
-       * e.g. there's some additional tranformation
-       * (a scaling) coming to bear on everything
-       * after mounting, that skews position extraction.
+       * as at that point the coordinate-systems for
+       * the viewBox (coordinates used to draw the svg,
+       * as specified in the root-element's property)
+       * and viewport (the piece user's get to see,
+       * including any scaling due to the screen's width)
+       * see: <https://sarasoueidan.com/blog/svg-coordinate-systems/>
        */
       const data = extractMapData(svg);
+
+      //delay(2000).then(() =>
+      //  console.log("map-data reextracted: ", extractMapData(svg))
+      //)
 
       let rect = data.sockets[0];
       let toAbs = makeConverterToAbsoluteCoords(svg, rect.element);
@@ -84,6 +90,12 @@ function fetchSvg(url: string): Promise<SVGSVGElement> {
   return svgPromise;
 }
 
+/**
+ * Extracts coordinates in viewport-space(!)
+ * and sizes for all game-elements. If you call
+ * this after scaling the svg, the results won't
+ * match the viewbox-coordinates any more.
+ */
 function extractMapData(svg: SVGSVGElement): MapData {
   const powerlines = getPowerlines(svg);
   const switches = getSwitches(svg);
@@ -158,25 +170,9 @@ function getPowerlines(svg: SVGSVGElement): Powerline[] {
         start,
         end,
         element: el,
-    });
+      });
     }
     return powerlines;
-}
-
-/**
- * adapted from <http://stackoverflow.com/questions/26049488/how-to-get-absolute-coordinates-of-object-inside-a-g-group>
- * Yields a function that converts from coordinates relative to the element to
- * those relative to the svg’s root.
- */
-function makeConverterToAbsoluteCoords(svgRoot, element) {
-  return function(p: Point): Point {
-    const offset = svgRoot.getBoundingClientRect();
-    const matrix = element.getScreenCTM();
-    return {
-      x: (matrix.a * p.x) + (matrix.c * p.y) + matrix.e - offset.left,
-      y: (matrix.b * p.x) + (matrix.d * p.y) + matrix.f - offset.top
-    };
-  };
 }
 
 function getRectanglesInLayer(svg: SVGSVGElement, layerId: string): Rectangle[] {
