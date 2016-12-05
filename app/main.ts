@@ -75,28 +75,28 @@ let touchedSockets: Set<Socket> = new Set<Socket>();
 let levelTimerId: number | undefined;
 let currentLevelNr: number = 0;
 
+const shockedIconPrototype: SVGSVGElement;
+const happyIconPrototype: SVGSVGElement;
+const boredIconPrototype: SVGSVGElement;
 
-
+/*
+ * ensure that the icons are loaded
+ */
 fetchSvg("shocked.svg").then(shockedSvg => {
-  if(pointsDecEl) {
-    pointsDecEl.appendChild(shockedSvg.cloneNode(true));
-    pointsDecEl.appendChild(shockedSvg.cloneNode(true));
-  }
+  shockedIconPrototype = shockedSvg;
 })
 fetchSvg("happy_face.svg").then(happySvg => {
-  if(pointsIncEl) {
-    pointsIncEl.appendChild(happySvg.cloneNode(true));
-    pointsIncEl.appendChild(happySvg.cloneNode(true));
-    pointsIncEl.appendChild(happySvg.cloneNode(true));
-  }
-
+  happyIconPrototype = happySvg;
 });
-fetchSvg("bored_face.svg")
+fetchSvg("bored_face.svg").then(boredSvg => {
+  boredIconPrototype = boredSvg;
+});
 
 
-
-
-resetLevelData(); // establish default values
+/*
+ * establish default values
+ */
+resetLevelData();
 
 // To enable automatic sub-pixel offset correction when the window is resized:
 // SVG.on(window, 'resize', function() { draw.spof() })
@@ -253,6 +253,20 @@ function updatePoints(touchedSockets, data){
 
   updateProgressBar(points);
 
+}
+
+function updateFeedbackIcons() {
+  /* TODO need to ensure that bored and shocked don't mix
+  if(pointsDecEl && shockedIconPrototype) {
+    pointsDecEl.appendChild(shockedIconPrototype.cloneNode(true));
+  }
+  */
+  if(pointsDecEl && boredIconPrototype) {
+    pointsDecEl.appendChild(boredIconPrototype.cloneNode(true));
+  }
+  if(pointsIncEl && happyIconPrototype) {
+    pointsIncEl.appendChild(happyIconPrototype.cloneNode(true));
+  }
 }
 
 
