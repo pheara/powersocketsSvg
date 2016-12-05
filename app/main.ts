@@ -161,32 +161,6 @@ function registerInputHandlers(s: Socket, data: MapData) {
 
   s.element.addEventListener('click', e => {
     console.log("[dbg] is clicked socket powered? ", isPowered(s, data));
-    
-    // https://www.sitepoint.com/how-to-translate-from-dom-to-svg-coordinates-and-back-again/
-
-    /*
-     * TODO stopped here
-     * what is at a point that i click at? (collision
-     * probably has problem with transformations, probably)
-     * might it be the scaling? px coords on screen vs px coords in svg?
-     *
-     * hmm, nvm, with clientRect coords it works. they don't start
-     * at (0,0) though. maybe it's also just the rotation.
-     *
-     * possible work-arounds:
-     * - reparse map data on scale?
-     * - multiply the scale onto all coordinates / lookups(!)
-     *
-     *
-     *
-     * 3 main coord-systems:
-     * - viewbox / original viewport
-     * - scaled viewport  (caused by calculartions in makeConv..?)
-     * - dom
-     *
-     * fuck-up probably at utils:svgElementsAt and the parsing of rotation-pivots
-     * powerline-coordinates change post-import!!
-     */
   });
 
   s.element.addEventListener('touchstart', e => {
