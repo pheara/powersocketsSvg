@@ -270,18 +270,23 @@ function updatePoints(touchedSockets, data){
     touchedSockets,
     s => !isPowered(s, data)
   );
+
+  const poweredAndTouched = filterSet(
+    touchedSockets,
+    s => !safeAndTouched.has(s)
+  )
   // console.log("touchedSockets: ", safeAndTouched);
 
   for (const s of safeButUntouched) {
     points -= MISSED_OPPORTUNITY_PENALTY;
   }
 
-  for	(const ts	of touchedSockets)	{
-
-    if( safeAndTouched.has(ts) ) {
+  for(const s of safeAndTouched) {
       points += POINTS_FOR_TAKEN_OPPORTUNITY;
+  }
 
-    } else /* touched and powered */ {
+  for(const s of poweredAndTouched) {
+      /* touched and powered */
       points -= SHOCK_PENALTY;
 
       /*
@@ -290,7 +295,7 @@ function updatePoints(touchedSockets, data){
       TODO better: lock socket while previous shock is still vibrating
       */
       brrzzzl();
-    }
+
   }
 
   points = Math.max(points, 0);
@@ -300,27 +305,29 @@ function updatePoints(touchedSockets, data){
     gotoNextLevel();
   }
 
-  updateFeedbackIcons(safeAndTouched, safeButUntouched)
+  updateFeedbackIcons({
+    happy: safeAndTouched.size,
+    bored: safeButUntouched.size,
+    shocked: poweredAndTouched.size,
+  });
   updateProgressBar(points);
 }
 
-function updateFeedbackIcons(safeAndTouched, safeButUntouched) {
-  if(iconElements && iconElements.bored) {
-    for(let i = 0; i < iconElements.bored.length; i++) {
-       iconElements.bored[i].style.display =
-         (i < safeButUntouched.size) ?
-         "block" :
-         "none";
+function updateFeedbackIcons(counts) {
+  function updateIconType(type) {
+    if(iconElements && iconElements[type]) {
+      // make counts[type] icons of <type> visible
+      for(let i = 0; i < iconElements[type].length; i++) {
+        iconElements[type][i].style.display =
+          (i < counts[type]) ?
+          "block" : /* visible */
+          "none"; /* invisible */
+      }
     }
   }
-  if(iconElements && iconElements.happy) {
-    for(let i = 0; i < iconElements.happy.length; i++) {
-      iconElements.happy[i].style.display =
-        (i < safeAndTouched.size) ?
-        "block" :
-        "none";
-    }
-  }
+  updateIconType("shocked");
+  updateIconType("bored");
+  updateIconType("happy");
 }
 
 
