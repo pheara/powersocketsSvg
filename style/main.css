@@ -19,6 +19,42 @@ body {
   */
 }
 
+.progress.above-icons{
+  margin-bottom: 0;
+}
+
+.pointsFeedbackIcons {
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+}
+.pointsFeedbackIcons__left {
+  flex-grow: 2; /* control mid-point between left and right containers */
+
+  display: flex;
+  flex-flow: row;
+  justify-content: flex-end; /* right-aligned in this case */
+
+  margin-right: 0.1rem;
+}
+.pointsFeedbackIcons__right {
+  flex-grow: 1; /* control mid-point between left and right containers */
+
+  display: flex;
+  flex-flow: row;
+  justify-content: flex-start; /* right-aligned in this case */
+
+  margin-left: 0.1rem;
+}
+.pointsFeedbackIcons__left > svg,
+.pointsFeedbackIcons__right > svg {
+  height: 1.5rem;
+  width: 1.858rem; /* same ratio as svg -> 1.238 x height*/
+
+  margin-left: 0.1rem;
+  margin-right: 0.1rem;
+}
+
 #levelMountPoint > svg {
   width: 100%;
   height: 100%;

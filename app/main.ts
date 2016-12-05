@@ -23,6 +23,7 @@ import {
 
 import {
   loadMap,
+  fetchSvg,
 } from "fetch-map";
 // declare var parseSvgPath: any; // no .d.ts supplied
 
@@ -65,12 +66,35 @@ let pointsTimerId;
 const timeLeftEl = document.getElementById("timeLeft");
 const touchesEl = document.getElementById("touches");
 const progressEl = document.getElementById("progress");
+const pointsIncEl = document.getElementById("pointIncIcons");
+const pointsDecEl = document.getElementById("pointDecIcons");
 let timeLevel: number;
 let currentMapData: MapData;
 let unregisterDebugMarker: Array<() => void> = [];
 let touchedSockets: Set<Socket> = new Set<Socket>();
 let levelTimerId: number | undefined;
 let currentLevelNr: number = 0;
+
+
+
+fetchSvg("shocked.svg").then(shockedSvg => {
+  if(pointsDecEl) {
+    pointsDecEl.appendChild(shockedSvg.cloneNode(true));
+    pointsDecEl.appendChild(shockedSvg.cloneNode(true));
+  }
+})
+fetchSvg("happy_face.svg").then(happySvg => {
+  if(pointsIncEl) {
+    pointsIncEl.appendChild(happySvg.cloneNode(true));
+    pointsIncEl.appendChild(happySvg.cloneNode(true));
+    pointsIncEl.appendChild(happySvg.cloneNode(true));
+  }
+
+});
+fetchSvg("bored_face.svg")
+
+
+
 
 resetLevelData(); // establish default values
 
@@ -248,6 +272,18 @@ function updateProgressBar(points: number): void {
       //
     }
   }
+}
+
+function ensureIconsAreLoaded() {
+
+  /*
+  if(icons) {
+    return Promise.resolve(icons);
+  } else {
+    // load icons
+  }
+  */
+
 }
 
 /**

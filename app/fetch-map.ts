@@ -67,7 +67,7 @@ export function loadMap(url: string, mountpoint: string) : Promise<MapData> {
   return mapDataPromise;
 }
 
-function fetchSvg(url: string): Promise<SVGSVGElement> {
+export function fetchSvg(url: string): Promise<SVGSVGElement> {
   const svgXhrPromise = new Promise<XMLHttpRequest>((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", url);
@@ -78,7 +78,7 @@ function fetchSvg(url: string): Promise<SVGSVGElement> {
     xhr.onload = (e) => {
       if (xhr.status === 200) {
         // console.log(xhr.responseText);
-        console.log("SVG request successful", xhr);
+        console.log(`SVG request for ${url} was successful: `, xhr);
         resolve(xhr);
       } else {
         console.error(xhr.statusText, xhr);
