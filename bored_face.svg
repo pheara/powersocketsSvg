@@ -5,39 +5,11 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="50.19532mm"
-   height="40.519283mm"
-   viewBox="0 0 177.85743 143.57226"
-   id="svg2"
    version="1.1"
-   inkscape:version="0.91 r13725"
-   sodipodi:docname="bored_face.svg">
-  <sodipodi:namedview
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1"
-     objecttolerance="10"
-     gridtolerance="10"
-     guidetolerance="10"
-     inkscape:pageopacity="0"
-     inkscape:pageshadow="2"
-     inkscape:window-width="1920"
-     inkscape:window-height="1056"
-     id="namedview8"
-     showgrid="false"
-     inkscape:zoom="0.81244847"
-     inkscape:cx="-79.023552"
-     inkscape:cy="-171.9652"
-     inkscape:window-x="0"
-     inkscape:window-y="24"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg2"
-     fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
-     fit-margin-bottom="0" />
+   id="svg2"
+   viewBox="0 0 177.85743 143.57226"
+   height="40.519283mm"
+   width="50.19532mm">
   <defs
      id="defs4" />
   <metadata
@@ -53,8 +25,7 @@
     </rdf:RDF>
   </metadata>
   <path
-     inkscape:connector-curvature="0"
-     id="path4217"
-     d="m 42.85742,0 0,0.35742 L 0,69.285165 l 42.85742,74.287095 135.00001,0 L 177.85743,0 42.85742,0 Z m 31.298839,33.50391 c 6.24244,0 9.22071,10.05639 9.22071,16.29883 0,6.24244 -2.97827,16.300785 -9.22071,16.300785 -6.24244,0 -9.2207,-10.058345 -9.2207,-16.300785 0,-6.24244 2.97826,-16.29883 9.2207,-16.29883 z m 69.812501,0 c 6.24244,0 9.21875,10.05639 9.21875,16.29883 0,6.24244 -2.97631,16.300785 -9.21875,16.300785 -6.24244,0 -9.2207,-10.058345 -9.2207,-16.300785 0,-6.24244 2.97826,-16.29883 9.2207,-16.29883 z m 14.28906,58.763665 0.0449,3.34961 -99.33009,14.865235 0,-2.94726 99.28516,-15.267585 z"
+     id="path4147"
+     d="M 42.857422 0 L 42.857422 0.35742188 L 0 69.285156 L 42.857422 143.57227 L 177.85742 143.57227 L 177.85742 0 L 42.857422 0 z M 74.15625 33.503906 C 80.39869 33.503906 83.376953 43.560294 83.376953 49.802734 C 83.376953 56.045174 80.39869 66.103516 74.15625 66.103516 C 67.91381 66.103516 64.935547 56.045174 64.935547 49.802734 C 64.935547 43.560294 67.91381 33.503906 74.15625 33.503906 z M 143.96875 33.503906 C 150.21119 33.503906 153.1875 43.560294 153.1875 49.802734 C 153.1875 56.045174 150.21119 66.103516 143.96875 66.103516 C 137.72631 66.103516 134.74805 56.045174 134.74805 49.802734 C 134.74805 43.560294 137.72631 33.503906 143.96875 33.503906 z M 158.25781 92.267578 L 158.30273 99.617188 L 58.972656 114.48242 L 58.972656 107.53516 L 158.25781 92.267578 z "
      style="fill:#5d5d5d;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
 </svg>
