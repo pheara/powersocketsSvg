@@ -75,9 +75,9 @@ let touchedSockets: Set<Socket> = new Set<Socket>();
 let levelTimerId: number | undefined;
 let currentLevelNr: number = 0;
 
-const shockedIconPrototype: SVGSVGElement;
-const happyIconPrototype: SVGSVGElement;
-const boredIconPrototype: SVGSVGElement;
+let shockedIconPrototype: SVGSVGElement;
+let happyIconPrototype: SVGSVGElement;
+let boredIconPrototype: SVGSVGElement;
 
 /*
  * ensure that the icons are loaded
