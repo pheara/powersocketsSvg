@@ -84,12 +84,15 @@ let boredIconPrototype: SVGSVGElement;
  */
 fetchSvg("shocked.svg").then(shockedSvg => {
   shockedIconPrototype = shockedSvg;
+  pointsDecEl.appendChild(shockedIconPrototype.cloneNode(true)); //deletme
 })
 fetchSvg("happy_face.svg").then(happySvg => {
   happyIconPrototype = happySvg;
+  pointsIncEl.appendChild(happyIconPrototype.cloneNode(true)); //deletme
 });
 fetchSvg("bored_face.svg").then(boredSvg => {
   boredIconPrototype = boredSvg;
+  pointsDecEl.appendChild(boredIconPrototype.cloneNode(true)); //deletme
 });
 
 
