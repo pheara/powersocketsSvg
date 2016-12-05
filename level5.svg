@@ -13,7 +13,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="level4.svg">
+   sodipodi:docname="level2.svg">
   <sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -27,13 +27,13 @@
      inkscape:window-height="1056"
      id="namedview4153"
      showgrid="false"
-     inkscape:zoom="3.3589912"
-     inkscape:cx="203.24873"
-     inkscape:cy="107.68151"
+     inkscape:zoom="6.7179824"
+     inkscape:cx="100.57467"
+     inkscape:cy="109.9768"
      inkscape:window-x="0"
      inkscape:window-y="24"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg2"
+     inkscape:current-layer="switches"
      inkscape:object-paths="true"
      inkscape:snap-intersection-paths="true"
      inkscape:object-nodes="true"
@@ -99,9 +99,14 @@
     <path
        inkscape:connector-curvature="0"
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.66400367px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 258.21082,130.33215 16.74105,0 0.24013,89.25959 -90.80159,0"
-       id="path3386"
-       sodipodi:nodetypes="ccc" />
+       d="m 258.21082,130.33215 16.74105,0 0,68.61425"
+       id="path3386" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path3388"
+       d="m 249.59292,219.29358 -60.69351,0.29816"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.80928141px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
   </g>
   <g
      transform="translate(49.256161,27.878788)"
@@ -142,6 +147,14 @@
   <g
      transform="translate(-155.01809,21.472197)"
      id="switches">
+    <path
+       id="path4148"
+       d="m 393.6987,217.88703 -31.35071,-0.87816 -0.59542,-12.98459 19.44238,0 0,-21.16233 12.18764,0 c 0.93276,21.90984 0,0 0.31611,35.02508 z"
+       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       inkscape:connector-curvature="0"
+       inkscape:transform-center-x="7.5904741"
+       inkscape:transform-center-y="-6.2114065"
+       sodipodi:nodetypes="ccccccc" />
     <path
        sodipodi:nodetypes="ccccccc"
        inkscape:transform-center-y="-9.3373451"
