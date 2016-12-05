@@ -41,6 +41,7 @@ import {
   svgElementsAt,
   delay,
   deepFreeze,
+  filterSet,
 } from "utils";
 
 /**
@@ -94,27 +95,8 @@ let iconElements: {
  * ensure that the icons are loaded
  */
 const shockedSvgP = fetchSvg("shocked.svg");
-/*
-shockedSvgP.then(shockedSvg => {
-  shockedIconPrototype = shockedSvg;
-  if(pointsDecEl) pointsDecEl.appendChild(shockedIconPrototype.cloneNode(true)); //deletme
-})
-*/
 const happySvgP = fetchSvg("happy_face.svg");
-/*
-happySvgP.then(happySvg => {
-  happyIconPrototype = happySvg;
-  if(pointsIncEl) pointsIncEl.appendChild(happyIconPrototype.cloneNode(true)); //deletme
-});
-*/
 const boredSvgP = fetchSvg("bored_face.svg");
-/*
-boredSvgP.then(boredSvg => {
-  boredIconPrototype = boredSvg;
-  if(pointsDecEl) pointsDecEl.appendChild(boredIconPrototype.cloneNode(true)); //deletme
-});
-*/
-
 
 /*
  * establish default values
@@ -220,7 +202,7 @@ function prepareFeedbackIcons(data: MapData) {
           iconElements[type].push(el); // cache reference for later access
           if(containerDiv) {
             containerDiv.appendChild(el); // append to dom
-            // el.style.display = "none";
+            el.style.display = "none";
           }
         }
       }
@@ -278,19 +260,28 @@ function updatePoints(touchedSockets, data){
     touchesEl.innerHTML = " touches " + touchedSockets.size;
   }
 
-  const untouchedSockets = new Set<Socket>(
-    data.sockets.filter(ts => !touchedSockets.has(ts))
+  const safeButUntouched = new Set<Socket>(
+    data.sockets.filter(s =>
+      !touchedSockets.has(s) && !isPowered(s, data)
+    )
   );
 
-  for (const uts of untouchedSockets) {
-    if (!isPowered(uts, data)) {
-      points -= MISSED_OPPORTUNITY_PENALTY;
-    }
+  const safeAndTouched = filterSet(
+    touchedSockets,
+    s => !isPowered(s, data)
+  );
+  // console.log("touchedSockets: ", safeAndTouched);
+
+  for (const s of safeButUntouched) {
+    points -= MISSED_OPPORTUNITY_PENALTY;
   }
 
-  for	(const ts	of	touchedSockets)	{
+  for	(const ts	of touchedSockets)	{
 
-    if (isPowered(ts, data)) {
+    if( safeAndTouched.has(ts) ) {
+      points += POINTS_FOR_TAKEN_OPPORTUNITY;
+
+    } else /* touched and powered */ {
       points -= SHOCK_PENALTY;
 
       /*
@@ -298,11 +289,7 @@ function updatePoints(touchedSockets, data){
       bad idea - the list of touchedSockets should be correct at all times
       TODO better: lock socket while previous shock is still vibrating
       */
-
       brrzzzl();
-
-    } else {
-      points += POINTS_FOR_TAKEN_OPPORTUNITY;
     }
   }
 
@@ -313,23 +300,26 @@ function updatePoints(touchedSockets, data){
     gotoNextLevel();
   }
 
-  updateFeedbackIcons(touchedSockets, untouchedSockets)
+  updateFeedbackIcons(safeAndTouched, safeButUntouched)
   updateProgressBar(points);
 }
 
-function updateFeedbackIcons(touchedSockets, untouchedSockets) {
-
-  /* TODO need to ensure that bored and shocked don't mix
-  if(pointsDecEl && iconPrototypes && iconPrototypes.shocked) {
-    pointsDecEl.appendChild(iconPrototype.shocked.cloneNode(true));
+function updateFeedbackIcons(safeAndTouched, safeButUntouched) {
+  if(iconElements && iconElements.bored) {
+    for(let i = 0; i < iconElements.bored.length; i++) {
+       iconElements.bored[i].style.display =
+         (i < safeButUntouched.size) ?
+         "block" :
+         "none";
+    }
   }
-  */
-  if(pointsDecEl && iconPrototypes && iconPrototypes.bored) {
-
-    // pointsDecEl.appendChild(iconPrototypes.bored.cloneNode(true));
-  }
-  if(pointsIncEl && iconPrototypes && iconPrototypes.happy) {
-    // pointsIncEl.appendChild(iconPrototypes.happy.cloneNode(true));
+  if(iconElements && iconElements.happy) {
+    for(let i = 0; i < iconElements.happy.length; i++) {
+      iconElements.happy[i].style.display =
+        (i < safeAndTouched.size) ?
+        "block" :
+        "none";
+    }
   }
 }
 

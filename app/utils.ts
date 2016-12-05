@@ -202,3 +202,13 @@ export function deepFreeze(obj) {
     // Freeze self
     return Object.freeze(obj);
 }
+
+export function filterSet(set, f) {
+  const resultSet = new Set();
+  for(let x of set) {
+    if(f(x)) {
+      resultSet.add(x);
+    }
+  }
+  return resultSet;
+}
