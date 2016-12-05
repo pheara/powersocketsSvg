@@ -75,25 +75,45 @@ let touchedSockets: Set<Socket> = new Set<Socket>();
 let levelTimerId: number | undefined;
 let currentLevelNr: number = 0;
 
-let shockedIconPrototype: SVGSVGElement;
-let happyIconPrototype: SVGSVGElement;
-let boredIconPrototype: SVGSVGElement;
+let iconPrototypes: {
+  shocked: SVGSVGElement,
+  happy: SVGSVGElement,
+  bored: SVGSVGElement,
+}; // shocked, happy, bored
+let iconElements: {
+  shocked: Array<SVGSVGElement>,
+  happy: Array<SVGSVGElement>,
+  bored: Array<SVGSVGElement>,
+} = {
+  shocked: [],
+  happy: [],
+  bored: [],
+}
 
 /*
  * ensure that the icons are loaded
  */
-fetchSvg("shocked.svg").then(shockedSvg => {
+const shockedSvgP = fetchSvg("shocked.svg");
+/*
+shockedSvgP.then(shockedSvg => {
   shockedIconPrototype = shockedSvg;
-  pointsDecEl.appendChild(shockedIconPrototype.cloneNode(true)); //deletme
+  if(pointsDecEl) pointsDecEl.appendChild(shockedIconPrototype.cloneNode(true)); //deletme
 })
-fetchSvg("happy_face.svg").then(happySvg => {
+*/
+const happySvgP = fetchSvg("happy_face.svg");
+/*
+happySvgP.then(happySvg => {
   happyIconPrototype = happySvg;
-  pointsIncEl.appendChild(happyIconPrototype.cloneNode(true)); //deletme
+  if(pointsIncEl) pointsIncEl.appendChild(happyIconPrototype.cloneNode(true)); //deletme
 });
-fetchSvg("bored_face.svg").then(boredSvg => {
+*/
+const boredSvgP = fetchSvg("bored_face.svg");
+/*
+boredSvgP.then(boredSvg => {
   boredIconPrototype = boredSvg;
-  pointsDecEl.appendChild(boredIconPrototype.cloneNode(true)); //deletme
+  if(pointsDecEl) pointsDecEl.appendChild(boredIconPrototype.cloneNode(true)); //deletme
 });
+*/
 
 
 /*
@@ -108,6 +128,7 @@ resetLevelData();
  * START GAME
  */
 gotoLevelN(currentLevelNr);
+
 
 
 /*
@@ -149,10 +170,13 @@ function gotoNextLevel() {
   return gotoLevelN(currentLevelNr);
 }
 
+
 function gotoLevelN(levelNr: number) {
   unregisterPrevious();
   console.log(`Loading level ${levelNr}`);
   loadMap(`level${levelNr}.svg`, "levelMountPoint").then((data: MapData) => {
+
+    prepareFeedbackIcons(data);
 
     // ensure that no further changes are made to the map data
     deepFreeze(data);
@@ -161,7 +185,7 @@ function gotoLevelN(levelNr: number) {
     resetLevelData();
     setupLevelTimer();
     currentMapData = data;
-    // markPoweredSockets(data);
+    //markPoweredSockets(data);
     for (const s of data.sockets) {
       registerInputHandlers(s, data);
     }
@@ -170,6 +194,41 @@ function gotoLevelN(levelNr: number) {
 
     console.log(`Successfully imported level ${levelNr}: `, data);
   })
+}
+
+function prepareFeedbackIcons(data: MapData) {
+    /*
+     * Make sure the SVGs are loaded
+     */
+    const iconsP = iconPrototypes?
+      Promise.resolve(iconPrototypes) :
+      Promise.all([ shockedSvgP, happySvgP, boredSvgP, ])
+      .then(([shocked, happy, bored]) => {
+        iconPrototypes = { shocked, happy, bored };
+        console.log("iconPrototypes", iconPrototypes);
+        return iconPrototypes;
+      });
+
+    /*
+     * make sure we have at least as many dom-elements
+     * of each type as we have sockets in the map.
+     */
+    iconsP.then(iconPrototypes => {
+      const prepareIcons = (containerDiv, type) => {
+        while(iconElements[type].length < data.sockets.length) {
+          const el = iconPrototypes[type].cloneNode(true);
+          iconElements[type].push(el); // cache reference for later access
+          if(containerDiv) {
+            containerDiv.appendChild(el); // append to dom
+            // el.style.display = "none";
+          }
+        }
+      }
+      prepareIcons(pointsDecEl, "shocked");
+      prepareIcons(pointsDecEl, "bored");
+      prepareIcons(pointsIncEl, "happy");
+    });
+
 }
 
 function setupLevelTimer() {
@@ -254,21 +313,23 @@ function updatePoints(touchedSockets, data){
     gotoNextLevel();
   }
 
+  updateFeedbackIcons(touchedSockets, untouchedSockets)
   updateProgressBar(points);
-
 }
 
-function updateFeedbackIcons() {
+function updateFeedbackIcons(touchedSockets, untouchedSockets) {
+
   /* TODO need to ensure that bored and shocked don't mix
-  if(pointsDecEl && shockedIconPrototype) {
-    pointsDecEl.appendChild(shockedIconPrototype.cloneNode(true));
+  if(pointsDecEl && iconPrototypes && iconPrototypes.shocked) {
+    pointsDecEl.appendChild(iconPrototype.shocked.cloneNode(true));
   }
   */
-  if(pointsDecEl && boredIconPrototype) {
-    pointsDecEl.appendChild(boredIconPrototype.cloneNode(true));
+  if(pointsDecEl && iconPrototypes && iconPrototypes.bored) {
+
+    // pointsDecEl.appendChild(iconPrototypes.bored.cloneNode(true));
   }
-  if(pointsIncEl && happyIconPrototype) {
-    pointsIncEl.appendChild(happyIconPrototype.cloneNode(true));
+  if(pointsIncEl && iconPrototypes && iconPrototypes.happy) {
+    // pointsIncEl.appendChild(iconPrototypes.happy.cloneNode(true));
   }
 }
 
@@ -289,18 +350,6 @@ function updateProgressBar(points: number): void {
       //
     }
   }
-}
-
-function ensureIconsAreLoaded() {
-
-  /*
-  if(icons) {
-    return Promise.resolve(icons);
-  } else {
-    // load icons
-  }
-  */
-
 }
 
 /**
