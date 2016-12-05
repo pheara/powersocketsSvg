@@ -29,7 +29,7 @@ body {
   justify-content: center;
 }
 .pointsFeedbackIcons__left {
-  flex-grow: 2; /* control mid-point between left and right containers */
+  flex-grow: 1; /* control mid-point between left and right containers */
 
   display: flex;
   flex-flow: row;
