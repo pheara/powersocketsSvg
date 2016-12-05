@@ -44,6 +44,7 @@ import {
   filterSet,
 } from "utils";
 
+
 /**
  * CONFIG
  */
@@ -51,7 +52,7 @@ import {
 const TIME_LIMIT_PER_LEVEL = 100;
 
 const INITIAL_POINTS = 30;
-const SHOCK_PENALTY = 10;
+const SHOCK_PENALTY = 25;
 const MISSED_OPPORTUNITY_PENALTY = 0.3;
 const POINTS_FOR_TAKEN_OPPORTUNITY = 0.9;
 
@@ -90,6 +91,8 @@ let iconElements: {
   happy: [],
   bored: [],
 }
+
+const currentlyShockedSockets = new Set<Socket>();
 
 /*
  * ensure that the icons are loaded
@@ -286,16 +289,15 @@ function updatePoints(touchedSockets, data){
   }
 
   for(const s of poweredAndTouched) {
-      /* touched and powered */
-      points -= SHOCK_PENALTY;
-
-      /*
-      reset touchedSockets and increase shock penalty to one big chunk?
-      bad idea - the list of touchedSockets should be correct at all times
-      TODO better: lock socket while previous shock is still vibrating
-      */
-      brrzzzl();
-
+      if(!currentlyShockedSockets.has(s)) {
+          // vibration not yet started for that socket
+          currentlyShockedSockets.add(s);
+          points -= SHOCK_PENALTY;
+          brrzzzl(900);
+          delay(950).then(() => {
+              currentlyShockedSockets.delete(s);
+          });
+      }
   }
 
   points = Math.max(points, 0);
@@ -353,11 +355,15 @@ function updateProgressBar(points: number): void {
 * https://www.sitepoint.com/use-html5-vibration-api/
 * https://davidwalsh.name/vibration-api
 */
-export function brrzzzl(){
+export function brrzzzl(durationInMs: number = 900){
   //TODO visual effect for same duration
   if ("vibrate" in navigator) {
 	// vibration API supported
-    navigator.vibrate([500, 300, 100]);
+    navigator.vibrate([
+        durationInMs * 5/9, 
+        durationInMs * 3/9, 
+        durationInMs * 1/9, 
+    ]);
     console.log("I am vibrating!!");
   }
 }
