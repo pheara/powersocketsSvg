@@ -46,8 +46,12 @@ import {
  * CONFIG
  */
 
-const SHOCK_PENALTY = 30;
 const TIME_LIMIT_PER_LEVEL = 100;
+
+const INITIAL_POINTS = 30;
+const SHOCK_PENALTY = 10;
+const MISSED_OPPORTUNITY_PENALTY = 0.1;
+const POINTS_FOR_TAKEN_OPPORTUNITY = 1.5;
 
 
 
@@ -61,11 +65,10 @@ let pointsTimerId;
 const timeLeftEl = document.getElementById("timeLeft");
 const touchesEl = document.getElementById("touches");
 const progressEl = document.getElementById("progress");
-const pointsEl = document.getElementById("points");
 let timeLevel: number;
 let currentMapData: MapData;
 let unregisterDebugMarker: Array<() => void> = [];
-let touchedSockets: Array<Socket>;
+let touchedSockets: Set<Socket> = new Set<Socket>();
 let levelTimerId: number | undefined;
 let currentLevelNr: number = 0;
 
@@ -86,8 +89,7 @@ gotoLevelN(currentLevelNr);
  */
 function resetLevelData() {
   timeLevel = TIME_LIMIT_PER_LEVEL;
-  touchedSockets = [];
-  points = 0;
+  points = INITIAL_POINTS;
   updateProgressBar(points);
 }
 
@@ -137,6 +139,8 @@ function gotoLevelN(levelNr: number) {
       registerInputHandlers(s, data);
     }
 
+    startScoring(data);
+
     console.log(`Successfully imported level ${levelNr}: `, data);
   })
 }
@@ -164,75 +168,76 @@ function registerInputHandlers(s: Socket, data: MapData) {
   });
 
   s.element.addEventListener('touchstart', e => {
-
     e.preventDefault();
-
-    touchedSockets.push(s);
-
-    if (touchedSockets.length > 1){
-      if(touchesEl) touchesEl.innerHTML +=
-        " touches " + touchedSockets.length;
-    } else {
-      clearInterval(pointsTimerId);
-      pointsTimerId = setInterval(() => updatePoints(touchedSockets, data), 100 ); /// () => has to be there
-      if(touchesEl) touchesEl.innerHTML += touchedSockets.length;
-    }
-
-
+    touchedSockets.add(s);
   }, false);
 
   s.element.addEventListener('touchend', e => {
-
-    touchedSockets.splice(touchedSockets.indexOf(s));
-
-    if(touchesEl) touchesEl.innerHTML = " touch end " + touchedSockets.length;
-
-    if (touchedSockets.length == 0){
-      clearInterval(pointsTimerId);
-    }
-
+    touchedSockets.delete(s);
   }, false);
 
+}
+
+function startScoring(mapData: MapData) {
+  pointsTimerId = setInterval(
+    () => updatePoints(touchedSockets, mapData),
+    100
+  ); /// () => has to be there
 }
 
 // ------------- //
 function updatePoints(touchedSockets, data){
 
-  for	(let ts	of	touchedSockets)	{
+  if(touchesEl) { // TODO deletme; for debugging
+    touchesEl.innerHTML = " touches " + touchedSockets.size;
+  }
+
+  const untouchedSockets = new Set<Socket>(
+    data.sockets.filter(ts => !touchedSockets.has(ts))
+  );
+
+  for (const uts of untouchedSockets) {
+    if (!isPowered(uts, data)) {
+      points -= MISSED_OPPORTUNITY_PENALTY;
+    }
+  }
+
+  for	(const ts	of	touchedSockets)	{
 
     if (isPowered(ts, data)) {
+      points -= SHOCK_PENALTY;
 
-      points = Math.max(0, points - SHOCK_PENALTY); //alternative: = max(points - X, 0)
+      /*
+      reset touchedSockets and increase shock penalty to one big chunk?
+      bad idea - the list of touchedSockets should be correct at all times
+      TODO better: lock socket while previous shock is still vibrating
+      */
 
       brrzzzl();
-      console.log("clicked powered socket *brzzl*");
-
-      clearInterval(pointsTimerId);
-      //touchedSockets.splice(touchedSockets.indexOf(ts));
 
     } else {
-      console.log("that socket is safe *phew*");
-
-      points += touchedSockets.length * 2;
-      points = Math.min(points, 100);
-
-      if(points >= 100) {
-        gotoNextLevel();
-      }
+      points += POINTS_FOR_TAKEN_OPPORTUNITY;
     }
-
-    updateProgressBar(points);
-
-    if(pointsEl) pointsEl.innerHTML = "Points " + points;
-
   }
+
+  points = Math.max(points, 0);
+  points = Math.min(points, 100);
+
+  if(points >= 100) {
+    gotoNextLevel();
+  }
+
+  updateProgressBar(points);
+
 }
 
 
 function updateProgressBar(points: number): void {
+  const pointsRounded = points.toFixed(1);
+
   if(progressEl) {
-    progressEl.innerHTML = points + "%";
-    progressEl.style.width = points + "%";
+    progressEl.innerHTML = pointsRounded + "%";
+    progressEl.style.width = pointsRounded + "%";
     if (points > 20 && points < 50) {
       progressEl.classList.remove('progress-bar-danger');
       progressEl.classList.add('progress-bar-warning');
