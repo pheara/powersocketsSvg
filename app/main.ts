@@ -90,7 +90,7 @@ let iconElements: {
   shocked: [],
   happy: [],
   bored: [],
-}
+};
 
 const currentlyShockedSockets = new Set<Socket>();
 
@@ -134,15 +134,15 @@ function unregisterPrevious() {
 
   unregisterDebugMarkers();
 
-  if(pointsTimerId !== undefined) {
+  if (pointsTimerId !== undefined) {
     clearInterval(pointsTimerId);
   }
-  if(levelTimerId !== undefined) {
+  if (levelTimerId !== undefined) {
     clearInterval(levelTimerId);
   }
 
   // make sure svg is removed from DOM
-  if(currentMapData) {
+  if (currentMapData) {
     currentMapData.element.remove();
   }
 }
@@ -170,7 +170,7 @@ function gotoLevelN(levelNr: number) {
     resetLevelData();
     setupLevelTimer();
     currentMapData = data;
-    //markPoweredSockets(data);
+    // markPoweredSockets(data);
     for (const s of data.sockets) {
       registerInputHandlers(s, data);
     }
@@ -178,14 +178,14 @@ function gotoLevelN(levelNr: number) {
     startScoring(data);
 
     console.log(`Successfully imported level ${levelNr}: `, data);
-  })
+  });
 }
 
 function prepareFeedbackIcons(data: MapData) {
     /*
      * Make sure the SVGs are loaded
      */
-    const iconsP = iconPrototypes?
+    const iconsP = iconPrototypes ?
       Promise.resolve(iconPrototypes) :
       Promise.all([ shockedSvgP, happySvgP, boredSvgP, ])
       .then(([shocked, happy, bored]) => {
@@ -200,15 +200,15 @@ function prepareFeedbackIcons(data: MapData) {
      */
     iconsP.then(iconPrototypes => {
       const prepareIcons = (containerDiv, type) => {
-        while(iconElements[type].length < data.sockets.length) {
+        while (iconElements[type].length < data.sockets.length) {
           const el = iconPrototypes[type].cloneNode(true);
           iconElements[type].push(el); // cache reference for later access
-          if(containerDiv) {
+          if (containerDiv) {
             containerDiv.appendChild(el); // append to dom
             el.style.display = "none";
           }
         }
-      }
+      };
       prepareIcons(pointsDecEl, "shocked");
       prepareIcons(pointsDecEl, "bored");
       prepareIcons(pointsIncEl, "happy");
@@ -219,12 +219,12 @@ function prepareFeedbackIcons(data: MapData) {
 function setupLevelTimer() {
   levelTimerId = setInterval(() => {
     timeLevel--;
-    if(timeLevel <= 0) {
+    if (timeLevel <= 0) {
       // timed out everything gets reset to the start of the level
       brrzzzl();
       resetLevelData();
     }
-    if(timeLeftEl) {
+    if (timeLeftEl) {
       timeLeftEl.innerHTML = "Time left: " + Math.max(timeLevel, 0);
     }
   }, 1000 );
@@ -234,16 +234,16 @@ function registerInputHandlers(s: Socket, data: MapData) {
 
   console.log("registering input handlers");
 
-  s.element.addEventListener('click', e => {
+  s.element.addEventListener("click", e => {
     console.log("[dbg] is clicked socket powered? ", isPowered(s, data));
   });
 
-  s.element.addEventListener('touchstart', e => {
+  s.element.addEventListener("touchstart", e => {
     e.preventDefault();
     touchedSockets.add(s);
   }, false);
 
-  s.element.addEventListener('touchend', e => {
+  s.element.addEventListener("touchend", e => {
     touchedSockets.delete(s);
   }, false);
 
@@ -257,9 +257,9 @@ function startScoring(mapData: MapData) {
 }
 
 // ------------- //
-function updatePoints(touchedSockets, data){
+function updatePoints(touchedSockets, data) {
 
-  if(touchesEl) { // TODO deletme; for debugging
+  if (touchesEl) { // TODO deletme; for debugging
     touchesEl.innerHTML = " touches " + touchedSockets.size;
   }
 
@@ -277,19 +277,19 @@ function updatePoints(touchedSockets, data){
   const poweredAndTouched = filterSet(
     touchedSockets,
     s => !safeAndTouched.has(s)
-  )
+  );
   // console.log("touchedSockets: ", safeAndTouched);
 
   for (const s of safeButUntouched) {
     points -= MISSED_OPPORTUNITY_PENALTY;
   }
 
-  for(const s of safeAndTouched) {
+  for (const s of safeAndTouched) {
       points += POINTS_FOR_TAKEN_OPPORTUNITY;
   }
 
-  for(const s of poweredAndTouched) {
-      if(!currentlyShockedSockets.has(s)) {
+  for (const s of poweredAndTouched) {
+      if (!currentlyShockedSockets.has(s)) {
           // vibration not yet started for that socket
           currentlyShockedSockets.add(s);
           points -= SHOCK_PENALTY;
@@ -303,7 +303,7 @@ function updatePoints(touchedSockets, data){
   points = Math.max(points, 0);
   points = Math.min(points, 100);
 
-  if(points >= 100) {
+  if (points >= 100) {
     gotoNextLevel();
   }
 
@@ -317,9 +317,9 @@ function updatePoints(touchedSockets, data){
 
 function updateFeedbackIcons(counts) {
   function updateIconType(type) {
-    if(iconElements && iconElements[type]) {
+    if (iconElements && iconElements[type]) {
       // make counts[type] icons of <type> visible
-      for(let i = 0; i < iconElements[type].length; i++) {
+      for (let i = 0; i < iconElements[type].length; i++) {
         iconElements[type][i].style.display =
           (i < counts[type]) ?
           "block" : /* visible */
@@ -336,15 +336,15 @@ function updateFeedbackIcons(counts) {
 function updateProgressBar(points: number): void {
   const pointsRounded = points.toFixed(1);
 
-  if(progressEl) {
+  if (progressEl) {
     progressEl.innerHTML = pointsRounded + "%";
     progressEl.style.width = pointsRounded + "%";
     if (points > 20 && points < 50) {
-      progressEl.classList.remove('progress-bar-danger');
-      progressEl.classList.add('progress-bar-warning');
+      progressEl.classList.remove("progress-bar-danger");
+      progressEl.classList.add("progress-bar-warning");
     } else if (points > 50) {
-      progressEl.classList.remove('progress-bar-warning');
-      progressEl.classList.add('progress-bar-success');
+      progressEl.classList.remove("progress-bar-warning");
+      progressEl.classList.add("progress-bar-success");
     } else {
       //
     }
@@ -355,14 +355,14 @@ function updateProgressBar(points: number): void {
 * https://www.sitepoint.com/use-html5-vibration-api/
 * https://davidwalsh.name/vibration-api
 */
-export function brrzzzl(durationInMs: number = 900){
-  //TODO visual effect for same duration
+export function brrzzzl(durationInMs: number = 900) {
+  // TODO visual effect for same duration
   if ("vibrate" in navigator) {
 	// vibration API supported
     navigator.vibrate([
-        durationInMs * 5/9,
-        durationInMs * 3/9,
-        durationInMs * 1/9,
+        durationInMs * 5 / 9,
+        durationInMs * 3 / 9,
+        durationInMs * 1 / 9,
     ]);
     console.log("I am vibrating!!");
   }
@@ -376,15 +376,15 @@ export function brrzzzl(durationInMs: number = 900){
  */
 
 function markElementPositions(mapData: MapData) {
-  for(const s of mapData.sockets) {
+  for (const s of mapData.sockets) {
     markCoords(mapData.element, s.pos.x, s.pos.y);
   }
 
-  for(const g of mapData.generators) {
+  for (const g of mapData.generators) {
     markCoords(mapData.element, g.pos.x, g.pos.y);
   }
 
-  for(const p of mapData.powerlines) {
+  for (const p of mapData.powerlines) {
     markCoords(mapData.element, p.start.x, p.start.y);
     markCoords(mapData.element, p.end.x, p.end.y);
   }
@@ -407,8 +407,8 @@ function markPoweredSockets(mapData: MapData) {
 
 function unregisterDebugMarkers() {
   let unregister;
-  while(unregister = unregisterDebugMarker.pop()){
-    if(unregister && hasJSType("Function", unregister)) {
+  while (unregister = unregisterDebugMarker.pop()) {
+    if (unregister && hasJSType("Function", unregister)) {
       console.log("Unregistering debug mark");
       unregister();
     }
