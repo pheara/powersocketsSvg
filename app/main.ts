@@ -2,7 +2,7 @@
 /// <reference path="declarations.d.ts"/>
 
 // declarations/headers installed via `./node_modules/.bin/typings install <pkg>`
-/// <reference path="../typings/index.d.ts"/>
+///// <reference path="../typings/index.d.ts"/>
 
 // import fetch from "fetch";
 import "fetch";
@@ -29,7 +29,7 @@ import {
 
 // import Immutable from "immutable";
 
-import "wout/svg.js";
+// import "wout/svg.js";
 // import SVG from "jspm_packages/svg.js@2.3.6/svg.js.d.ts";
 
 import {
@@ -360,9 +360,9 @@ export function brrzzzl(durationInMs: number = 900){
   if ("vibrate" in navigator) {
 	// vibration API supported
     navigator.vibrate([
-        durationInMs * 5/9, 
-        durationInMs * 3/9, 
-        durationInMs * 1/9, 
+        durationInMs * 5/9,
+        durationInMs * 3/9,
+        durationInMs * 1/9,
     ]);
     console.log("I am vibrating!!");
   }

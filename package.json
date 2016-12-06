@@ -1,10 +1,12 @@
 {
   "name": "powersockets-svg",
   "version": "0.2.0",
-  "dependencies": {},
+  "dependencies": {
+    "@types/whatwg-fetch": "0.0.32"
+  },
   "scripts": {
     "postinstall": "jspm install && npm run build",
-    "prestart" : "npm install && npm run build",
+    "prestart": "npm install && npm run build",
     "start": "nws",
     "build": "gulp build",
     "watch": "gulp watch",
