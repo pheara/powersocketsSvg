@@ -358,7 +358,7 @@ function updateProgressBar(points: number): void {
 export function brrzzzl(durationInMs: number = 900) {
   // TODO visual effect for same duration
   if ("vibrate" in navigator) {
-	// vibration API supported
+    // vibration API supported
     navigator.vibrate([
         durationInMs * 5 / 9,
         durationInMs * 3 / 9,
