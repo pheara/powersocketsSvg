@@ -42,6 +42,7 @@ import {
   delay,
   deepFreeze,
   filterSet,
+  makeDOM2VBox,
 } from "utils";
 
 
@@ -233,6 +234,21 @@ function setupLevelTimer() {
 function registerInputHandlers(s: Socket, data: MapData) {
 
   console.log("registering input handlers");
+
+  /*
+  data.element.addEventListener("click", e => {
+    const dom2vbox = makeDOM2VBox(data.element);
+    const elements = svgElementsAt(
+      dom2vbox({x : e.clientX, y: e.clientY}),
+      data.element,
+    );
+    const pieces = piecesAt(
+      data,
+      dom2vbox({x : e.clientX, y: e.clientY}),
+    );
+    console.log("clicked on the following: ", elements, pieces);
+  });
+  */
 
   s.element.addEventListener("click", e => {
     console.log("[dbg] is clicked socket powered? ", isPowered(s, data));
