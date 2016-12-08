@@ -61,6 +61,40 @@ export function svgElementsAt(pt: Point, svg: SVGSVGElement) {
     svgRect.width = svgRect.height = 1;
 
     return svg.getIntersectionList(svgRect, svg);
+
+    //TODO fine-grained collision between paths and the point
+    // (`getIntersectionList` only uses the bounding box)
+
+    // const boxCollisions = svg.getIntersectionList(svgRect, svg);
+    // return boxCollisions.filter()
+    /* path to [{x,y}] or straight up intersection
+     * - intersection library: http://www.kevlindev.com/geometry/2D/intersections/index.htm
+     *     - on npm: https://www.npmjs.com/package/svg-intersections
+     * - svg-points seems to do path<->points: https://www.npmjs.com/package/svg-points#path and https://github.com/colinmeinke/points
+     * - http://stackoverflow.com/questions/25384052/convert-svg-path-d-attribute-to-a-array-of-points
+     * - use switch as clip, then getPointAt #themhacks
+     * - getPointAtLength() with polygon resulution
+     * - polyfill for the soon-to-be standard https://github.com/jarek-foksa/path-data-polyfill.js
+     * - docu for d: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d
+     * - http://stackoverflow.com/questions/34352624/alternative-for-deprecated-svg-pathseglist/34359059#34359059
+     * - path-tutorial: https://www.sitepoint.com/closer-look-svg-path-data/
+    */
+}
+
+
+/**
+ * @param poly an array of points with x and y positions which build a closed path.
+ * @param pt  the position of the point which we want to check if it is inside the closed path or not. If so, a collision is detected.
+ * by Jonas Raoni Soares Silva
+ * http://jsfromhell.com/math/is-point-in-poly [rev. #0]
+ */
+export function isPointInPoly(poly: Array<Point>, pt: Point): boolean {
+    let c, i, l, j;
+    for(c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
+        ((poly[i].y <= pt.y && pt.y < poly[j].y) || (poly[j].y <= pt.y && pt.y < poly[i].y))
+        && (pt.x < (poly[j].x - poly[i].x) * (pt.y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x)
+        && (c = !c);
+    return c;
 }
 
 /**
