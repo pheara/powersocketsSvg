@@ -6,6 +6,11 @@ import {
   svgElementsAt,
 } from "utils";
 
+/**
+ * @param map
+ * @param pt x- and y- coordinates in vbox-
+ *           coordinates (=the original svg coordinates)
+ */
 export function piecesAt(map: MapData, pt: Point) {
   const svg = map.element;
   const intersectedElements = svgElementsAt(pt, svg);
