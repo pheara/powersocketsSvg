@@ -564,7 +564,19 @@ function deletemeCollisionDbg(data) {
     const switchPoints = toPoints(switchShape);
     const toAbs = makeConverterToAbsoluteCoords(
       data.element, s
-    ); //TODO produces viewspace coords for some reason
+    );
+
+    // we only need the transform that's applied to the powerlines-group
+    /*
+  <g
+     transform="translate(-85.731594,24.276162)" <-- apply this translate to the coordinates and all is fine
+     id="switches">
+    <path
+       id="path4148-3"
+       d="M 280.52317,18.27923 L 280.52317,29.12718 C 243.01458,29.12718 280.52317,29.12718 243.01458,29.12718 L 243.01458,18.27923 Z"
+
+    */
+    //TODO produces viewspace coords for some reason
     const absSwitchPoints = switchPoints.map(
       p => toAbs({x: p.x, y: p.y})
     );
