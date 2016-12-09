@@ -68,6 +68,9 @@ export function svgElementsAt(pt: Point, svg: SVGSVGElement) {
     // const boxCollisions = svg.getIntersectionList(svgRect, svg);
     // return boxCollisions.filter()
     /* path to [{x,y}] or straight up intersection
+     * - inkscape can be forced to save absolute path coordinates!
+     *     - http://stackoverflow.com/questions/6890685/is-there-a-tool-to-convert-svg-line-paths-from-absolute-to-relative
+     *     - path-tutorial: https://developer.mozilla.org/en/docs/Web/SVG/Tutorial/Paths
      * - intersection library: http://www.kevlindev.com/geometry/2D/intersections/index.htm
      *     - on npm: https://www.npmjs.com/package/svg-intersections
      *     - requires preprocessed data that is in the same coordinate-space (which is hard to do with to paths' d-attributes)
