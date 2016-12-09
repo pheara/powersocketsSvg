@@ -306,13 +306,18 @@ function updatePoints(touchedSockets, data) {
 
   for (const s of poweredAndTouched) {
       if (!currentlyShockedSockets.has(s)) {
+
+          s.element.style.stroke = "red":
           // vibration not yet started for that socket
           currentlyShockedSockets.add(s);
           points -= SHOCK_PENALTY;
           brrzzzl(900);
           delay(950).then(() => {
               currentlyShockedSockets.delete(s);
+              s.element.style.stroke = "black";
           });
+
+
       }
   }
 
