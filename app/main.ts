@@ -9,6 +9,20 @@ import "fetch";
 declare var fetch; // sadly there's no .d.ts file for fetch
 
 import {
+  intersect,
+  shape,
+} from "svg-intersections";
+/*
+import "svg-intersections";
+declare var intersect;
+declare var shape;
+*/
+
+import {
+  toPoints,
+} from "svg-points";
+
+import {
   piecesAt,
   selectAttachedLines,
   attached,
@@ -43,6 +57,7 @@ import {
   deepFreeze,
   filterSet,
   makeDOM2VBox,
+  makeConverterToAbsoluteCoords,
 } from "utils";
 
 
@@ -161,6 +176,8 @@ function gotoLevelN(levelNr: number) {
   unregisterPrevious();
   console.log(`Loading level ${levelNr}`);
   loadMap(`level${levelNr}.svg`, "levelMountPoint").then((data: MapData) => {
+
+    deletemeCollisionDbg(data); //TODO deletme
 
     prepareFeedbackIcons(data);
 
@@ -500,3 +517,79 @@ console.log(Raphael);
 // circle.attr("stroke", "#fff");
 //
  */
+
+function deletemeCollisionDbg(data) {
+    //TODO <deletme>
+    const getAttributes = el => {
+      const acc = {}
+      for(let a of el.attributes) {
+        const parsed = Number.parseFloat(a.value);
+        if(!isNaN(parsed) && parsed.toString() === a.value) {
+          // correct parse => numerical attribute
+          acc[a.name] = parsed;
+        } else {
+          // string attribute
+          acc[a.name] = a.value;
+        }
+      }
+      return acc;
+    }
+    //TODO toAbs (all coordinates need to be in same space)
+    // makeConverterToAbsoluteCoords(svgRoot, elem)(p)
+    // but how for paths' "d"-attribute?
+
+
+    // run intersection myself? with some kind of iterative enhancement with getPointAt
+
+    /*
+    const rect2shape = r => {
+      const getNumAttr = attrName =>
+        Number.parseFloat(r.getAttribute(attrName))
+      return shape("rect", {
+        x: y: height: width: });
+    }
+    */
+    const path2shape = p => {
+      return {
+        type: "path",
+        d: p.getAttribute("d")
+      };
+    }
+
+    const g = data.generators[0].element;
+    const s = data.switches[0].element;
+    const ps = data.powerlines.map(p => p.element);
+
+    const switchShape = path2shape(s);
+    const switchPoints = toPoints(switchShape);
+    const toAbs = makeConverterToAbsoluteCoords(
+      data.element, s
+    ); //TODO produces viewspace coords for some reason
+    const absSwitchPoints = switchPoints.map(
+      p => toAbs({x: p.x, y: p.y})
+    );
+    switchPoints.forEach(sp => {
+      const mc = markCoords;
+      markCoords(data.element, sp.x, sp.y);
+    })
+    absSwitchPoints.forEach(asp => {
+      const mc = markCoords;
+      markCoords(data.element, asp.x, asp.y);
+    })
+    console.log("switchPoints: ", switchPoints, absSwitchPoints );
+
+
+/*
+    ps.forEach(p => {
+      // console.log("testing intersections: ", intersect(p, g));
+      const sp = shape(p.tagName, getAttributes(p));
+      const ss = shape(s.tagName, getAttributes(s));
+      console.log(
+        "testing intersections: ",
+        intersect(sp, ss)
+      );
+    });
+    */
+
+    //TODO </deletme>
+}

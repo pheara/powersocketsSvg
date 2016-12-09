@@ -75,7 +75,8 @@ body {
   -ms-animation: tick 2s infinite linear;
   */
   /*animation: tick1 2s infinite linear;*/
-  animation: tick1 5.5s infinite ease-in-out;
+  /* animation: tick1 5.5s infinite ease-in-out; */
+  animation: tick1 30s infinite ease-in-out;
   transform-origin: 50% 50%;
   display: block;
 }

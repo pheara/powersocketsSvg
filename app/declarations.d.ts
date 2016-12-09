@@ -4,6 +4,8 @@
 }*/
 
 declare module "svg-path-parser";
+declare module "svg-intersections";
+declare module "svg-points";
 
 interface MapData {
   element: SVGSVGElement,

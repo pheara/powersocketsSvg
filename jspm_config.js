@@ -24,7 +24,11 @@ System.config({
     "babel-runtime": "npm:babel-runtime@5.8.38",
     "core-js": "npm:core-js@1.2.7",
     "fetch": "github:github/fetch@1.0.0",
+    "svg-intersections": "npm:svg-intersections@0.2.5",
     "svg-path-parser": "npm:svg-path-parser@1.0.1",
+    "svg-points": "npm:svg-points@3.0.1",
+    "svg.intersections.js": "npm:svg.intersections.js@1.1.1",
+    "svg.js": "npm:svg.js@2.3.6",
     "typescript": "npm:typescript@1.8.10",
     "wout/svg.js": "github:wout/svg.js@2.3.6",
     "github:jspm/nodelibs-assert@0.1.0": {
@@ -84,6 +88,18 @@ System.config({
       "assert": "github:jspm/nodelibs-assert@0.1.0",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "vm": "github:jspm/nodelibs-vm@0.1.0"
+    },
+    "npm:svg-intersections@0.2.5": {
+      "kld-affine": "npm:kld-affine@0.1.0",
+      "kld-polynomial": "npm:kld-polynomial@0.1.0"
+    },
+    "npm:svg.intersections.js@1.1.1": {
+      "svg.js": "npm:svg.js@2.3.6"
+    },
+    "npm:svg.js@2.3.6": {
+      "fs": "github:jspm/nodelibs-fs@0.1.2",
+      "process": "github:jspm/nodelibs-process@0.1.2",
+      "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     },
     "npm:typescript@1.8.10": {
       "os": "github:jspm/nodelibs-os@0.1.0"
