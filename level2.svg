@@ -14,7 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="level0.svg">
+   sodipodi:docname="level2.svg">
   <sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -24,17 +24,17 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1920"
-     inkscape:window-height="1056"
+     inkscape:window-width="1680"
+     inkscape:window-height="1026"
      id="namedview4153"
      showgrid="false"
-     inkscape:zoom="3.3589911"
-     inkscape:cx="42.569673"
-     inkscape:cy="169.0049"
-     inkscape:window-x="0"
+     inkscape:zoom="9.5006616"
+     inkscape:cx="134.63586"
+     inkscape:cy="136.46487"
+     inkscape:window-x="1920"
      inkscape:window-y="24"
      inkscape:window-maximized="1"
-     inkscape:current-layer="switches"
+     inkscape:current-layer="svg2"
      inkscape:object-paths="true"
      inkscape:snap-intersection-paths="true"
      inkscape:object-nodes="true"
@@ -67,11 +67,11 @@
     </rdf:RDF>
   </metadata>
   <g
-     transform="translate(-42.681194,10.068232)"
+     transform="translate(-40.681194,12.068232)"
      id="powerlines">
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.84184951px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 163.44399,37.804688 0.29816,65.676802"
+       d="M 163.44399,37.804688 L 163.74215,108.42851"
        id="path4173"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
@@ -79,11 +79,11 @@
        sodipodi:nodetypes="cc"
        inkscape:connector-curvature="0"
        id="path3380"
-       d="m 146.36828,130.03399 -26.67413,0.29816"
+       d="M 146.36828,130.03399 L 119.69415,130.33215"
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.53650475px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.53650475px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 215.28264,129.19194 -26.67413,0.29816"
+       d="M 215.28264,129.19194 L 188.60851,129.4901"
        id="path3382"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
@@ -91,11 +91,11 @@
        sodipodi:nodetypes="cc"
        inkscape:connector-curvature="0"
        id="path3428"
-       d="m 163.34542,149.79689 0.29816,65.6768"
+       d="M 163.34542,149.79689 L 163.64358,215.47369"
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.84184951px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
   </g>
   <g
-     transform="translate(118.55849,32.169725)"
+     transform="translate(120.55849,34.169725)"
      id="generators">
     <rect
        y="-27.378788"
@@ -106,7 +106,7 @@
        style="opacity:1;fill:#ffa300;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
   </g>
   <g
-     transform="translate(6.7328066,14.887518)"
+     transform="translate(8.7328066,16.887518)"
      id="sockets">
     <rect
        y="190.49631"
@@ -134,7 +134,7 @@
      id="switches">
     <path
        id="path4148-3"
-       d="m 115.63699,112.24634 10.84795,0 0,19.97037 19.44238,0 0,12.0765 -19.44238,0 0,21.16233 -10.84795,0 z"
+       d="M 117.63699,114.24634 L 128.48494,114.24634 L 128.48494,134.21671 L 149.29565,134.21671 L 149.29565,146.29321 L 128.48494,146.29321 L 128.48494,167.45554 L 117.63699,167.45554 Z"
        style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        inkscape:connector-curvature="0"
        inkscape:transform-center-x="-9.5423578"

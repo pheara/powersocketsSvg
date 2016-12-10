@@ -23,17 +23,17 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1920"
-     inkscape:window-height="1056"
+     inkscape:window-width="1680"
+     inkscape:window-height="1026"
      id="namedview4153"
      showgrid="false"
-     inkscape:zoom="3.3589913"
-     inkscape:cx="89.401596"
-     inkscape:cy="102.77452"
-     inkscape:window-x="0"
+     inkscape:zoom="4.7503312"
+     inkscape:cx="98.224882"
+     inkscape:cy="143.52599"
+     inkscape:window-x="1920"
      inkscape:window-y="24"
      inkscape:window-maximized="1"
-     inkscape:current-layer="powerlines"
+     inkscape:current-layer="svg2"
      inkscape:object-paths="true"
      inkscape:snap-intersection-paths="true"
      inkscape:object-nodes="true"
@@ -69,7 +69,7 @@
      id="powerlines">
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.84184951px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 94.192177,44.640234 0.298167,65.676796"
+       d="M 94.192177,38.851303 L 94.490344,112.31703"
        id="path4173"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
@@ -77,23 +77,23 @@
        sodipodi:nodetypes="cc"
        inkscape:connector-curvature="0"
        id="path3380"
-       d="m 146.36828,130.03399 -26.67413,0.29816"
+       d="M 146.36828,132.03399 L 118.20561,132.33215"
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.53650475px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     <path
        sodipodi:nodetypes="cc"
        inkscape:connector-curvature="0"
        id="path3384"
-       d="m 233.55089,38.96272 0.29817,76.42174"
+       d="M 233.55089,40.96272 L 233.84906,117.38446"
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.90810692px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.53650475px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 215.28263,129.93788 -26.67413,0.29816"
+       d="M 215.28263,131.93788 L 181.68678,132.23604"
        id="path3364"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
   </g>
   <g
-     transform="translate(49.256161,27.878788)"
+     transform="translate(49.256161,29.878788)"
      id="generators">
     <rect
        y="-27.378788"
@@ -111,7 +111,7 @@
        y="-27.378788" />
   </g>
   <g
-     transform="translate(6.7328066,14.887518)"
+     transform="translate(6.7328066,16.887518)"
      id="sockets">
     <rect
        style="opacity:1;fill:#cccccc;fill-opacity:1;stroke:#000000;stroke-width:1.79131746;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
@@ -122,11 +122,11 @@
        y="109.14062" />
   </g>
   <g
-     transform="translate(-21.784432,18.532245)"
+     transform="translate(-21.784432,20.532245)"
      id="switches">
     <path
        id="path4148"
-       d="m 219.31415,129.62202 -31.35071,-0.87816 -0.59542,-12.98459 19.44238,0 0,-21.162331 12.18764,0 c 0.93276,21.909841 0,0 0.31611,35.025081 z"
+       d="M 219.31415,129.62202 L 187.2936,129.71141 L 187.36802,115.75927 L 206.8104,115.75927 L 206.8104,94.596939 L 219.29575,94.671366 Z"
        style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        inkscape:connector-curvature="0"
        inkscape:transform-center-x="8.185891"
@@ -138,7 +138,7 @@
        inkscape:transform-center-x="9.0790164"
        inkscape:connector-curvature="0"
        style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 79.97057,129.62202 -31.35071,-0.87816 -0.59542,-12.98459 19.44238,0 0,-21.162331 12.18764,0 c 0.93276,21.909841 0,0 0.31611,35.025081 z"
+       d="M 79.97057,129.62202 L 48.173297,129.63699 L 48.02444,115.75927 L 67.46682,115.75927 L 67.46682,94.596939 L 79.65446,94.596939 Z"
        id="path4153" />
   </g>
 </svg>
