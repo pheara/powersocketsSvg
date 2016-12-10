@@ -24,9 +24,8 @@ System.config({
     "babel-runtime": "npm:babel-runtime@5.8.38",
     "core-js": "npm:core-js@1.2.7",
     "fetch": "github:github/fetch@1.0.0",
-    "svg-path-parser": "npm:svg-path-parser@1.0.1",
+    "svg-points": "npm:svg-points@3.0.1",
     "typescript": "npm:typescript@1.8.10",
-    "wout/svg.js": "github:wout/svg.js@2.3.6",
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.4.1"
     },

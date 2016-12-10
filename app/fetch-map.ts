@@ -1,5 +1,4 @@
 /// <reference path="declarations.d.ts"/>
-import parseSvgPath from "svg-path-parser";
 // import fetch from "fetch";
 import "fetch";
 declare var fetch; // sadly there's no .d.ts file for fetch

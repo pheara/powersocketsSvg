@@ -2,6 +2,7 @@
   "name": "powersockets-svg",
   "version": "0.2.0",
   "dependencies": {
+    "@types/svg.js": "0.0.17",
     "@types/whatwg-fetch": "0.0.32"
   },
   "scripts": {
@@ -26,8 +27,7 @@
     "configFile": "jspm_config.js",
     "dependencies": {
       "fetch": "github:github/fetch@^1.0.0",
-      "svg-path-parser": "npm:svg-path-parser@^1.0.1",
-      "wout/svg.js": "github:svgdotjs/svg.js@^2.3.6"
+      "svg-points": "npm:svg-points@^3.0.1"
     },
     "devDependencies": {
       "babel": "npm:babel-core@^5.8.24",

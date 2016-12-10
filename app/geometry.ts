@@ -3,8 +3,11 @@ import {
   contains,
   markCoords,
   markCoordsLive,
-  svgElementsAt,
 } from "utils";
+
+import {
+  svgElementsAt,
+} from "svg-elements-at";
 
 /**
  * @param map

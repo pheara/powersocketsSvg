@@ -40,49 +40,6 @@ export function markCoords(svg: SVGSVGElement, x: number, y: number) {
 }
 
 /**
-  * @param pt the point in viewbox-coordinates (=pre-scaling coords).
-  * @param svg the svg-root-element
-  * adapted from source of
-  * <http://xn--dahlstrm-t4a.net/svg/interactivity/intersection/sandbox_hover.svg>
-  */
-export function svgElementsAt(pt: Point, svg: SVGSVGElement) {
-    /*
-     * getIntersectionList works on viewport-coordinates
-     * we need to transform the svgRects coordinats from
-     * viebox (=original) to viewport (=svg after scaling)
-     * coordinates.
-     */
-    const vbox2vportCoords = makeConverterToAbsoluteCoords(svg, svg);
-    const vportPt = vbox2vportCoords(pt);
-
-    const svgRect = svg.createSVGRect();
-    svgRect.x = vportPt.x;
-    svgRect.y = vportPt.y;
-    svgRect.width = svgRect.height = 1;
-
-    return svg.getIntersectionList(svgRect, svg);
-
-    //TODO fine-grained collision between paths and the point
-    // (`getIntersectionList` only uses the bounding box)
-
-    // const boxCollisions = svg.getIntersectionList(svgRect, svg);
-    // return boxCollisions.filter()
-    /* path to [{x,y}] or straight up intersection
-     * - intersection library: http://www.kevlindev.com/geometry/2D/intersections/index.htm
-     *     - on npm: https://www.npmjs.com/package/svg-intersections
-     * - svg-points seems to do path<->points: https://www.npmjs.com/package/svg-points#path and https://github.com/colinmeinke/points
-     * - http://stackoverflow.com/questions/25384052/convert-svg-path-d-attribute-to-a-array-of-points
-     * - use switch as clip, then getPointAt #themhacks
-     * - getPointAtLength() with polygon resulution
-     * - polyfill for the soon-to-be standard https://github.com/jarek-foksa/path-data-polyfill.js
-     * - docu for d: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d
-     * - http://stackoverflow.com/questions/34352624/alternative-for-deprecated-svg-pathseglist/34359059#34359059
-     * - path-tutorial: https://www.sitepoint.com/closer-look-svg-path-data/
-    */
-}
-
-
-/**
  * @param poly an array of points with x and y positions which build a closed path.
  * @param pt  the position of the point which we want to check if it is inside the closed path or not. If so, a collision is detected.
  * by Jonas Raoni Soares Silva
@@ -95,6 +52,18 @@ export function isPointInPoly(poly: Array<Point>, pt: Point): boolean {
         && (pt.x < (poly[j].x - poly[i].x) * (pt.y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x)
         && (c = !c);
     return c;
+}
+
+/**
+ * Turns anything that supports for-of
+ * into an array.
+ */
+export function nodeListToArray<T extends Node>(nodeList: NodeListOf<T>): Array<T> {
+  const arr = new Array(nodeList.length);
+  for(let i = 0; i < nodeList.length; i++) {
+    arr[i] = nodeList[i];
+  }
+  return arr;
 }
 
 /**
@@ -111,6 +80,25 @@ export function makeConverterToAbsoluteCoords(svgRoot, element) {
       y: (matrix.b * p.x) + (matrix.d * p.y) + matrix.f - offset.top
     };
   };
+}
+
+/**
+ * @returns a function that converts points from an elements
+ *          own/local coordinate system, to their equivalent
+ *          viewbox-coordinates (viewbox = the svg's original
+ *          coordinate-system)
+ */
+export function makeLocal2VBox(svgRoot: SVGSVGElement, element) {
+  return (p: Point): Point => {
+    const svgPoint = svgRoot.createSVGPoint()
+    svgPoint.x = p.x;
+    svgPoint.y = p.y;
+    return svgPoint
+      // v-- transform to viewport (vbox + transform of svgRoot)
+      .matrixTransform(element.getCTM())
+      // v-- viewport to viewbox
+      .matrixTransform(svgRoot.getCTM().inverse())
+  }
 }
 
 /**

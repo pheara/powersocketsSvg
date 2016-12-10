@@ -1,4 +1,4 @@
-// custom declarations / headers like for `svg-path-parser`
+// custom declarations / headers
 /// <reference path="declarations.d.ts"/>
 
 // declarations/headers installed via `./node_modules/.bin/typings install <pkg>`
@@ -7,6 +7,10 @@
 // import fetch from "fetch";
 import "fetch";
 declare var fetch; // sadly there's no .d.ts file for fetch
+
+import {
+  toPoints,
+} from "svg-points";
 
 import {
   piecesAt,
@@ -25,7 +29,6 @@ import {
   loadMap,
   fetchSvg,
 } from "fetch-map";
-// declare var parseSvgPath: any; // no .d.ts supplied
 
 // import Immutable from "immutable";
 
@@ -33,16 +36,22 @@ import {
 // import SVG from "jspm_packages/svg.js@2.3.6/svg.js.d.ts";
 
 import {
+  svgElementsAt,
+} from "svg-elements-at";
+
+import {
   hasJSType,
   contains,
   markCoords,
   markCoordsLive,
   getIn,
-  svgElementsAt,
   delay,
   deepFreeze,
   filterSet,
   makeDOM2VBox,
+  makeConverterToAbsoluteCoords,
+  makeLocal2VBox,
+  isPointInPoly,
 } from "utils";
 
 
@@ -235,20 +244,7 @@ function registerInputHandlers(s: Socket, data: MapData) {
 
   console.log("registering input handlers");
 
-  /*
-  data.element.addEventListener("click", e => {
-    const dom2vbox = makeDOM2VBox(data.element);
-    const elements = svgElementsAt(
-      dom2vbox({x : e.clientX, y: e.clientY}),
-      data.element,
-    );
-    const pieces = piecesAt(
-      data,
-      dom2vbox({x : e.clientX, y: e.clientY}),
-    );
-    console.log("clicked on the following: ", elements, pieces);
-  });
-  */
+  // setupDbgClickHandler(data);
 
   s.element.addEventListener("click", e => {
     console.log("[dbg] is clicked socket powered? ", isPowered(s, data));
@@ -436,72 +432,17 @@ function unregisterDebugMarkers() {
   }
 }
 
-
-// ------------- //
-
-
-/*
-//TODO how to do collision? also: run box-collision first
-
-[svg.js has intersections](https://github.com/amatiash/svg.intersections.js)
-
-// <http://www.kevlindev.com/geometry/2D/intersections/index.htm>
-// http://stackoverflow.com/questions/5396657/event-when-two-svg-elements-touch
-// raphael js has collision detection ([source](http://stackoverflow.com/questions/12550635/how-can-i-improve-on-this-javascript-collision-detection))
-//
-// http://stackoverflow.com/questions/2174640/hit-testing-svg-shapes
-// var nodelist = svgroot.getIntersectionList(hitrect, null);
-// [working example](http://xn--dahlstrm-t4a.net/svg/interactivity/intersection/sandbox_hover.svg)
-//
-// [paper.js renders to canvas and has collision too](http://paperjs.org/reference/path/#getintersections-path)
-
-//TODO: t-pieces. connector box?
-window.SVG4dbg = SVG;
-var svgParent = document.getElementById('background');
-var draw = SVG(svgParent);
-window.draw4dbg = draw;
-var rect = draw.rect(100, 100).attr({ fill: '#f06' });
-
-var draw2 = SVG(blueprintSVG);
-window.draw2fordbg = draw2;
-*/
-
-
-/*
-declare var Raphael: any; //imported in index.html
-
-
-//TODO take a look at the lightweight svg.js
-
-
-
-importing svg data
-
-* https://github.com/wout/svg.js#import--export-svg
-* https://github.com/wout/raphael-svg-import (deprecated for svg.js)
-
-
-parsing path data
-
-* https://github.com/hughsk/svg-path-parser
-* https://www.npmjs.com/package/parse-svg
-* https://github.com/canvg/canvg
-
-
-
-
-
-console.log(Raphael);
-
-// Creates canvas 320 × 200 at 10, 50
-// var paper = Raphael(10, 50, 320, 200);
-//
-// // Creates circle at x = 50, y = 40, with radius 10
-// var circle = paper.circle(50, 40, 10);
-// // Sets the fill attribute of the circle to red (#f00)
-// circle.attr("fill", "#f00");
-//
-// // Sets the stroke attribute of the circle to white
-// circle.attr("stroke", "#fff");
-//
- */
+function setupDbgClickHandler(data: MapData) {
+  data.element.addEventListener("click", e => {
+    const dom2vbox = makeDOM2VBox(data.element);
+    const elements = svgElementsAt(
+      dom2vbox({x : e.clientX, y: e.clientY}),
+      data.element,
+    );
+    const pieces = piecesAt(
+      data,
+      dom2vbox({x : e.clientX, y: e.clientY}),
+    );
+    console.log("clicked on the following: ", elements, pieces);
+  });
+}
