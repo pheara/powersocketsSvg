@@ -47,18 +47,22 @@ import {
 // import SVG from "jspm_packages/svg.js@2.3.6/svg.js.d.ts";
 
 import {
+  svgElementsAt,
+} from "svg-elements-at";
+
+import {
   hasJSType,
   contains,
   markCoords,
   markCoordsLive,
   getIn,
-  svgElementsAt,
   delay,
   deepFreeze,
   filterSet,
   makeDOM2VBox,
   makeConverterToAbsoluteCoords,
   makeLocal2VBox,
+  isPointInPoly,
 } from "utils";
 
 
@@ -189,7 +193,7 @@ function gotoLevelN(levelNr: number) {
     resetLevelData();
     setupLevelTimer();
     currentMapData = data;
-    // markPoweredSockets(data);
+    markPoweredSockets(data);
     for (const s of data.sockets) {
       registerInputHandlers(s, data);
     }
@@ -253,7 +257,6 @@ function registerInputHandlers(s: Socket, data: MapData) {
 
   console.log("registering input handlers");
 
-  /*
   data.element.addEventListener("click", e => {
     const dom2vbox = makeDOM2VBox(data.element);
     const elements = svgElementsAt(
@@ -266,7 +269,6 @@ function registerInputHandlers(s: Socket, data: MapData) {
     );
     console.log("clicked on the following: ", elements, pieces);
   });
-  */
 
   s.element.addEventListener("click", e => {
     console.log("[dbg] is clicked socket powered? ", isPowered(s, data));
@@ -584,13 +586,19 @@ function deletemeCollisionDbg(data) {
     );
     switchPoints.forEach(sp => {
       const mc = markCoords;
-      markCoords(data.element, sp.x, sp.y);
+      // markCoords(data.element, sp.x, sp.y);
     })
     vboxSwitchPoints.forEach(asp => {
       const mc = markCoords;
-      markCoords(data.element, asp.x, asp.y);
+      // markCoords(data.element, asp.x, asp.y);
     })
     console.log("switchPoints: ", switchPoints, vboxSwitchPoints );
+    console.log(
+      "point in poly: ",
+      isPointInPoly(vboxSwitchPoints, {x: 160, y: 50}),
+      isPointInPoly(vboxSwitchPoints, {x: 200, y: 50}),
+      isPointInPoly(vboxSwitchPoints, {x: 160, y: 10}),
+    );
 
 
 /*

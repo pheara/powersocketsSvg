@@ -12,8 +12,11 @@ import {
   contains,
   markCoords,
   markCoordsLive,
-  svgElementsAt,
 } from "utils";
+
+import {
+  svgElementsAt,
+} from "svg-elements-at";
 
 export function isPowered(
   powerable: Rectangle | Switch,
