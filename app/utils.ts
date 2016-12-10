@@ -121,6 +121,25 @@ export function makeConverterToAbsoluteCoords(svgRoot, element) {
 }
 
 /**
+ * @returns a function that converts points from an elements
+ *          own/local coordinate system, to their equivalent
+ *          viewbox-coordinates (viewbox = the svg's original
+ *          coordinate-system)
+ */
+export function makeLocal2VBox(svgRoot: SVGSVGElement, element) {
+  return (p: Point): Point => {
+    const svgPoint = svgRoot.createSVGPoint()
+    svgPoint.x = p.x;
+    svgPoint.y = p.y;
+    return svgPoint
+      // v-- transform to viewport (vbox + transform of svgRoot)
+      .matrixTransform(element.getCTM())
+      // v-- viewport to viewbox
+      .matrixTransform(svgRoot.getCTM().inverse())
+  }
+}
+
+/**
   * adapted from <https://www.sitepoint.com/how-to-translate-from-dom-to-svg-coordinates-and-back-again/>
   */
 export function makeDOM2VBox(svg: SVGSVGElement) {

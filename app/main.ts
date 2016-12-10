@@ -58,6 +58,7 @@ import {
   filterSet,
   makeDOM2VBox,
   makeConverterToAbsoluteCoords,
+  makeLocal2VBox,
 } from "utils";
 
 
@@ -565,6 +566,7 @@ function deletemeCollisionDbg(data) {
     const toAbs = makeConverterToAbsoluteCoords(
       data.element, s
     );
+    const local2VBox = makeLocal2VBox(data.element, s);
 
     // we only need the transform that's applied to the powerlines-group
     /*
@@ -577,18 +579,18 @@ function deletemeCollisionDbg(data) {
 
     */
     //TODO produces viewspace coords for some reason
-    const absSwitchPoints = switchPoints.map(
-      p => toAbs({x: p.x, y: p.y})
+    const vboxSwitchPoints = switchPoints.map(
+      p => local2VBox({x: p.x, y: p.y})
     );
     switchPoints.forEach(sp => {
       const mc = markCoords;
       markCoords(data.element, sp.x, sp.y);
     })
-    absSwitchPoints.forEach(asp => {
+    vboxSwitchPoints.forEach(asp => {
       const mc = markCoords;
       markCoords(data.element, asp.x, asp.y);
     })
-    console.log("switchPoints: ", switchPoints, absSwitchPoints );
+    console.log("switchPoints: ", switchPoints, vboxSwitchPoints );
 
 
 /*
