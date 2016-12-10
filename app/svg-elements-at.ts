@@ -72,33 +72,7 @@ export function svgElementsAt(
       return exactIntersection;
     }
 }
-    // TODO the change might break isPowered as powerlines are impossible to hit now
 
-
-    //TODO fine-grained collision between paths and the point
-    // (`getIntersectionList` only uses the bounding box)
-
-    // const boxCollisions = svg.getIntersectionList(svgRect, svg);
-    // return boxCollisions.filter()
-    /* path to [{x,y}] or straight up intersection
-     * - inkscape can be forced to save absolute path coordinates!
-     *     - http://stackoverflow.com/questions/6890685/is-there-a-tool-to-convert-svg-line-paths-from-absolute-to-relative
-     *     - path-tutorial: https://developer.mozilla.org/en/docs/Web/SVG/Tutorial/Paths
-     * - intersection library: http://www.kevlindev.com/geometry/2D/intersections/index.htm
-     *     - on npm: https://www.npmjs.com/package/svg-intersections
-     *     - requires preprocessed data that is in the same coordinate-space (which is hard to do with to paths' d-attributes)
-     * - svg-points seems to do path<->points: https://www.npmjs.com/package/svg-points#path and https://github.com/colinmeinke/points
-     *     - only parses the "d"-attribute without even translating it to element-space coordinates
-     * - http://stackoverflow.com/questions/25384052/convert-svg-path-d-attribute-to-a-array-of-points
-     * - use switch as clip, then getPointAt #themhacks
-     * - getPointAtLength() with polygon resulution
-     * - polyfill for the soon-to-be standard https://github.com/jarek-foksa/path-data-polyfill.js
-     * - docu for d: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d
-     * - http://stackoverflow.com/questions/34352624/alternative-for-deprecated-svg-pathseglist/34359059#34359059
-     * - path-tutorial: https://www.sitepoint.com/closer-look-svg-path-data/
-     *
-     * easiest hack: just always return false during the transitions (requires hard-coding them)
-    */
 function toShape(el): any {
   const getNumAttr = attr => Number.parseFloat(el.getAttribute(attr));
   switch(el.tagName) {

@@ -1,10 +1,3 @@
-/*declare module "svg-path-parser" {
-  let _temp: any;
-  export = _temp;
-}*/
-
-declare module "svg-path-parser";
-declare module "svg-intersections";
 declare module "svg-points";
 
 interface MapData {

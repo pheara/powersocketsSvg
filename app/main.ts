@@ -1,4 +1,4 @@
-// custom declarations / headers like for `svg-path-parser`
+// custom declarations / headers
 /// <reference path="declarations.d.ts"/>
 
 // declarations/headers installed via `./node_modules/.bin/typings install <pkg>`
@@ -7,16 +7,6 @@
 // import fetch from "fetch";
 import "fetch";
 declare var fetch; // sadly there's no .d.ts file for fetch
-
-import {
-  intersect,
-  shape,
-} from "svg-intersections";
-/*
-import "svg-intersections";
-declare var intersect;
-declare var shape;
-*/
 
 import {
   toPoints,
@@ -39,7 +29,6 @@ import {
   loadMap,
   fetchSvg,
 } from "fetch-map";
-// declare var parseSvgPath: any; // no .d.ts supplied
 
 // import Immutable from "immutable";
 
@@ -182,8 +171,6 @@ function gotoLevelN(levelNr: number) {
   console.log(`Loading level ${levelNr}`);
   loadMap(`level${levelNr}.svg`, "levelMountPoint").then((data: MapData) => {
 
-    deletemeCollisionDbg(data); //TODO deletme
-
     prepareFeedbackIcons(data);
 
     // ensure that no further changes are made to the map data
@@ -193,7 +180,7 @@ function gotoLevelN(levelNr: number) {
     resetLevelData();
     setupLevelTimer();
     currentMapData = data;
-    markPoweredSockets(data);
+    // markPoweredSockets(data);
     for (const s of data.sockets) {
       registerInputHandlers(s, data);
     }
@@ -257,18 +244,7 @@ function registerInputHandlers(s: Socket, data: MapData) {
 
   console.log("registering input handlers");
 
-  data.element.addEventListener("click", e => {
-    const dom2vbox = makeDOM2VBox(data.element);
-    const elements = svgElementsAt(
-      dom2vbox({x : e.clientX, y: e.clientY}),
-      data.element,
-    );
-    const pieces = piecesAt(
-      data,
-      dom2vbox({x : e.clientX, y: e.clientY}),
-    );
-    console.log("clicked on the following: ", elements, pieces);
-  });
+  // setupDbgClickHandler(data);
 
   s.element.addEventListener("click", e => {
     console.log("[dbg] is clicked socket powered? ", isPowered(s, data));
@@ -451,167 +427,17 @@ function unregisterDebugMarkers() {
   }
 }
 
-
-// ------------- //
-
-
-/*
-//TODO how to do collision? also: run box-collision first
-
-[svg.js has intersections](https://github.com/amatiash/svg.intersections.js)
-
-// <http://www.kevlindev.com/geometry/2D/intersections/index.htm>
-// http://stackoverflow.com/questions/5396657/event-when-two-svg-elements-touch
-// raphael js has collision detection ([source](http://stackoverflow.com/questions/12550635/how-can-i-improve-on-this-javascript-collision-detection))
-//
-// http://stackoverflow.com/questions/2174640/hit-testing-svg-shapes
-// var nodelist = svgroot.getIntersectionList(hitrect, null);
-// [working example](http://xn--dahlstrm-t4a.net/svg/interactivity/intersection/sandbox_hover.svg)
-//
-// [paper.js renders to canvas and has collision too](http://paperjs.org/reference/path/#getintersections-path)
-
-//TODO: t-pieces. connector box?
-window.SVG4dbg = SVG;
-var svgParent = document.getElementById('background');
-var draw = SVG(svgParent);
-window.draw4dbg = draw;
-var rect = draw.rect(100, 100).attr({ fill: '#f06' });
-
-var draw2 = SVG(blueprintSVG);
-window.draw2fordbg = draw2;
-*/
-
-
-/*
-declare var Raphael: any; //imported in index.html
-
-
-//TODO take a look at the lightweight svg.js
-
-
-
-importing svg data
-
-* https://github.com/wout/svg.js#import--export-svg
-* https://github.com/wout/raphael-svg-import (deprecated for svg.js)
-
-
-parsing path data
-
-* https://github.com/hughsk/svg-path-parser
-* https://www.npmjs.com/package/parse-svg
-* https://github.com/canvg/canvg
-
-
-
-
-
-console.log(Raphael);
-
-// Creates canvas 320 × 200 at 10, 50
-// var paper = Raphael(10, 50, 320, 200);
-//
-// // Creates circle at x = 50, y = 40, with radius 10
-// var circle = paper.circle(50, 40, 10);
-// // Sets the fill attribute of the circle to red (#f00)
-// circle.attr("fill", "#f00");
-//
-// // Sets the stroke attribute of the circle to white
-// circle.attr("stroke", "#fff");
-//
- */
-
-function deletemeCollisionDbg(data) {
-    //TODO <deletme>
-    const getAttributes = el => {
-      const acc = {}
-      for(let a of el.attributes) {
-        const parsed = Number.parseFloat(a.value);
-        if(!isNaN(parsed) && parsed.toString() === a.value) {
-          // correct parse => numerical attribute
-          acc[a.name] = parsed;
-        } else {
-          // string attribute
-          acc[a.name] = a.value;
-        }
-      }
-      return acc;
-    }
-    //TODO toAbs (all coordinates need to be in same space)
-    // makeConverterToAbsoluteCoords(svgRoot, elem)(p)
-    // but how for paths' "d"-attribute?
-
-
-    // run intersection myself? with some kind of iterative enhancement with getPointAt
-
-    /*
-    const rect2shape = r => {
-      const getNumAttr = attrName =>
-        Number.parseFloat(r.getAttribute(attrName))
-      return shape("rect", {
-        x: y: height: width: });
-    }
-    */
-    const path2shape = p => {
-      return {
-        type: "path",
-        d: p.getAttribute("d")
-      };
-    }
-
-    const g = data.generators[0].element;
-    const s = data.switches[0].element;
-    const ps = data.powerlines.map(p => p.element);
-
-    const switchShape = path2shape(s);
-    const switchPoints = toPoints(switchShape);
-    const toAbs = makeConverterToAbsoluteCoords(
-      data.element, s
+function setupDbgClickHandler(data: MapData) {
+  data.element.addEventListener("click", e => {
+    const dom2vbox = makeDOM2VBox(data.element);
+    const elements = svgElementsAt(
+      dom2vbox({x : e.clientX, y: e.clientY}),
+      data.element,
     );
-    const local2VBox = makeLocal2VBox(data.element, s);
-
-    // we only need the transform that's applied to the powerlines-group
-    /*
-  <g
-     transform="translate(-85.731594,24.276162)" <-- apply this translate to the coordinates and all is fine
-     id="switches">
-    <path
-       id="path4148-3"
-       d="M 280.52317,18.27923 L 280.52317,29.12718 C 243.01458,29.12718 280.52317,29.12718 243.01458,29.12718 L 243.01458,18.27923 Z"
-
-    */
-    //TODO produces viewspace coords for some reason
-    const vboxSwitchPoints = switchPoints.map(
-      p => local2VBox({x: p.x, y: p.y})
+    const pieces = piecesAt(
+      data,
+      dom2vbox({x : e.clientX, y: e.clientY}),
     );
-    switchPoints.forEach(sp => {
-      const mc = markCoords;
-      // markCoords(data.element, sp.x, sp.y);
-    })
-    vboxSwitchPoints.forEach(asp => {
-      const mc = markCoords;
-      // markCoords(data.element, asp.x, asp.y);
-    })
-    console.log("switchPoints: ", switchPoints, vboxSwitchPoints );
-    console.log(
-      "point in poly: ",
-      isPointInPoly(vboxSwitchPoints, {x: 160, y: 50}),
-      isPointInPoly(vboxSwitchPoints, {x: 200, y: 50}),
-      isPointInPoly(vboxSwitchPoints, {x: 160, y: 10}),
-    );
-
-
-/*
-    ps.forEach(p => {
-      // console.log("testing intersections: ", intersect(p, g));
-      const sp = shape(p.tagName, getAttributes(p));
-      const ss = shape(s.tagName, getAttributes(s));
-      console.log(
-        "testing intersections: ",
-        intersect(sp, ss)
-      );
-    });
-    */
-
-    //TODO </deletme>
+    console.log("clicked on the following: ", elements, pieces);
+  });
 }
