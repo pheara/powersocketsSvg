@@ -280,9 +280,11 @@ function startScoring(mapData: MapData) {
 // ------------- //
 function updatePoints(touchedSockets, data) {
 
+  /*
   if (touchesEl) { // TODO deletme; for debugging
     touchesEl.innerHTML = " touches " + touchedSockets.size;
   }
+  */
 
   const safeButUntouched = new Set<Socket>(
     data.sockets.filter(s =>
