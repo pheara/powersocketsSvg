@@ -21,10 +21,12 @@ import {
 export function isPowered(
   powerable: Rectangle | Switch,
   map: MapData,
-  visited = new Set<Rectangle | Switch>()
+  visited = new Set<Rectangle | Switch>(),
+  powered = new Set<Rectangle | Switch>()
 ): boolean {
   if (contains(map.generators, powerable)) {
     // reached a generator, stuff is powered.
+    powered.add(powerable);
     return true;
   } else { // switch or socket
 
@@ -42,12 +44,18 @@ export function isPowered(
 
       if (connectedWith.generators.length > 0) {
         // markCoords(map.element, otherEnd.x, otherEnd.y);
+        connectedWith.generators.forEach(g => powered.add(g));
+        powered.add(powLine);
+        powered.add(powerable);
         return true;
       } else if (connectedWith.switches.length > 0) {
         // markCoords(map.element, otherEnd.x, otherEnd.y);
         for (const swtch of connectedWith.switches) {
           // recurse into the switch (but avoid going back)
-          if (!visited.has(swtch) && isPowered(swtch, map, visited)) {
+          if (!visited.has(swtch) && isPowered(swtch, map, visited, powered)) {
+            powered.add(swtch);
+            powered.add(powerable);
+            powered.add(powLine);
             return true;
           }
         }

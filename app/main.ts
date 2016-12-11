@@ -247,7 +247,16 @@ function registerInputHandlers(s: Socket, data: MapData) {
   // setupDbgClickHandler(data);
 
   s.element.addEventListener("click", e => {
-    console.log("[dbg] is clicked socket powered? ", isPowered(s, data));
+    const visited = new Set<Rectangle | Switch>();
+    const poweredVia = new Set<Rectangle | Switch>();
+    console.log("[dbg] is clicked socket powered? ", isPowered(s, data, visited, poweredVia));
+    console.log("[dbg] poweredVia: ", poweredVia);
+    for(const p of poweredVia) {
+      p.element.style.stroke = "red";
+      delay(900).then(() => {
+        p.element.style.stroke = "black";
+      })
+    }
   });
 
   s.element.addEventListener("touchstart", e => {
