@@ -20,14 +20,25 @@ import {
 
 export function isPowered(
   powerable: Rectangle | Switch,
+  map: MapData
+): boolean {
+  const visited = new Set<Rectangle | Switch>();
+  const powered = new Set<Rectangle | Switch>();
+  pathToGenerator(powerable, map, visited, powered);
+  return powered.size > 0;
+}
+
+
+export function pathToGenerator(
+  powerable: Rectangle | Switch,
   map: MapData,
   visited = new Set<Rectangle | Switch>(),
   powered = new Set<Rectangle | Switch>()
-): boolean {
+): Set<Rectangle | Switch> { // boolean {
   if (contains(map.generators, powerable)) {
     // reached a generator, stuff is powered.
     powered.add(powerable);
-    return true;
+    return powered;
   } else { // switch or socket
 
     visited.add(powerable);
@@ -47,21 +58,26 @@ export function isPowered(
         connectedWith.generators.forEach(g => powered.add(g));
         powered.add(powLine);
         powered.add(powerable);
-        return true;
+        return powered;
       } else if (connectedWith.switches.length > 0) {
         // markCoords(map.element, otherEnd.x, otherEnd.y);
         for (const swtch of connectedWith.switches) {
-          // recurse into the switch (but avoid going back)
-          if (!visited.has(swtch) && isPowered(swtch, map, visited, powered)) {
-            powered.add(swtch);
-            powered.add(powerable);
-            powered.add(powLine);
-            return true;
+          if (!visited.has(swtch)) {
+            /* recurse into the switch (but avoid going back).
+             * powered elements are added to `powered` by-reference
+             */
+            pathToGenerator(swtch, map, visited, powered);
+            if (powered.has(swtch)) {
+              powered.add(swtch);
+              powered.add(powerable);
+              powered.add(powLine);
+              return powered;
+            }
           }
         }
       }
     }
 
-    return false;
+    return powered;
   }
 }

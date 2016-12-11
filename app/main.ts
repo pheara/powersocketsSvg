@@ -23,6 +23,7 @@ import {
 
 import {
   isPowered,
+  pathToGenerator,
 } from "is-powered";
 
 import {
@@ -247,15 +248,14 @@ function registerInputHandlers(s: Socket, data: MapData) {
   // setupDbgClickHandler(data);
 
   s.element.addEventListener("click", e => {
-    const visited = new Set<Rectangle | Switch>();
-    const poweredVia = new Set<Rectangle | Switch>();
-    console.log("[dbg] is clicked socket powered? ", isPowered(s, data, visited, poweredVia));
+    const ptg = pathToGenerator(s, data);
+    console.log("[dbg] is clicked socket powered? ", ptg.size > 0);
     console.log("[dbg] poweredVia: ", poweredVia);
-    for(const p of poweredVia) {
-      p.element.style.stroke = "red";
+    for (const pathPiece of ptg) {
+      pathPiece.element.style.stroke = "red";
       delay(900).then(() => {
-        p.element.style.stroke = "black";
-      })
+        pathPiece.element.style.stroke = "black";
+      });
     }
   });
 
