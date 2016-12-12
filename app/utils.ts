@@ -234,3 +234,11 @@ export function filterSet(set, f) {
   }
   return resultSet;
 }
+
+export function mapToMap<A, B>(arr: Array<A>, f: (A) => B): Map<A, B> {
+  const result = new Map<A, B>();
+  for (const x of arr) {
+    result.set(x, f(x));
+  }
+  return result;
+}
