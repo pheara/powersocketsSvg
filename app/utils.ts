@@ -1,5 +1,5 @@
 export function valueOr<T>(value: T | undefined | null, deflt: T): T {
-  return value? value : deflt;
+  return value ? value : deflt;
 }
 
 export function hasJSType(type: string, obj: any) {
@@ -7,12 +7,12 @@ export function hasJSType(type: string, obj: any) {
 }
 
 export function contains<T>( xs: T[] | Iterable<T>, x: T): boolean {
-  if((<T[]>xs).indexOf) {
+  if ((<T[]>xs).indexOf) {
     // assumes that internal implementation is more optimized
     return (<T[]>xs).indexOf(x) >= 0;
   } else {
-    for(const el of xs) {
-      if(el === x) return true;
+    for (const el of xs) {
+      if (el === x) return true;
     }
     return false;
   }
@@ -29,7 +29,7 @@ export function delay(milliseconds: number): Promise<void> {
  * using the viewBox (= pre-mounting) coordinate-system.
  */
 export function markCoords(svg: SVGSVGElement, x: number, y: number) {
-  //const NS = svg.getAttribute('xmlns'); ---v
+  // const NS = svg.getAttribute('xmlns'); ---v
   const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle"); // Create a path in SVG's namespace
   circle.setAttribute("cx", x.toString());
   circle.setAttribute("cy", y.toString());
@@ -47,7 +47,7 @@ export function markCoords(svg: SVGSVGElement, x: number, y: number) {
  */
 export function isPointInPoly(poly: Array<Point>, pt: Point): boolean {
     let c, i, l, j;
-    for(c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
+    for (c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
         ((poly[i].y <= pt.y && pt.y < poly[j].y) || (poly[j].y <= pt.y && pt.y < poly[i].y))
         && (pt.x < (poly[j].x - poly[i].x) * (pt.y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x)
         && (c = !c);
@@ -60,7 +60,7 @@ export function isPointInPoly(poly: Array<Point>, pt: Point): boolean {
  */
 export function nodeListToArray<T extends Node>(nodeList: NodeListOf<T>): Array<T> {
   const arr = new Array(nodeList.length);
-  for(let i = 0; i < nodeList.length; i++) {
+  for (let i = 0; i < nodeList.length; i++) {
     arr[i] = nodeList[i];
   }
   return arr;
@@ -90,15 +90,15 @@ export function makeConverterToAbsoluteCoords(svgRoot, element) {
  */
 export function makeLocal2VBox(svgRoot: SVGSVGElement, element) {
   return (p: Point): Point => {
-    const svgPoint = svgRoot.createSVGPoint()
+    const svgPoint = svgRoot.createSVGPoint();
     svgPoint.x = p.x;
     svgPoint.y = p.y;
     return svgPoint
       // v-- transform to viewport (vbox + transform of svgRoot)
       .matrixTransform(element.getCTM())
       // v-- viewport to viewbox
-      .matrixTransform(svgRoot.getCTM().inverse())
-  }
+      .matrixTransform(svgRoot.getCTM().inverse());
+  };
 }
 
 /**
@@ -110,7 +110,7 @@ export function makeDOM2VBox(svg: SVGSVGElement) {
     svgPoint.x = pt.x;
     svgPoint.y = pt.y;
     return svgPoint.matrixTransform(svg.getScreenCTM().inverse());
-  }
+  };
 }
 
 /**
@@ -121,7 +121,7 @@ export function makeDOM2VBox(svg: SVGSVGElement) {
 export function boundingRectVBox(el: SVGElement, svg: SVGSVGElement) {
     const boundsClientRect = el.getBoundingClientRect();
 
-    const dom2vbox = makeDOM2VBox(svg)
+    const dom2vbox = makeDOM2VBox(svg);
     const leftUpper = dom2vbox({
       x: boundsClientRect.left,
       y: boundsClientRect.top
@@ -139,7 +139,7 @@ export function boundingRectVBox(el: SVGElement, svg: SVGSVGElement) {
       y: leftUpper.y,
       height,
       width,
-    }
+    };
 }
 
 /**
@@ -156,21 +156,21 @@ export function markCoordsLive(svg: SVGSVGElement, x: number, y: number, conditi
   svg.appendChild(mark);
 
   const updateMark = () => {
-    if(condition()) {
+    if (condition()) {
       mark.style.display = ""; // not "none"
     } else {
       mark.style.display = "none";
     }
-  }
+  };
   const intervalId = setInterval(updateMark, 100);
   return () => {
     svg.removeChild(mark);
     clearInterval(intervalId);
-  }
+  };
 }
 
 export function addClientRect(el: SVGElement, svg: SVGSVGElement) {
-  const crData = el.getBoundingClientRect()
+  const crData = el.getBoundingClientRect();
   const clientRect = document.createElementNS("http://www.w3.org/2000/svg", "rect"); // Create a path in SVG's namespace
   clientRect.setAttribute("x", crData.left.toString());
   clientRect.setAttribute("y", crData.top.toString());
@@ -190,14 +190,14 @@ export function addClientRect(el: SVGElement, svg: SVGSVGElement) {
  * @param path
  * @return {*}
  */
-export function getIn(obj:any , path: string[]) {
-    switch(path.length){
+export function getIn(obj: any , path: string[]) {
+    switch (path.length) {
         case 0:
             return undefined;
         case 1:
             return obj && obj[path[0]];
         default:
-            return obj && obj[path[0]] && getIn( obj[path[0]] , path.slice(1) )
+            return obj && obj[path[0]] && getIn( obj[path[0]] , path.slice(1) );
     }
 }
 
@@ -210,14 +210,14 @@ export function getIn(obj:any , path: string[]) {
 export function deepFreeze(obj) {
 
     // Retrieve the property names defined on obj
-    var propNames = Object.getOwnPropertyNames(obj);
+    let propNames = Object.getOwnPropertyNames(obj);
 
     // Freeze properties before freezing self
     propNames.forEach(function(name) {
-        var prop = obj[name];
+        let prop = obj[name];
 
         // Freeze prop if it is an object
-        if (typeof prop == 'object' && !Object.isFrozen(prop))
+        if (typeof prop === "object" && !Object.isFrozen(prop))
             deepFreeze(prop);
     });
 
@@ -227,8 +227,8 @@ export function deepFreeze(obj) {
 
 export function filterSet(set, f) {
   const resultSet = new Set();
-  for(let x of set) {
-    if(f(x)) {
+  for (let x of set) {
+    if (f(x)) {
       resultSet.add(x);
     }
   }
