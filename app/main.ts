@@ -326,9 +326,14 @@ function updatePoints(touchedSockets, data) {
   for (const s of poweredAndTouched) {
       if (!currentlyShockedSockets.has(s)) {
 
-          s.element.style.stroke = "red";
+          // s.element.style.stroke = "red";
           // vibration not yet started for that socket
           currentlyShockedSockets.add(s);
+          delay(1000).then(() => {
+              currentlyShockedSockets.delete(s);
+              // s.element.style.stroke = "black";
+          });
+
           points -= SHOCK_PENALTY;
           brrzzzl(900);
           const ptg = pathsToGenerator.get(s);
@@ -340,12 +345,6 @@ function updatePoints(touchedSockets, data) {
               });
             }
           }
-
-          delay(950).then(() => {
-              currentlyShockedSockets.delete(s);
-              s.element.style.stroke = "black";
-          });
-
 
       }
   }
