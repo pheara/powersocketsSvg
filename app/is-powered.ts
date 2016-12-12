@@ -32,7 +32,7 @@ export function pathToGenerator(
   map: MapData,
   visited = new Set<Rectangle | Switch>(),
   powered = new Set<Rectangle | Switch>()
-): Set<Rectangle | Switch> { // boolean {
+): Set<Rectangle | Switch | Powerline> { // boolean {
   if (contains(map.generators, powerable)) {
     // reached a generator, stuff is powered.
     powered.add(powerable);
