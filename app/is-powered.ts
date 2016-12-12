@@ -51,6 +51,11 @@ export function pathToGenerator(
       // markCoords(map.element, otherEnd.x, otherEnd.y);
       // console.log("powerable attached to: ", connectedWith.generators, connectedWith.switches);
 
+      /*
+      TODO search the whole map for the sake of the color highlight
+      even if one path leads to a generator early on
+      */
+
       if (connectedWith.generators.length > 0) {
         // markCoords(map.element, otherEnd.x, otherEnd.y);
         connectedWith.generators.forEach(g => powered.add(g));
