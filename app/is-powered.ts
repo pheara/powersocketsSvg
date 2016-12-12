@@ -22,9 +22,7 @@ export function isPowered(
   powerable: Rectangle | Switch,
   map: MapData
 ): boolean {
-  const visited = new Set<Rectangle | Switch>();
-  const powered = new Set<Rectangle | Switch>();
-  pathToGenerator(powerable, map, visited, powered);
+  const powered = pathToGenerator(powerable, map);
   return powered.size > 0;
 }
 
