@@ -241,7 +241,7 @@ function setupLevelTimer() {
       brrzzzl();
       resetLevelData();
     }
-    if (timeLeftEl) {
+    if (timeLeftEl && scoreHTML && score) {
       timeLeftEl.innerHTML = "Time left: " + Math.max(timeLevel, 0);
       scoreHTML.innerHTML = "Score: " + score;
     }
