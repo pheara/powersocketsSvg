@@ -53,6 +53,7 @@ import {
   makeConverterToAbsoluteCoords,
   makeLocal2VBox,
   isPointInPoly,
+  mapToMap,
 } from "utils";
 
 
@@ -250,7 +251,7 @@ function registerInputHandlers(s: Socket, data: MapData) {
   s.element.addEventListener("click", e => {
     const ptg = pathToGenerator(s, data);
     console.log("[dbg] is clicked socket powered? ", ptg.size > 0);
-    console.log("[dbg] poweredVia: ", poweredVia);
+    console.log("[dbg] poweredVia: ", ptg);
     for (const pathPiece of ptg) {
       pathPiece.element.style.stroke = "red";
       delay(900).then(() => {
@@ -285,16 +286,27 @@ function updatePoints(touchedSockets, data) {
     touchesEl.innerHTML = " touches " + touchedSockets.size;
   }
   */
+  const pathsToGenerator = mapToMap(
+    data.sockets,
+    s => pathToGenerator(s, data)
+  );
+
+  const poweredSockets = new Set<Socket>(
+    data.sockets.filter(s => {
+      const ptg = pathsToGenerator.get(s);
+      return ptg && ptg.size > 0;
+    })
+  );
 
   const safeButUntouched = new Set<Socket>(
     data.sockets.filter(s =>
-      !touchedSockets.has(s) && !isPowered(s, data)
+      !touchedSockets.has(s) && !poweredSockets.has(s)
     )
   );
 
   const safeAndTouched = filterSet(
     touchedSockets,
-    s => !isPowered(s, data)
+    s => !poweredSockets.has(s)
   );
 
   const poweredAndTouched = filterSet(
@@ -319,6 +331,16 @@ function updatePoints(touchedSockets, data) {
           currentlyShockedSockets.add(s);
           points -= SHOCK_PENALTY;
           brrzzzl(900);
+          const ptg = pathsToGenerator.get(s);
+          if (ptg) { // always true, but necessary for type-check
+            for (const pathPiece of ptg) {
+              pathPiece.element.style.stroke = "red";
+              delay(900).then(() => {
+                pathPiece.element.style.stroke = "black";
+              });
+            }
+          }
+
           delay(950).then(() => {
               currentlyShockedSockets.delete(s);
               s.element.style.stroke = "black";
