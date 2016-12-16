@@ -186,7 +186,7 @@ function gotoLevelN(levelNr: number) {
       registerInputHandlers(s, data);
     }
 
-    startScoring(data);
+    startGameLoop(data);
 
     console.log(`Successfully imported level ${levelNr}: `, data);
   });
@@ -270,15 +270,15 @@ function registerInputHandlers(s: Socket, data: MapData) {
 
 }
 
-function startScoring(mapData: MapData) {
+function startGameLoop(mapData: MapData) {
   pointsTimerId = setInterval(
-    () => updatePoints(touchedSockets, mapData),
+    () => gameLoop(touchedSockets, mapData),
     100
   ); /// () => has to be there
 }
 
 // ------------- //
-function updatePoints(touchedSockets, data) {
+function gameLoop(touchedSockets, data) {
 
   const pathsToGenerator = mapToMap(
     data.sockets,
