@@ -60,19 +60,24 @@ import {
 /**
  * CONFIG
  */
-
+/*
 const TIME_LIMIT_PER_LEVEL = 100;
 
 const INITIAL_POINTS = 30;
 const SHOCK_PENALTY = 25;
 const MISSED_OPPORTUNITY_PENALTY = 0.3;
 const POINTS_FOR_TAKEN_OPPORTUNITY = 0.9;
-
-
+*/
+import {
+  level,
+} from "config";
 
 /**
  * GLOBAL STATE :|
  */
+let scoreHTML = document.getElementById("score");
+let score: number = 0;
+
 const blueprintSVG = document.getElementById("blueprint");
 let points: number; ///points, adding according to how long someone is pressing the right socket
 let pointsTimerId;
@@ -133,8 +138,8 @@ gotoLevelN(currentLevelNr);
  * be at the start of a level.
  */
 function resetLevelData() {
-  timeLevel = TIME_LIMIT_PER_LEVEL;
-  points = INITIAL_POINTS;
+  timeLevel = level[currentLevelNr][0]; //TIME_LIMIT_PER_LEVEL;
+  points = level[currentLevelNr][1]; //INITIAL_POINTS;
   updateProgressBar(points);
 }
 
@@ -236,8 +241,9 @@ function setupLevelTimer() {
       brrzzzl();
       resetLevelData();
     }
-    if (timeLeftEl) {
+    if (timeLeftEl && scoreHTML && score) {
       timeLeftEl.innerHTML = "Time left: " + Math.max(timeLevel, 0);
+      scoreHTML.innerHTML = "Score: " + score;
     }
   }, 1000 );
 }
@@ -314,20 +320,25 @@ function gameLoop(touchedSockets, data) {
   // console.log("touchedSockets: ", safeAndTouched);
 
   for (const s of safeButUntouched) {
-    points -= MISSED_OPPORTUNITY_PENALTY;
+    points -= level[currentLevelNr][3]; //MISSED_OPPORTUNITY_PENALTY;
   }
 
   for (const s of safeAndTouched) {
-      points += POINTS_FOR_TAKEN_OPPORTUNITY;
+      points += level[currentLevelNr][4]; //POINTS_FOR_TAKEN_OPPORTUNITY;
   }
 
   for (const s of poweredAndTouched) {
       if (!currentlyShockedSockets.has(s)) {
 
-          s.element.style.stroke = "red";
+          // s.element.style.stroke = "red";
           // vibration not yet started for that socket
           currentlyShockedSockets.add(s);
-          points -= SHOCK_PENALTY;
+          delay(1000).then(() => {
+              currentlyShockedSockets.delete(s);
+              // s.element.style.stroke = "black";
+          });
+
+          points -= level[currentLevelNr][2]; //SHOCK_PENALTY;
           brrzzzl(900);
           const ptg = pathsToGenerator.get(s);
           if (ptg) { // always true, but necessary for type-check
@@ -339,12 +350,6 @@ function gameLoop(touchedSockets, data) {
             }
           }
 
-          delay(950).then(() => {
-              currentlyShockedSockets.delete(s);
-              s.element.style.stroke = "black";
-          });
-
-
       }
   }
 
@@ -352,6 +357,7 @@ function gameLoop(touchedSockets, data) {
   points = Math.min(points, 100);
 
   if (points >= 100) {
+    score += timeLevel;
     gotoNextLevel();
   }
 

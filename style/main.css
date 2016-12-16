@@ -49,11 +49,11 @@ body {
 .pointsFeedbackIcons,
 .pointsFeedbackIcons__left > svg,
 .pointsFeedbackIcons__right > svg {
-  height: 1.5rem;
+  height: 3.5rem;
 }
 .pointsFeedbackIcons__left > svg,
 .pointsFeedbackIcons__right > svg {
-  width: 1.858rem; /* same ratio as svg -> 1.238 x height*/
+  width: 4.33rem; /* same ratio as svg -> 1.238 x height*/
 
   margin-left: 0.1rem;
   margin-right: 0.1rem;

@@ -65,6 +65,8 @@
     </rdf:RDF>
   </metadata>
   <g
+     inkscape:groupmode="layer"
+     inkscape:label="powerlines"
      transform="translate(-42.681194,10.068232)"
      id="powerlines">
     <path
@@ -93,6 +95,8 @@
        sodipodi:nodetypes="cc" />
   </g>
   <g
+     inkscape:groupmode="layer"
+     inkscape:label="generators"
      transform="translate(49.256161,29.878788)"
      id="generators">
     <rect
@@ -111,6 +115,8 @@
        y="-27.378788" />
   </g>
   <g
+     inkscape:groupmode="layer"
+     inkscape:label="sockets"
      transform="translate(6.7328066,16.887518)"
      id="sockets">
     <rect
@@ -122,6 +128,8 @@
        y="109.14062" />
   </g>
   <g
+     inkscape:groupmode="layer"
+     inkscape:label="switches"
      transform="translate(-21.784432,20.532245)"
      id="switches">
     <path

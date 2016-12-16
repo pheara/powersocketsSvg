@@ -22,9 +22,7 @@ export function isPowered(
   powerable: Rectangle | Switch,
   map: MapData
 ): boolean {
-  const visited = new Set<Rectangle | Switch>();
-  const powered = new Set<Rectangle | Switch>();
-  pathToGenerator(powerable, map, visited, powered);
+  const powered = pathToGenerator(powerable, map);
   return powered.size > 0;
 }
 
@@ -34,7 +32,7 @@ export function pathToGenerator(
   map: MapData,
   visited = new Set<Rectangle | Switch>(),
   powered = new Set<Rectangle | Switch>()
-): Set<Rectangle | Switch> { // boolean {
+): Set<Rectangle | Switch | Powerline> { // boolean {
   if (contains(map.generators, powerable)) {
     // reached a generator, stuff is powered.
     powered.add(powerable);
@@ -52,6 +50,11 @@ export function pathToGenerator(
 
       // markCoords(map.element, otherEnd.x, otherEnd.y);
       // console.log("powerable attached to: ", connectedWith.generators, connectedWith.switches);
+
+      /*
+      TODO search the whole map for the sake of the color highlight
+      even if one path leads to a generator early on
+      */
 
       if (connectedWith.generators.length > 0) {
         // markCoords(map.element, otherEnd.x, otherEnd.y);

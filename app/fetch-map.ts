@@ -33,21 +33,25 @@ export function loadMap(url: string, mountpoint: string) : Promise<MapData> {
       //  console.log("map-data reextracted: ", extractMapData(svg))
       //)
 
+      /*
       let rect = data.sockets[0];
       let toAbs = makeConverterToAbsoluteCoords(svg, rect.element);
       console.log("to abs 1: ", toAbs(rect.pos));
       console.log("to abs 1: ", toAbs({x: 0, y: 0}));
       console.log("to abs 1: ", toAbs({x: 1, y: 1}));
+      */
 
       /*
        * mount the svg
        */
       backgroundDiv.appendChild(svg);
 
+      /*
       toAbs = makeConverterToAbsoluteCoords(svg, rect.element);
       console.log("to abs 2: ", toAbs(rect.pos)); // doesn't match up with the same vec above
       console.log("to abs 2: ", toAbs({x: 0, y: 0}));
       console.log("to abs 2: ", toAbs({x: 1, y: 1}));
+      */
 
       /*
        * some parsing needs to happen after mounting,

@@ -65,6 +65,8 @@
     </rdf:RDF>
   </metadata>
   <g
+     inkscape:groupmode="layer"
+     inkscape:label="powerlines"
      id="powerlines"
      powerlines=""
      transform="translate(0,2)">
@@ -87,6 +89,8 @@
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
   </g>
   <g
+     inkscape:groupmode="layer"
+     inkscape:label="generators"
      transform="translate(114.58687,48.403002)"
      id="generators">
     <rect
@@ -98,6 +102,8 @@
        style="opacity:1;fill:#ffa300;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
   </g>
   <g
+     inkscape:groupmode="layer"
+     inkscape:label="sockets"
      transform="translate(-15.381923,2.3800421)"
      id="sockets">
     <rect
@@ -116,6 +122,8 @@
        y="173.31842" />
   </g>
   <g
+     inkscape:groupmode="layer"
+     inkscape:label="switches"
      transform="translate(-85.731594,24.276162)"
      id="switches">
     <path
