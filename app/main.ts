@@ -78,7 +78,6 @@ let points: number; ///points, adding according to how long someone is pressing 
 let pointsTimerId;
 
 const timeLeftEl = document.getElementById("timeLeft");
-const touchesEl = document.getElementById("touches");
 const progressEl = document.getElementById("progress");
 const pointsIncEl = document.getElementById("pointIncIcons");
 const pointsDecEl = document.getElementById("pointDecIcons");
@@ -281,11 +280,6 @@ function startScoring(mapData: MapData) {
 // ------------- //
 function updatePoints(touchedSockets, data) {
 
-  /*
-  if (touchesEl) { // TODO deletme; for debugging
-    touchesEl.innerHTML = " touches " + touchedSockets.size;
-  }
-  */
   const pathsToGenerator = mapToMap(
     data.sockets,
     s => pathToGenerator(s, data)
