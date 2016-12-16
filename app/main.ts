@@ -78,6 +78,7 @@ let points: number; ///points, adding according to how long someone is pressing 
 let pointsTimerId;
 
 const timeLeftEl = document.getElementById("timeLeft");
+const fpsEl = document.getElementById("fps");
 const progressEl = document.getElementById("progress");
 const pointsIncEl = document.getElementById("pointIncIcons");
 const pointsDecEl = document.getElementById("pointDecIcons");
@@ -280,6 +281,9 @@ function startGameLoop(mapData: MapData) {
 // ------------- //
 function gameLoop(touchedSockets, data) {
 
+  updateFpsCounter();
+
+
   const pathsToGenerator = mapToMap(
     data.sockets,
     s => pathToGenerator(s, data)
@@ -357,6 +361,20 @@ function gameLoop(touchedSockets, data) {
     shocked: poweredAndTouched.size,
   });
   updateProgressBar(points);
+}
+
+let previousUpdateTime;
+function updateFpsCounter () {
+  if (previousUpdateTime) {
+    const currentTime = Date.now();
+    const deltaT = currentTime - previousUpdateTime;
+    const fps = 1000 / deltaT;
+    if (fpsEl) {
+      // the slice is to ensure a fixed string length. need to change this to use non-collapsible spaces.
+      fpsEl.innerHTML = "fps: " + ("____" + fps.toFixed(1)).slice(-4);
+    }
+  }
+  previousUpdateTime = Date.now();
 }
 
 function updateFeedbackIcons(counts) {
