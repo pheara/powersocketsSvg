@@ -78,7 +78,6 @@ import {
 let scoreHTML = document.getElementById("score");
 let score: number = 0;
 
-const blueprintSVG = document.getElementById("blueprint");
 let points: number; ///points, adding according to how long someone is pressing the right socket
 let pointsTimerId;
 
