@@ -31,6 +31,10 @@ import {
   fetchSvg,
 } from "fetch-map";
 
+import {
+  runGameLoop
+} from "run-game-loop";
+
 // import Immutable from "immutable";
 
 // import "wout/svg.js";
@@ -80,6 +84,9 @@ let score: number = 0;
 
 let points: number; ///points, adding according to how long someone is pressing the right socket
 let pointsTimerId;
+
+// let stopGameLoop: () => void;
+let stopGameLoop;
 
 const timeLeftEl = document.getElementById("timeLeft");
 const fpsEl = document.getElementById("fps");
@@ -173,6 +180,12 @@ function gotoNextLevel() {
 
 
 function gotoLevelN(levelNr: number) {
+
+  if (stopGameLoop) {
+    stopGameLoop();
+  }
+
+
   unregisterPrevious();
   console.log(`Loading level ${levelNr}`);
   loadMap(`level${levelNr}.svg`, "levelMountPoint").then((data: MapData) => {
@@ -191,7 +204,13 @@ function gotoLevelN(levelNr: number) {
       registerInputHandlers(s, data);
     }
 
-    startGameLoop(data);
+    // now, with everything configured, let's start up the updates
+    stopGameLoop = runGameLoop(
+      (deltaT, stopGameLoop) => update(deltaT, stopGameLoop, levelNr, data),
+      conf.maxFps
+    );
+
+    console.log("STOP: ", stopGameLoop);
 
     console.log(`Successfully imported level ${levelNr}: `, data);
   });
@@ -276,18 +295,18 @@ function registerInputHandlers(s: Socket, data: MapData) {
 
 }
 
-function startGameLoop(mapData: MapData) {
-  pointsTimerId = setInterval(
-    () => gameLoop(touchedSockets, mapData),
-    100
-  ); /// () => has to be there
 }
 
-// ------------- //
-function gameLoop(touchedSockets, data) {
-  const deltaT = getDeltaT();
-
-  updateFpsCounter(deltaT);
+/**
+ * All the game-logic around scoring and GUI-updates
+ */
+function update(
+  deltaT: number,
+  stopGameLoop: (() => void),
+  levelNr: number,
+  data: MapData
+) {
+  console.log("Running update for level ", levelNr); // TODO deleteme
 
   const pathsToGenerator = mapToMap(
     data.sockets,
@@ -359,6 +378,7 @@ function gameLoop(touchedSockets, data) {
     gotoNextLevel();
   }
 
+  updateFpsCounter(deltaT);
   updateFeedbackIcons({
     happy: safeAndTouched.size,
     bored: safeButUntouched.size,
@@ -367,17 +387,6 @@ function gameLoop(touchedSockets, data) {
   updateProgressBar(points);
 }
 
-let previousUpdateTime;
-function getDeltaT(): number {
-  const currentTime = Date.now();
-  if (!previousUpdateTime) {
-    previousUpdateTime = currentTime;
-  }
-  const deltaT = currentTime - previousUpdateTime;
-  previousUpdateTime = Date.now();
-
-  return deltaT;
-}
 
 function updateFpsCounter (deltaT: number) {
   if (deltaT > 0) {
