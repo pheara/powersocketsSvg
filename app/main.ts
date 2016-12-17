@@ -286,9 +286,9 @@ function startGameLoop(mapData: MapData) {
 
 // ------------- //
 function gameLoop(touchedSockets, data) {
+  const deltaT = getDeltaT();
 
-  updateFpsCounter();
-
+  updateFpsCounter(deltaT);
 
   const pathsToGenerator = mapToMap(
     data.sockets,
@@ -370,17 +370,25 @@ function gameLoop(touchedSockets, data) {
 }
 
 let previousUpdateTime;
-function updateFpsCounter () {
-  if (previousUpdateTime) {
-    const currentTime = Date.now();
-    const deltaT = currentTime - previousUpdateTime;
+function getDeltaT(): number {
+  const currentTime = Date.now();
+  if (!previousUpdateTime) {
+    previousUpdateTime = currentTime;
+  }
+  const deltaT = currentTime - previousUpdateTime;
+  previousUpdateTime = Date.now();
+
+  return deltaT;
+}
+
+function updateFpsCounter (deltaT: number) {
+  if (deltaT > 0) {
     const fps = 1000 / deltaT;
     if (fpsEl) {
       // the slice is to ensure a fixed string length. need to change this to use non-collapsible spaces.
       fpsEl.innerHTML = "fps: " + ("____" + fps.toFixed(1)).slice(-4);
     }
   }
-  previousUpdateTime = Date.now();
 }
 
 function updateFeedbackIcons(counts) {
