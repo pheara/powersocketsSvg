@@ -287,16 +287,23 @@ function registerInputHandlers(s: Socket, data: MapData) {
     }
   });
 
+  s.element.addEventListener("mousedown", e => {
+    e.preventDefault();
+    touchedSockets.add(s);
+  }, false);
+
   s.element.addEventListener("touchstart", e => {
     e.preventDefault();
     touchedSockets.add(s);
   }, false);
 
-  s.element.addEventListener("touchend", e => {
+  s.element.addEventListener("mouseup", e => {
     touchedSockets.delete(s);
   }, false);
 
-}
+  s.element.addEventListener("touchend", e => {
+    touchedSockets.delete(s);
+  }, false);
 
 }
 
