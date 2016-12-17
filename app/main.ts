@@ -75,7 +75,7 @@ import {
 /**
  * GLOBAL STATE :|
  */
-let scoreHTML = document.getElementById("score");
+let scoreEl = document.getElementById("score");
 let score: number = 0;
 
 let points: number; ///points, adding according to how long someone is pressing the right socket
@@ -240,9 +240,9 @@ function setupLevelTimer() {
       brrzzzl();
       resetLevelData();
     }
-    if (timeLeftEl && scoreHTML && score) {
+    if (timeLeftEl && scoreEl && score) {
       timeLeftEl.innerHTML = "Time left: " + Math.max(timeLevel, 0);
-      scoreHTML.innerHTML = "Score: " + score;
+      scoreEl.innerHTML = "Score: " + score;
     }
   }, 1000 );
 }
