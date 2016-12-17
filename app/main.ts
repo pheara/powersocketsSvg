@@ -73,8 +73,11 @@ const MISSED_OPPORTUNITY_PENALTY = 0.3;
 const POINTS_FOR_TAKEN_OPPORTUNITY = 0.9;
 */
 import {
-  levelConf,
+  levels,
 } from "config";
+*/
+
+import * as conf from "config";
 
 /**
  * GLOBAL STATE :|
@@ -144,8 +147,8 @@ gotoLevelN(currentLevelNr);
  * be at the start of a level.
  */
 function resetLevelData() {
-  timeLevel = levelConf[currentLevelNr].timeLimit;
-  points = levelConf[currentLevelNr].initialPoints;
+  timeLevel = conf.levels[currentLevelNr].timeLimit;
+  points = conf.levels[currentLevelNr].initialPoints;
   updateProgressBar(points);
 }
 
@@ -338,11 +341,11 @@ function update(
   // console.log("touchedSockets: ", safeAndTouched);
 
   for (const s of safeButUntouched) {
-    points -= levelConf[currentLevelNr].missedOpportunityPenalty * deltaT / 1000;
+    points -= conf.levels[levelNr].missedOpportunityPenalty * deltaT / 1000;
   }
 
   for (const s of safeAndTouched) {
-      points += levelConf[currentLevelNr].takenOpportunityPoints * deltaT / 1000;
+      points += conf.levels[levelNr].takenOpportunityPoints * deltaT / 1000;
   }
 
   for (const s of poweredAndTouched) {
@@ -356,7 +359,7 @@ function update(
               // s.element.style.stroke = "black";
           });
 
-          points -= levelConf[currentLevelNr].shockPenalty;
+          points -= conf.levels[levelNr].shockPenalty;
           brrzzzl(900);
           const ptg = pathsToGenerator.get(s);
           if (ptg) { // always true, but necessary for type-check
