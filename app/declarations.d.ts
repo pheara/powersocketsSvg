@@ -1,11 +1,11 @@
 declare module "svg-points";
 
 interface MapData {
-  element: SVGSVGElement,
-  generators: Generator[],
-  sockets: Socket[],
-  switches: Switch[],
-  powerlines: Powerline[],
+  element: SVGSVGElement;
+  generators: Generator[];
+  sockets: Socket[];
+  switches: Switch[];
+  powerlines: Powerline[];
 }
 
 interface Switch {
