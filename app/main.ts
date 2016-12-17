@@ -75,7 +75,6 @@ const POINTS_FOR_TAKEN_OPPORTUNITY = 0.9;
 import {
   levels,
 } from "config";
-*/
 
 import * as conf from "config";
 
@@ -157,6 +156,8 @@ function resetLevelData() {
  * the map if they're set
  */
 function unregisterPrevious() {
+
+  touchedSockets.clear();
 
   unregisterDebugMarkers();
 
