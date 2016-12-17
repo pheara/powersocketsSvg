@@ -3,7 +3,7 @@ export function valueOr<T>(value: T | undefined | null, deflt: T): T {
 }
 
 export function hasJSType(type: string, obj: any) {
-  return Object.prototype.toString.call(obj).slice(8, -1);
+  return Object.prototype.toString.call(obj).slice(8, -1) === type;
 }
 
 export function contains<T>( xs: T[] | Iterable<T>, x: T): boolean {
