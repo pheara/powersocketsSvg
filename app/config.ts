@@ -44,4 +44,11 @@ export const levelConf: Array<{
     missedOpportunityPenalty: 8,
     takenOpportunityPoints: 12,
   },
+  { // level5
+    timeLimit: 30,
+    initialPoints: 30,
+    shockPenalty: 31,
+    missedOpportunityPenalty: 8,
+    takenOpportunityPoints: 12,
+  },
 ]);
