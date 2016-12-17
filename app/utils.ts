@@ -208,18 +208,23 @@ export function getIn(obj: any , path: string[]) {
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze
  */
 export function deepFreeze(obj) {
+    if (hasJSType("Array", obj)) {
+      for (const el of obj) {
+        deepFreeze(el);
+      }
+    } else if (hasJSType("Object", obj)) {
+      // Retrieve the property names defined on obj
+      let propNames = Object.getOwnPropertyNames(obj);
 
-    // Retrieve the property names defined on obj
-    let propNames = Object.getOwnPropertyNames(obj);
+      // Freeze properties before freezing self
+      propNames.forEach(function(name) {
+          let prop = obj[name];
 
-    // Freeze properties before freezing self
-    propNames.forEach(function(name) {
-        let prop = obj[name];
-
-        // Freeze prop if it is an object
-        if (typeof prop === "object" && !Object.isFrozen(prop))
-            deepFreeze(prop);
-    });
+          // Freeze prop if it is an object
+          if (typeof prop === "object" && !Object.isFrozen(prop))
+              deepFreeze(prop);
+      });
+    }
 
     // Freeze self
     return Object.freeze(obj);
