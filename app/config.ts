@@ -2,7 +2,9 @@ import {
   deepFreeze,
 } from "utils";
 
-export const levelConf: Array<{
+export const maxFps = 10;
+
+export const levels: Array<{
     timeLimit: number, // in seconds
     initialPoints: number,
     shockPenalty: number, // per press
