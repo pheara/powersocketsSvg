@@ -319,11 +319,11 @@ function gameLoop(touchedSockets, data) {
   // console.log("touchedSockets: ", safeAndTouched);
 
   for (const s of safeButUntouched) {
-    points -= levelConf[currentLevelNr].missedOpportunityPenalty;
+    points -= levelConf[currentLevelNr].missedOpportunityPenalty * deltaT / 1000;
   }
 
   for (const s of safeAndTouched) {
-      points += levelConf[currentLevelNr].takenOpportunityPoints;
+      points += levelConf[currentLevelNr].takenOpportunityPoints * deltaT / 1000;
   }
 
   for (const s of poweredAndTouched) {
@@ -384,7 +384,7 @@ function updateFpsCounter (deltaT: number) {
     const fps = 1000 / deltaT;
     if (fpsEl) {
       // the slice is to ensure a fixed string length. need to change this to use non-collapsible spaces.
-      fpsEl.innerHTML = "fps: " + ("____" + fps.toFixed(1)).slice(-4);
+      fpsEl.innerHTML = "scoring-fps: " + ("____" + fps.toFixed(1)).slice(-4);
     }
   }
 }
