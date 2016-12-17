@@ -69,7 +69,7 @@ const MISSED_OPPORTUNITY_PENALTY = 0.3;
 const POINTS_FOR_TAKEN_OPPORTUNITY = 0.9;
 */
 import {
-  level,
+  levelConf,
 } from "config";
 
 /**
@@ -138,8 +138,8 @@ gotoLevelN(currentLevelNr);
  * be at the start of a level.
  */
 function resetLevelData() {
-  timeLevel = level[currentLevelNr][0]; //TIME_LIMIT_PER_LEVEL;
-  points = level[currentLevelNr][1]; //INITIAL_POINTS;
+  timeLevel = levelConf[currentLevelNr].timeLimit;
+  points = levelConf[currentLevelNr].initialPoints;
   updateProgressBar(points);
 }
 
@@ -320,11 +320,11 @@ function gameLoop(touchedSockets, data) {
   // console.log("touchedSockets: ", safeAndTouched);
 
   for (const s of safeButUntouched) {
-    points -= level[currentLevelNr][3]; //MISSED_OPPORTUNITY_PENALTY;
+    points -= levelConf[currentLevelNr].missedOpportunityPenalty;
   }
 
   for (const s of safeAndTouched) {
-      points += level[currentLevelNr][4]; //POINTS_FOR_TAKEN_OPPORTUNITY;
+      points += levelConf[currentLevelNr].takenOpportunityPoints;
   }
 
   for (const s of poweredAndTouched) {
@@ -338,7 +338,7 @@ function gameLoop(touchedSockets, data) {
               // s.element.style.stroke = "black";
           });
 
-          points -= level[currentLevelNr][2]; //SHOCK_PENALTY;
+          points -= levelConf[currentLevelNr].shockPenalty;
           brrzzzl(900);
           const ptg = pathsToGenerator.get(s);
           if (ptg) { // always true, but necessary for type-check
@@ -349,7 +349,6 @@ function gameLoop(touchedSockets, data) {
               });
             }
           }
-
       }
   }
 
