@@ -122,9 +122,9 @@ const currentlyShockedSockets = new Set<Socket>();
 /*
  * ensure that the icons are loaded
  */
-const shockedSvgP = fetchSvg("shocked.svg");
-const happySvgP = fetchSvg("happy_face.svg");
-const boredSvgP = fetchSvg("bored_face.svg");
+const shockedSvgP = fetchSvg("icons/shocked.svg");
+const happySvgP = fetchSvg("icons/happy_face.svg");
+const boredSvgP = fetchSvg("icons/bored_face.svg");
 
 /*
  * establish default values
@@ -192,7 +192,7 @@ function gotoLevelN(levelNr: number) {
 
   unregisterPrevious();
   console.log(`Loading level ${levelNr}`);
-  loadMap(`level${levelNr}.svg`, "levelMountPoint").then((data: MapData) => {
+  loadMap(`maps/level${levelNr}.svg`, "levelMountPoint").then((data: MapData) => {
 
     prepareFeedbackIcons(data);
 
