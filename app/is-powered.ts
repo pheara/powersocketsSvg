@@ -36,6 +36,7 @@ export function pathToGenerator(
   if (contains(map.generators, powerable)) {
     // reached a generator, stuff is powered.
     powered.add(powerable);
+    visited.add(powerable);
     return powered;
   } else { // switch or socket
 
@@ -48,6 +49,8 @@ export function pathToGenerator(
           powLine.end;
       const connectedWith = piecesAt(map, otherEnd);
 
+      visited.add(powLine);
+
       // markCoords(map.element, otherEnd.x, otherEnd.y);
       // console.log("powerable attached to: ", connectedWith.generators, connectedWith.switches);
 
@@ -58,7 +61,10 @@ export function pathToGenerator(
 
       if (connectedWith.generators.length > 0) {
         // markCoords(map.element, otherEnd.x, otherEnd.y);
-        connectedWith.generators.forEach(g => powered.add(g));
+        connectedWith.generators.forEach(g => {
+          powered.add(g)
+          visited.add(g)
+        });
         powered.add(powLine);
         powered.add(powerable);
         return powered;
@@ -71,7 +77,10 @@ export function pathToGenerator(
              */
             pathToGenerator(swtch, map, visited, powered);
             if (powered.has(swtch)) {
+
+              visited.add(swtch);
               powered.add(swtch);
+
               powered.add(powerable);
               powered.add(powLine);
               return powered;

@@ -8,6 +8,8 @@ interface MapData {
   powerlines: Powerline[];
 }
 
+type GamePiece = Powerline | Switch | Rectangle;
+
 interface Switch {
   element: SVGPathElement;
 }

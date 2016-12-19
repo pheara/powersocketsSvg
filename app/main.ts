@@ -117,7 +117,7 @@ let iconElements: {
   bored: [],
 };
 
-const currentlyShockedSockets = new Set<Socket>();
+const currentlyShockedPieces = new Set<GamePiece>();
 
 /*
  * ensure that the icons are loaded
@@ -317,68 +317,81 @@ function update(
   levelNr: number,
   data: MapData
 ) {
-  console.log("Running update for level ", levelNr); // TODO deleteme
 
   const pathsToGenerator = mapToMap(
     data.sockets,
-    s => pathToGenerator(s, data)
+    s => {
+
+      const visited = new Set<Rectangle | Switch>();
+      const powered = new Set<Rectangle | Switch>();
+      pathToGenerator(s, data, visited, powered);
+      return { visited, powered };
+    }
   );
 
   const poweredSockets = new Set<Socket>(
     data.sockets.filter(s => {
       const ptg = pathsToGenerator.get(s);
-      return ptg && ptg.size > 0;
+      return ptg && ptg.powered.size > 0;
     })
   );
 
-  const safeButUntouched = new Set<Socket>(
+  const enabled = new Set<Socket>(
     data.sockets.filter(s =>
-      !touchedSockets.has(s) && !poweredSockets.has(s)
+      // sockets that are currently being shocked, are exempt from scoring
+      !currentlyShockedPieces.has(s)
     )
   );
 
+  const enabledTouched = filterSet(
+    enabled,
+    s => touchedSockets.has(s)
+  );
+
+  const enabledUntouched = filterSet(
+    enabled,
+    s => !touchedSockets.has(s)
+  );
+
+  const safeButUntouched = filterSet(
+    enabledUntouched,
+    s => !poweredSockets.has(s)
+  );
+
   const safeAndTouched = filterSet(
-    touchedSockets,
+    enabledTouched,
     s => !poweredSockets.has(s)
   );
 
   const poweredAndTouched = filterSet(
-    touchedSockets,
-    s => !safeAndTouched.has(s)
+    enabledTouched,
+    s => poweredSockets.has(s)
   );
-  // console.log("touchedSockets: ", safeAndTouched);
 
   for (const s of safeButUntouched) {
     points -= conf.levels[levelNr].missedOpportunityPenalty * deltaT / 1000;
   }
 
   for (const s of safeAndTouched) {
-      points += conf.levels[levelNr].takenOpportunityPoints * deltaT / 1000;
+    points += conf.levels[levelNr].takenOpportunityPoints * deltaT / 1000;
   }
 
   for (const s of poweredAndTouched) {
-      if (!currentlyShockedSockets.has(s)) {
+    // vibration not yet started for that socket
 
-          // s.element.style.stroke = "red";
-          // vibration not yet started for that socket
-          currentlyShockedSockets.add(s);
-          delay(1000).then(() => {
-              currentlyShockedSockets.delete(s);
-              // s.element.style.stroke = "black";
-          });
-
-          points -= conf.levels[levelNr].shockPenalty;
-          brrzzzl(900);
-          const ptg = pathsToGenerator.get(s);
-          if (ptg) { // always true, but necessary for type-check
-            for (const pathPiece of ptg) {
-              pathPiece.element.style.stroke = "red";
-              delay(900).then(() => {
-                pathPiece.element.style.stroke = "black";
-              });
-            }
-          }
+    const ptg = pathsToGenerator.get(s);
+    if(ptg) {
+      for (const pathPiece of ptg.visited) {
+        currentlyShockedPieces.add(pathPiece);
+        delay(conf.shockDuration * 1000).then(() => {
+            currentlyShockedPieces.delete(pathPiece);
+        });
       }
+    }
+
+    points -= conf.levels[levelNr].shockPenalty;
+    brrzzzl(conf.shockDuration * 1000);
+    //}
   }
 
   points = Math.max(points, 0);
@@ -390,12 +403,59 @@ function update(
   }
 
   updateFpsCounter(deltaT);
+  updateProgressBar(points);
+  updateStrokeColors({
+    safeAndTouched,
+    pathsToGenerator,
+    currentlyShockedPieces,
+    mapData: data
+  });
   updateFeedbackIcons({
     happy: safeAndTouched.size,
     bored: safeButUntouched.size,
     shocked: poweredAndTouched.size,
   });
-  updateProgressBar(points);
+}
+
+function updateStrokeColors(args) {
+  const {
+    mapData,
+    safeAndTouched,
+    pathsToGenerator,
+    currentlyShockedPieces,
+  } = args;
+
+  const toStrokeWith = new Map<GamePiece, string>(); // maps to color-string
+
+  for (const s of mapData.sockets) {
+    toStrokeWith.set(s, conf.defaultColor);
+  }
+  for (const g of mapData.generators) {
+    toStrokeWith.set(g, conf.defaultColor);
+  }
+  for (const p of mapData.powerlines) {
+    toStrokeWith.set(p, conf.defaultColor);
+  }
+  for (const s of mapData.switches) {
+    toStrokeWith.set(s, conf.defaultColor);
+  }
+
+  for (const s of safeAndTouched) {
+    const ptg = pathsToGenerator.get(s);
+    if(ptg) {
+      for (const pathPiece of ptg.visited) {
+        toStrokeWith.set(pathPiece, conf.happyColor);
+      }
+    }
+  }
+
+  for (const piece of currentlyShockedPieces) {
+    toStrokeWith.set(piece, conf.shockColor);
+  }
+
+  for (const [pathPiece, color] of toStrokeWith) {
+    pathPiece.element.style.stroke = color;
+  }
 }
 
 

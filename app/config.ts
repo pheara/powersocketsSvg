@@ -2,7 +2,13 @@ import {
   deepFreeze,
 } from "utils";
 
+export const happyColor = "green";
+export const shockColor = "red";
+export const defaultColor = "black";
+
 export const maxFps = 10;
+
+export const shockDuration = 0.9; // in seconds
 
 export const levels: Array<{
     timeLimit: number, // in seconds
