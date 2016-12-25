@@ -19,13 +19,6 @@ body {
   */
 }
 
-#background,
-#background *,
-#decorations,
-#decorations * {
-  pointer-events: none;
-}
-
 .progress.above-icons{
   margin-bottom: 0;
 }
