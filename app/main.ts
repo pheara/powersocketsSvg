@@ -281,9 +281,9 @@ function registerInputHandlers(s: Socket, data: MapData) {
     console.log("[dbg] is clicked socket powered? ", ptg.size > 0);
     console.log("[dbg] poweredVia: ", ptg);
     for (const pathPiece of ptg) {
-      pathPiece.element.style.stroke = "red";
+      pathPiece.element.style.stroke = conf.shockColor;
       delay(900).then(() => {
-        pathPiece.element.style.stroke = "black";
+        pathPiece.element.style.stroke = conf.defaultColor;
       });
     }
   });

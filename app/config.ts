@@ -2,9 +2,9 @@ import {
   deepFreeze,
 } from "utils";
 
-export const happyColor = "green";
-export const shockColor = "red";
-export const defaultColor = "black";
+export const happyColor = "#3cd348"; // light green
+export const shockColor = "#f9321d"; // almost pure red
+export const defaultColor = "#dadada"; // light grey
 
 export const maxFps = 10;
 
