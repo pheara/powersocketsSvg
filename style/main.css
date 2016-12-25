@@ -17,6 +17,10 @@ body {
   width: 100%;
   max-width: 100%;
   */
+
+}
+body.dark-theme {
+  background-color: #1a1a1a;
 }
 
 .progress.above-icons{
