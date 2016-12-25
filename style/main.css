@@ -31,6 +31,9 @@ body.dark-theme {
   display: flex;
   flex-flow: row;
   justify-content: center;
+
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
 }
 .pointsFeedbackIcons__left {
   flex-grow: 1; /* control mid-point between left and right containers */
