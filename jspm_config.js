@@ -1,5 +1,5 @@
 System.config({
-  baseURL: "/",
+  baseURL: "/powersocketsSvg/",
   defaultJSExtensions: true,
   transpiler: "typescript",
   babelOptions: {
