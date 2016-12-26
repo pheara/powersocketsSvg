@@ -201,7 +201,7 @@ function gotoLevelN(levelNr: number) {
 
     // markElementPositions(data);
     resetLevelData();
-    setupLevelTimer();
+    // setupLevelTimer(); TODO clarify design for timer/scoring
     currentMapData = data;
     // markPoweredSockets(data);
     for (const s of data.sockets) {
@@ -398,7 +398,7 @@ function update(
   points = Math.min(points, 100);
 
   if (points >= 100) {
-    score += timeLevel;
+    // score += timeLevel; TODO clarify design for timer/scoring
     gotoNextLevel();
   }
 
