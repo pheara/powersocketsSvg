@@ -27,6 +27,9 @@ body.dark-theme {
 
 #fps {
   color: #999999;
+  position: absolute;
+  top: 2rem;
+  right: 1rem;
 }
 
 .progress.above-icons{
