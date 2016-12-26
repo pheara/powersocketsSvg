@@ -59,4 +59,11 @@ export const levels: Array<{
     missedOpportunityPenalty: 5,
     takenOpportunityPoints: 8,
   },
+  { // level6 - end screen
+    timeLimit: 999999,
+    initialPoints: 0,
+    shockPenalty: 0,
+    missedOpportunityPenalty: 0,
+    takenOpportunityPoints: 0,
+  },
 ]);
