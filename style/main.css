@@ -25,6 +25,10 @@ body.dark-theme {
   color: #dadada;
 }
 
+#fps {
+  color: #999999;
+}
+
 .progress.above-icons{
   margin-bottom: 0;
 }
