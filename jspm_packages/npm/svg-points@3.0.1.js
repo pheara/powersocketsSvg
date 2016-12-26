@@ -1,0 +1,1 @@
+module.exports = require("npm:svg-points@3.0.1/lib/index.js");
