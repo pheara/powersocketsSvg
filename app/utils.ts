@@ -83,33 +83,43 @@ export function makeConverterToAbsoluteCoords(svgRoot, element) {
 }
 
 /**
+ * NOTE the transformation matrix of the elemend is 
+ * cached / closed over -- make sure to re-generate the
+ * function if the element's transformation changes.
  * @returns a function that converts points from an elements
  *          own/local coordinate system, to their equivalent
  *          viewbox-coordinates (viewbox = the svg's original
  *          coordinate-system)
  */
-export function makeLocal2VBox(svgRoot: SVGSVGElement, element) {
+export function makeLocal2VBox(svgRoot: SVGSVGElement, element, cacheCTM: boolean = false) {
+  // v-- transform to viewport (vbox + transform of svgRoot)
+  const elementCTM = element.getCTM();
+  // v-- viewport to viewbox
+  const inverseRootCTM = svgRoot.getCTM().inverse();
+  const transformationMatrix = inverseRootCTM.multiply(elementCTM)
+
   return (p: Point): Point => {
     const svgPoint = svgRoot.createSVGPoint();
     svgPoint.x = p.x;
     svgPoint.y = p.y;
-    return svgPoint
-      // v-- transform to viewport (vbox + transform of svgRoot)
-      .matrixTransform(element.getCTM())
-      // v-- viewport to viewbox
-      .matrixTransform(svgRoot.getCTM().inverse());
+    return svgPoint.matrixTransform(transformationMatrix);
   };
 }
 
 /**
   * adapted from <https://www.sitepoint.com/how-to-translate-from-dom-to-svg-coordinates-and-back-again/>
+  * NOTE the screen-transformation-matrix of the elemend is 
+  * cached / closed over -- make sure to re-generate the
+  * function if the element's transformation changes.
   */
 export function makeDOM2VBox(svg: SVGSVGElement) {
+  const inverseScreenCTM = svg.getScreenCTM().inverse();
+
   return (pt: Point): Point => {
     const svgPoint = svg.createSVGPoint();
     svgPoint.x = pt.x;
     svgPoint.y = pt.y;
-    return svgPoint.matrixTransform(svg.getScreenCTM().inverse());
+    return svgPoint.matrixTransform(inverseScreenCTM);
   };
 }
 
