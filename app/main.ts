@@ -481,11 +481,8 @@ function updateFeedbackIcons(counts) {
       }
     }
   }
-
   updateIconType("shocked");
-  // misleading in the first few levels
-  if (conf.levels[currentLevelNr].missedOpportunityPenalty > 1 )
-    updateIconType("bored");
+  updateIconType("bored");
   updateIconType("happy");
 }
 

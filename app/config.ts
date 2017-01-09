@@ -17,40 +17,12 @@ export const levels: Array<{
     missedOpportunityPenalty: number, // per second
     takenOpportunityPoints: number // per second
 }> = deepFreeze([
-  { // intro
-    timeLimit: 999,
-    initialPoints: 0,
-    shockPenalty: 0,
-    missedOpportunityPenalty: 0,
-    takenOpportunityPoints: 200,
-  },
-  { // intro1
-    timeLimit: 999,
-    initialPoints: 0,
-    shockPenalty: 0,
-    missedOpportunityPenalty: 0,
-    takenOpportunityPoints: 25,
-  },
-  { // intro2
-    timeLimit: 999,
+  { // level0
+    timeLimit: 30,
     initialPoints: 30,
-    shockPenalty: 20,
-    missedOpportunityPenalty: 0,
-    takenOpportunityPoints: 25,
-  },
-  { // intro3
-    timeLimit: 999,
-    initialPoints: 30,
-    shockPenalty: 30,
-    missedOpportunityPenalty: 0,
-    takenOpportunityPoints: 25,
-  },
-  { // intro4
-    timeLimit: 999,
-    initialPoints: 30,
-    shockPenalty: 20,
+    shockPenalty: 27,
     missedOpportunityPenalty: 10,
-    takenOpportunityPoints: 25,
+    takenOpportunityPoints: 20,
   },
   { // level1
     timeLimit: 30,
