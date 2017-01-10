@@ -99,7 +99,7 @@ export function makeLocal2VBox(svgRoot: SVGSVGElement, element, cacheCTM: boolea
   const transformationMatrix = inverseRootCTM.multiply(elementCTM)
 
   return (p: Point): Point => {
-    const svgPoint = svgRoot.createSVGPoint();
+    const svgPoint = tempPoint(svgRoot);
     svgPoint.x = p.x;
     svgPoint.y = p.y;
     return svgPoint.matrixTransform(transformationMatrix);
@@ -116,12 +116,29 @@ export function makeDOM2VBox(svg: SVGSVGElement) {
   const inverseScreenCTM = svg.getScreenCTM().inverse();
 
   return (pt: Point): Point => {
-    const svgPoint = svg.createSVGPoint();
+    const svgPoint = tempPoint(svg);
     svgPoint.x = pt.x;
     svgPoint.y = pt.y;
     return svgPoint.matrixTransform(inverseScreenCTM);
   };
 }
+
+/**
+ * An svg-point to use in calculations. Creating
+ * one is expensive, so use this one and set its
+ * coordinates. Just make sure to never pass it
+ * out of utils functions or use it multiple times.
+ * Btw, `.matrixTransform` is safe, as it generates
+ * a new point internally.
+ */
+let tmpPoint: SVGPoint;
+function tempPoint(svg: SVGSVGElement) {
+  if (!tmpPoint) {
+    tmpPoint = svg.createSVGPoint();
+  }
+  return tmpPoint;
+}
+
 
 /**
  * Returns the bounding rectangle of the element
