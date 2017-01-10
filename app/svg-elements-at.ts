@@ -8,10 +8,12 @@ import {
   isPointInPoly,
   nodeListToArray,
   makeLocal2VBox,
+  deepFreeze,
 } from "utils";
 
 
 const localPointsCache = new Map();
+const cachedLocal2VBox = new Map();
 
 /**
   * @param pt the point in viewbox-coordinates (=pre-scaling coords).
@@ -37,18 +39,41 @@ const localPointsCache = new Map();
   *          their bounding-boxes equal their exact shapes and thus
   *          the costly exact calculation can be skipped. Defaults 
   *          to `true`.
-  * adapted from source of
+  * @param config.cacheTransformations relevant if exactCollision == true. If
+  *          set to `true` (the default) all elements in the scene are assumed
+  *          static and the transformation matrices / functions for them are
+  *          cached. You can disable the caching for specific elements by 
+  *          passing them via `config.dynamicElements`.
+  * @param config.dynamicElements see `config.cacheTransformations` above.
+  * @param config.resizeHasHappend relevant when using config.staticElements.
+  *          if this is set to true, the transformations of all elements
+  *          have changed and the cached transformation functions are 
+  *          reinitialized.
+  *
+  * code for this function was adapted from the sources of
   * <http://xn--dahlstrm-t4a.net/svg/interactivity/intersection/sandbox_hover.svg>
   */
 export function svgElementsAt(
   pt: Point,
   svg: SVGSVGElement,
-  config = {
+  config: {
+    exactCollision?: boolean | undefined,
+    cacheLocalPoints?: boolean | undefined,
+    onlyUprightRectangles?: boolean | undefined,
+    cacheTransformations?: boolean | undefined,
+    dynamicElements?//: Set<SVGElement> | undefined,
+    resizeHasHappened?: boolean | undefined,
+  } = {}
+) {
+    config = Object.assign({
       exactCollision: true,
       cacheLocalPoints: true,
       onlyUprightRectangles: true,
-  }
-) {
+      cacheTransformations: true,
+      dynamicElements: new Set(),
+      resizeHasHappend: false,
+    } , config); // copy the custom config over the defaults
+
     /*
      * getIntersectionList works on viewport-coordinates
      * we need to transform the svgRects coordinats from
@@ -91,7 +116,20 @@ export function svgElementsAt(
           localPointsCache.set(el, localPoints);
         }
 
-        const local2VBox = makeLocal2VBox(svg, el);
+        let local2VBox;
+        if (!config.cacheTransformations || config.dynamicElements.has(el)) {
+          // caching disabled or is a dynamic element.
+          // calculate transformations every time
+          local2VBox = makeLocal2VBox(svg, el);
+        } else if (!cachedLocal2VBox.has(el) || config.resizeHasHappened) {
+          // static but not yet in cache or cache invalidated due to resize
+          local2VBox = makeLocal2VBox(svg, el);
+          cachedLocal2VBox.set(el, local2VBox);
+        } else {
+          // static and cached
+          local2VBox = cachedLocal2VBox.get(el);
+        }
+
         const vboxPoints = localPoints.map(
           p => local2VBox({x: p.x, y: p.y})
         );

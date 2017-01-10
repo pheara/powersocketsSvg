@@ -2,7 +2,6 @@ import {
   piecesAt,
   selectAttachedLines,
   attached,
-  attachedToShape,
   insideShape,
   insideRect,
 } from "geometry";
@@ -44,7 +43,7 @@ export function pathToGenerator(
     const attachedLines = selectAttachedLines(powerable, map);
     for (const powLine of attachedLines) {
       const otherEnd: Point =
-        insideShape(powLine.end, powerable, map.element) ?
+        insideShape(powLine.end, powerable, map) ?
           powLine.start :
           powLine.end;
       const connectedWith = piecesAt(map, otherEnd);

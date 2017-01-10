@@ -16,7 +16,12 @@ import {
  */
 export function piecesAt(map: MapData, pt: Point) {
   const svg = map.element;
-  const intersectedElements = svgElementsAt(pt, svg);
+
+  const dynamicElements = selectDynamicElements(map);
+
+  // TODO detect resize
+
+  const intersectedElements = svgElementsAt(pt, svg, { dynamicElements } );
   return {
     generators: map.generators.filter(g =>
       contains(intersectedElements, g.element)
@@ -30,13 +35,36 @@ export function piecesAt(map: MapData, pt: Point) {
   };
 }
 
+function selectDynamicElements(map: MapData) {
+  return selectElementsFrom([map.switches]);
+}
+function selectStaticElements(map: MapData) {
+  return selectElementsFrom([
+    map.powerlines, 
+    map.generators, 
+    map.sockets,
+  ]);
+}
+
+function selectElementsFrom(collectionsOfPieces) {
+  const selectedElements = new Set();
+
+  collectionsOfPieces.forEach((pieces: Array<Rectangle | Powerline>) => 
+    pieces && pieces.forEach(
+      p => selectedElements.add(p.element)
+    )
+  );
+
+  return selectedElements;
+
+}
 
 /**
  * Returns the powerlines connectected to a Generator/Socket/Switch
  */
-export function selectAttachedLines(piece: Rectangle | Switch, map): Powerline[] {
+export function selectAttachedLines(piece: Rectangle | Switch, map: MapData): Powerline[] {
   return map.powerlines.filter(p =>
-    attachedToShape(p, piece, map.element)
+    attachedToShape(p, piece, map)
   );
 }
 
@@ -44,13 +72,20 @@ export function attached(rect: Rectangle, powerline: Powerline): boolean {
     return insideRect(rect, powerline.start) || insideRect(rect, powerline.end);
 }
 
-export function attachedToShape(powerline: Powerline, shape: Rectangle | Switch, svg: SVGSVGElement) {
-  return insideShape(powerline.start, shape, svg) ||
-         insideShape(powerline.end, shape, svg);
+export function attachedToShape(powerline: Powerline, shape: Rectangle | Switch, map: MapData) {
+  return insideShape(powerline.start, shape, map) ||
+         insideShape(powerline.end, shape, map);
 }
 
-export function insideShape(point: Point, shape: Rectangle | Switch, svg: SVGSVGElement): boolean {
-  const intersectedElements = svgElementsAt(point, svg);
+export function insideShape(point: Point, shape: Rectangle | Switch, map: MapData): boolean {
+  const dynamicElements = selectDynamicElements(map);
+
+  // TODO detect resize
+
+  const intersectedElements = svgElementsAt(point, map.element, { dynamicElements } );
+
+  // TODO this might be a highly inefficient way of doing this. straight up getting the element from the shape and determining exact collision for this only is way more performant
+
   return contains(
     intersectedElements,
     shape.element
