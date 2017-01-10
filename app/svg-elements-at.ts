@@ -15,6 +15,7 @@ import {
 
 const localPointsCache = new Map();
 const cachedLocal2VBox = new Map();
+const cachedBoundingBoxes = new Map(); // in vbox-space
 
 /**
   * @param pt the point in viewbox-coordinates (=pre-scaling coords).
@@ -119,8 +120,18 @@ export function pointInSvgElement(
     resizeHasHappened?: boolean | undefined,
   } = {}
 ) {
+  config = Object.assign({
+    exactCollision: true,
+    cacheLocalPoints: true,
+    onlyUprightRectangles: true,
+    cacheTransformations: true,
+    dynamicElements: new Set(),
+    resizeHasHappend: false,
+  } , config); // copy the custom config over the defaults
+
+
   // bounding box collision
-  const inBoundingBox = pointInBoundingBox(pt, el, svg);
+  const inBoundingBox = pointInBoundingBox(pt, el, svg, config);
 
   if(!inBoundingBox ) {
     return false;
@@ -133,12 +144,42 @@ export function pointInSvgElement(
   }
 }
 
+/**
+ * Checks if a given point is in the bounding box
+ * of the given element.
+ *
+ * @param config the same as svgElementsAt but
+ *    only the fields related to `cacheTransformations` 
+ *    are used.
+ */
 function pointInBoundingBox(
   pt: Point,
   el, // the SVG*Element
   svg: SVGSVGElement,
+  config: {
+    exactCollision?: boolean | undefined,
+    cacheLocalPoints?: boolean | undefined,
+    onlyUprightRectangles?: boolean | undefined,
+    cacheTransformations?: boolean | undefined,
+    dynamicElements?//: Set<SVGElement> | undefined,
+    resizeHasHappened?: boolean | undefined,
+  }
 ) {
-  const boundingBox = boundingRectVBox(el, svg); // TODO cache for static elements?
+  //const cachedBoundngBoxes = new Map(); // in vbox-space
+  let boundingBox;
+
+  if(!config.cacheTransformations || config.dynamicElements.has(el)) {
+    // caching disabled generally or for this element
+    boundingBox = boundingRectVBox(el, svg); 
+  } else if (!cachedBoundingBoxes.has(el) || config.resizeHasHappened) {
+    // caching active but cache miss or cache invalid
+    boundingBox = boundingRectVBox(el, svg); 
+    cachedBoundingBoxes.set(el, boundingBox);
+  } else {
+    // caching active and item correctly cached
+    boundingBox = cachedBoundingBoxes.get(el);
+  }
+
   return boundingBox.x <= pt.x && 
          pt.x <= (boundingBox.x + boundingBox.width) &&
          boundingBox.y <= pt.y && 
