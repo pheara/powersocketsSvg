@@ -95,6 +95,7 @@ const fpsEl = document.getElementById("fps");
 const progressEl = document.getElementById("progress");
 const pointsIncEl = document.getElementById("pointIncIcons");
 const pointsDecEl = document.getElementById("pointDecIcons");
+let resizeHasHappened: boolean = false; // true if the size of the svg has changed before the frame.
 let timeLevel: number;
 let currentMapData: MapData;
 let unregisterDebugMarker: Array<() => void> = [];
@@ -274,10 +275,19 @@ function registerInputHandlers(s: Socket, data: MapData) {
 
   console.log("registering input handlers");
 
+  /* TODO find a solution to make this work with the svg-root
+   * to catch cases where the window stays the same but the 
+   * svg resizes. (Shouldn't happen atm due to width=100vw)
+   */
+  window.addEventListener("resize", e => {
+    console.log("Resized svg, invalidating geometry-caches.");
+    resizeHasHappened = true;
+  });
+
   // setupDbgClickHandler(data);
 
   s.element.addEventListener("click", e => {
-    const ptg = pathToGenerator(s, data);
+    const ptg = pathToGenerator(s, data, resizeHasHappened);
     console.log("[dbg] is clicked socket powered? ", ptg.size > 0);
     console.log("[dbg] poweredVia: ", ptg);
     for (const pathPiece of ptg) {
@@ -324,7 +334,7 @@ function update(
 
       const visited = new Set<Rectangle | Switch>();
       const powered = new Set<Rectangle | Switch>();
-      pathToGenerator(s, data, visited, powered);
+      pathToGenerator(s, data, resizeHasHappened, visited, powered);
       return { visited, powered };
     }
   );
@@ -415,6 +425,8 @@ function update(
     bored: safeButUntouched.size,
     shocked: poweredAndTouched.size,
   });
+
+  resizeHasHappened = false; // all geometry-caches should have been updated by now.
 }
 
 function updateStrokeColors(args) {
@@ -553,7 +565,7 @@ function markPoweredSockets(mapData: MapData) {
     // mark powered sockets
     const unregister = markCoordsLive(
       mapData.element, s.pos.x, s.pos.y,
-      () => isPowered(s, mapData)
+      () => isPowered(s, mapData, resizeHasHappened)
     );
     unregisterDebugMarker.push(unregister);
   }

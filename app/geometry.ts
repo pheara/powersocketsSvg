@@ -15,14 +15,17 @@ import {
  * @param pt x- and y- coordinates in vbox-
  *           coordinates (=the original svg coordinates)
  */
-export function piecesAt(map: MapData, pt: Point) {
+export function piecesAt(map: MapData, pt: Point, resizeHasHappened: boolean = false) {
   const svg = map.element;
 
   const dynamicElements = selectDynamicElements(map);
 
   // TODO detect resize and pass on resizeHasHappened
 
-  const intersectedElements = svgElementsAt(pt, svg, { dynamicElements } );
+  const intersectedElements = svgElementsAt(
+    pt, svg, 
+    { dynamicElements, resizeHasHappened } 
+  );
   return {
     generators: map.generators.filter(g =>
       contains(intersectedElements, g.element)
