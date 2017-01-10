@@ -16,6 +16,7 @@ import {
 const localPointsCache = new Map();
 const cachedLocal2VBox = new Map();
 const cachedBoundingBoxes = new Map(); // in vbox-space
+let cachedConv2AbsCoords; 
 
 /**
   * @param pt the point in viewbox-coordinates (=pre-scaling coords).
@@ -82,7 +83,19 @@ export function svgElementsAt(
      * viebox (=original) to viewport (=svg after scaling)
      * coordinates.
      */
-    const vbox2vportCoords = makeConverterToAbsoluteCoords(svg, svg);
+    let vbox2vportCoords;
+    if(!config.cacheTransformations) {
+      // caching disabled generally or for this element
+      vbox2vportCoords = makeConverterToAbsoluteCoords(svg, svg);
+    } else if (!cachedConv2AbsCoords || config.resizeHasHappened) {
+      // caching active but cache miss or cache invalid
+      cachedConv2AbsCoords = makeConverterToAbsoluteCoords(svg, svg);
+      vbox2vportCoords = cachedConv2AbsCoords;
+    } else {
+      // caching active and item correctly cached
+      vbox2vportCoords = cachedConv2AbsCoords;
+    }
+
     const vportPt = vbox2vportCoords(pt);
 
     const svgRect = svg.createSVGRect();

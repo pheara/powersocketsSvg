@@ -70,11 +70,16 @@ export function nodeListToArray<T extends Node>(nodeList: NodeListOf<T>): Array<
  * adapted from <http://stackoverflow.com/questions/26049488/how-to-get-absolute-coordinates-of-object-inside-a-g-group>
  * Yields a function that converts from coordinates relative to the element to
  * those relative to the svg’s root.
+ *
+ * NOTE the transformation matrix of the elemend is 
+ * cached / closed over -- make sure to re-generate the
+ * function if the root's or element's transformation changes.
  */
 export function makeConverterToAbsoluteCoords(svgRoot, element) {
+  const offset = svgRoot.getBoundingClientRect();
+  const matrix = element.getScreenCTM();
+
   return function(p: Point): Point {
-    const offset = svgRoot.getBoundingClientRect();
-    const matrix = element.getScreenCTM();
     return {
       x: (matrix.a * p.x) + (matrix.c * p.y) + matrix.e - offset.left,
       y: (matrix.b * p.x) + (matrix.d * p.y) + matrix.f - offset.top
@@ -85,7 +90,8 @@ export function makeConverterToAbsoluteCoords(svgRoot, element) {
 /**
  * NOTE the transformation matrix of the elemend is 
  * cached / closed over -- make sure to re-generate the
- * function if the element's transformation changes.
+ * function if the root's or element's transformation changes.
+ *
  * @returns a function that converts points from an elements
  *          own/local coordinate system, to their equivalent
  *          viewbox-coordinates (viewbox = the svg's original
