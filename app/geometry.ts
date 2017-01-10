@@ -50,8 +50,9 @@ export function attachedToShape(powerline: Powerline, shape: Rectangle | Switch,
 }
 
 export function insideShape(point: Point, shape: Rectangle | Switch, svg: SVGSVGElement): boolean {
+  const intersectedElements = svgElementsAt(point, svg);
   return contains(
-    svgElementsAt(point, svg),
+    intersectedElements,
     shape.element
   );
 }

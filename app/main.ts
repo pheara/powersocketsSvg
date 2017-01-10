@@ -572,7 +572,7 @@ function unregisterDebugMarkers() {
 function setupDbgClickHandler(data: MapData) {
   data.element.addEventListener("click", e => {
     const dom2vbox = makeDOM2VBox(data.element);
-    const elements = svgElementsAt(
+    const intersectedElements = svgElementsAt(
       dom2vbox({x : e.clientX, y: e.clientY}),
       data.element,
     );
@@ -580,6 +580,6 @@ function setupDbgClickHandler(data: MapData) {
       data,
       dom2vbox({x : e.clientX, y: e.clientY}),
     );
-    console.log("clicked on the following: ", elements, pieces);
+    console.log("clicked on the following: ", intersectedElements, pieces);
   });
 }
