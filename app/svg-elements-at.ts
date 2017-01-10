@@ -9,6 +9,7 @@ import {
   nodeListToArray,
   makeLocal2VBox,
   deepFreeze,
+  boundingRectVBox,
 } from "utils";
 
 
@@ -92,52 +93,125 @@ export function svgElementsAt(
     if(!config.exactCollision) {
       return boundingBoxIntersections;
     } else {
-      const exactIntersections = boundingBoxIntersections.filter( el => {
-
-        if(el.tagName === "circle") {
-          /*
-          * `toPoints` only returns two points for
-          * circles. So they would essentially intersect
-          * like a line with our point, i.e. not at all.
-          */
-          return true;
-        }
-        if(config.onlyUprightRectangles && el.tagName === "rect") {
-          // for these bounding-box == exact shape
-          return true;
-        }
-
-        let localPoints;
-        if(config.cacheLocalPoints && localPointsCache.has(el)) {
-          localPoints = localPointsCache.get(el);
-        } else {
-          const shape = toShape(el); // prepare for handing it svg-points
-          localPoints = toPoints(shape);
-          localPointsCache.set(el, localPoints);
-        }
-
-        let local2VBox;
-        if (!config.cacheTransformations || config.dynamicElements.has(el)) {
-          // caching disabled or is a dynamic element.
-          // calculate transformations every time
-          local2VBox = makeLocal2VBox(svg, el);
-        } else if (!cachedLocal2VBox.has(el) || config.resizeHasHappened) {
-          // static but not yet in cache or cache invalidated due to resize
-          local2VBox = makeLocal2VBox(svg, el);
-          cachedLocal2VBox.set(el, local2VBox);
-        } else {
-          // static and cached
-          local2VBox = cachedLocal2VBox.get(el);
-        }
-
-        const vboxPoints = localPoints.map(
-          p => local2VBox({x: p.x, y: p.y})
-        );
-        return isPointInPoly(vboxPoints, pt);
-      });
+      const exactIntersections = boundingBoxIntersections.filter( 
+        el => pointInShape(pt, el, svg, config)
+      );
 
       return exactIntersections;
     }
+}
+
+/**
+ * Checks if a point is contained within a 
+ * passed svg-element. The config-parameter
+ * works the same as in `svgElementsAt`.
+ */
+export function pointInSvgElement(
+  pt: Point,
+  el, // the SVG*Element
+  svg: SVGSVGElement,
+  config: {
+    exactCollision?: boolean | undefined,
+    cacheLocalPoints?: boolean | undefined,
+    onlyUprightRectangles?: boolean | undefined,
+    cacheTransformations?: boolean | undefined,
+    dynamicElements?//: Set<SVGElement> | undefined,
+    resizeHasHappened?: boolean | undefined,
+  } = {}
+) {
+  // bounding box collision
+  const inBoundingBox = pointInBoundingBox(pt, el, svg);
+
+  if(!inBoundingBox ) {
+    return false;
+  } else if (!config.exactCollision) {
+    // in bounding box and that's enough for us
+    return true;
+  } else {
+    // fine / exact collision if necessary
+    return pointInShape(pt, el, svg, config);
+  }
+}
+
+function pointInBoundingBox(
+  pt: Point,
+  el, // the SVG*Element
+  svg: SVGSVGElement,
+) {
+  const boundingBox = boundingRectVBox(el, svg); // TODO cache for static elements?
+  return boundingBox.x <= pt.x && 
+         pt.x <= (boundingBox.x + boundingBox.width) &&
+         boundingBox.y <= pt.y && 
+         pt.y <= (boundingBox.y + boundingBox.height);
+}
+
+/**
+ * NOTE: Make sure you have done bounding box collision
+ * first, as some shapes (e.g. circles) aren't
+ * currently matched correctly just with this function.
+ * For this reason this function *is not exported*. 
+ * Use pointInSvgElement instead.
+ * 
+ * @param config the same as svgElementsAt except for the 
+ *          exactCollision-field that isn't used as you
+ *          shouldn't call this function if you don't 
+ *          want exact collisions -- that's what it does.
+ */
+function pointInShape(
+  pt: Point,
+  el, // the SVG*Element
+  svg: SVGSVGElement,
+  config: {
+    exactCollision?: boolean | undefined,
+    cacheLocalPoints?: boolean | undefined,
+    onlyUprightRectangles?: boolean | undefined,
+    cacheTransformations?: boolean | undefined,
+    dynamicElements?//: Set<SVGElement> | undefined,
+    resizeHasHappened?: boolean | undefined,
+  }
+) {
+    if(el.tagName === "circle") {
+      /*
+      * `toPoints` only returns two points for
+      * circles. So they would essentially intersect
+      * like a line with our point, i.e. not at all.
+      * TODO properly deal with circles. don't treat 
+      * them as rectangles.
+      */
+      return true;
+    }
+    if(config.onlyUprightRectangles && el.tagName === "rect") {
+      // for these bounding-box == exact shape
+      return true;
+    }
+
+    let localPoints;
+    if(config.cacheLocalPoints && localPointsCache.has(el)) {
+      localPoints = localPointsCache.get(el);
+    } else {
+      const shape = toShape(el); // prepare for handing it svg-points
+      localPoints = toPoints(shape);
+      localPointsCache.set(el, localPoints);
+    }
+
+    let local2VBox;
+    if (!config.cacheTransformations || config.dynamicElements.has(el)) {
+      // caching disabled or is a dynamic element.
+      // calculate transformations every time
+      local2VBox = makeLocal2VBox(svg, el);
+    } else if (!cachedLocal2VBox.has(el) || config.resizeHasHappened) {
+      // static but not yet in cache or cache invalidated due to resize
+      local2VBox = makeLocal2VBox(svg, el);
+      cachedLocal2VBox.set(el, local2VBox);
+    } else {
+      // static and cached
+      local2VBox = cachedLocal2VBox.get(el);
+    }
+
+    const vboxPoints = localPoints.map(
+      p => local2VBox({x: p.x, y: p.y})
+    );
+    return isPointInPoly(vboxPoints, pt);
 }
 
 

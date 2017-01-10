@@ -131,7 +131,7 @@ export function makeDOM2VBox(svg: SVGSVGElement) {
 export function boundingRectVBox(el: SVGElement, svg: SVGSVGElement) {
     const boundsClientRect = el.getBoundingClientRect();
 
-    const dom2vbox = makeDOM2VBox(svg);
+    const dom2vbox = makeDOM2VBox(svg); // TODO cache until resize?
     const leftUpper = dom2vbox({
       x: boundsClientRect.left,
       y: boundsClientRect.top
@@ -257,3 +257,4 @@ export function mapToMap<A, B>(arr: Array<A>, f: (A) => B): Map<A, B> {
   }
   return result;
 }
+

@@ -7,6 +7,7 @@ import {
 
 import {
   svgElementsAt,
+  pointInSvgElement,
 } from "svg-elements-at";
 
 /**
@@ -19,7 +20,7 @@ export function piecesAt(map: MapData, pt: Point) {
 
   const dynamicElements = selectDynamicElements(map);
 
-  // TODO detect resize
+  // TODO detect resize and pass on resizeHasHappened
 
   const intersectedElements = svgElementsAt(pt, svg, { dynamicElements } );
   return {
@@ -80,15 +81,11 @@ export function attachedToShape(powerline: Powerline, shape: Rectangle | Switch,
 export function insideShape(point: Point, shape: Rectangle | Switch, map: MapData): boolean {
   const dynamicElements = selectDynamicElements(map);
 
-  // TODO detect resize
-
-  const intersectedElements = svgElementsAt(point, map.element, { dynamicElements } );
-
-  // TODO this might be a highly inefficient way of doing this. straight up getting the element from the shape and determining exact collision for this only is way more performant
-
-  return contains(
-    intersectedElements,
-    shape.element
+  // TODO detect resize and pass on resizeHasHappened
+  
+  return pointInSvgElement(
+    point, shape.element, map.element, 
+    { dynamicElements }
   );
 }
 
