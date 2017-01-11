@@ -87,6 +87,12 @@ export function makeConverterToAbsoluteCoords(svgRoot, element) {
   };
 }
 
+let _idMat; 
+function idMat(svg: SVGSVGElement) {
+  if (!_idMat) _idMat = svg.createSVGMatrix();
+  return _idMat;
+}
+
 /**
  * NOTE the transformation matrix of the elemend is 
  * cached / closed over -- make sure to re-generate the
