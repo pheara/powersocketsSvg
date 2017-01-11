@@ -8,7 +8,8 @@
   "scripts": {
     "postinstall": "jspm install && npm run build",
     "prestart": "npm install && npm run build",
-    "start": "nws -b 'powersocketsSvg/'",
+    "start": "npm run serve",
+    "serve": "nws -b 'powersocketsSvg/'",
     "build": "gulp build",
     "watch": "gulp watch",
     "clean": "gulp clean"
