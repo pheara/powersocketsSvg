@@ -60,7 +60,7 @@ export const levels: Array<{
     initialPoints: 30,
     shockPenalty: 31,
     missedOpportunityPenalty: 5,
-    takenOpportunityPoints: 50,
+    takenOpportunityPoints: 30,
   },
 
     
