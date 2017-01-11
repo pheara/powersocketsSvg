@@ -19,10 +19,10 @@ export const levels: Array<{
 }> = deepFreeze([
 
   { // level0
-    timeLimit: 30,
-    initialPoints: 30,
-    shockPenalty: 27,
-    missedOpportunityPenalty: 10,
+    timeLimit: 10,
+    initialPoints: 0,
+    shockPenalty: 0,
+    missedOpportunityPenalty: 0,
     takenOpportunityPoints: 40,
   },
   { // level1
@@ -61,7 +61,7 @@ export const levels: Array<{
     takenOpportunityPoints: 50,
   },
 
-    
+
   { // level6
     timeLimit: 30,
     initialPoints: 30,
