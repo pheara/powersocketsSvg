@@ -43,7 +43,7 @@ export function pathToGenerator(
 
     visited.add(powerable);
     const attachedLines = selectAttachedLines(powerable, map);
-    for (const powLine of attachedLines) {
+    for (let powLine of attachedLines) {
       const otherEnd: Point =
         insideShape(powLine.end, powerable, map) ?
           powLine.start :
@@ -71,7 +71,7 @@ export function pathToGenerator(
         return powered;
       } else if (connectedWith.switches.length > 0) {
         // markCoords(map.element, otherEnd.x, otherEnd.y);
-        for (const swtch of connectedWith.switches) {
+        for (let swtch of connectedWith.switches) {
           if (!visited.has(swtch)) {
             /* recurse into the switch (but avoid going back).
              * powered elements are added to `powered` by-reference

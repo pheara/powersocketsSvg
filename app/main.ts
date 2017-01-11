@@ -206,7 +206,7 @@ function gotoLevelN(levelNr: number) {
     // setupLevelTimer(); TODO clarify design for timer/scoring
     currentMapData = data;
     // markPoweredSockets(data);
-    for (const s of data.sockets) {
+    for (let s of data.sockets) {
       registerInputHandlers(s, data);
     }
 
@@ -291,7 +291,7 @@ function registerInputHandlers(s: Socket, data: MapData) {
     const ptg = pathToGenerator(s, data, resizeHasHappened);
     console.log("[dbg] is clicked socket powered? ", ptg.size > 0);
     console.log("[dbg] poweredVia: ", ptg);
-    for (const pathPiece of ptg) {
+    for (let pathPiece of ptg) {
       pathPiece.element.style.stroke = conf.shockColor;
       delay(900).then(() => {
         pathPiece.element.style.stroke = conf.defaultColor;
@@ -406,20 +406,20 @@ function update(
        */
   );
 
-  for (const s of safeButUntouched) {
+  for (let s of safeButUntouched) {
     points -= conf.levels[levelNr].missedOpportunityPenalty * deltaT / 1000;
   }
 
-  for (const s of safeAndTouched) {
+  for (let s of safeAndTouched) {
     points += conf.levels[levelNr].takenOpportunityPoints * deltaT / 1000;
   }
 
-  for (const s of poweredAndTouched) {
+  for (let s of poweredAndTouched) {
     // vibration not yet started for that socket
 
     const ptg = pathsToGenerator.get(s);
     if(ptg) {
-      for (const pathPiece of ptg.visited) {
+      for (let pathPiece of ptg.visited) {
         currentlyShockedPieces.add(pathPiece);
         delay(conf.shockDuration * 1000).then(() => {
             currentlyShockedPieces.delete(pathPiece);
@@ -467,33 +467,33 @@ function updateStrokeColors(args) {
 
   const toStrokeWith = new Map<GamePiece, string>(); // maps to color-string
 
-  for (const s of mapData.sockets) {
+  for (let s of mapData.sockets) {
     toStrokeWith.set(s, conf.defaultColor);
   }
-  for (const g of mapData.generators) {
+  for (let g of mapData.generators) {
     toStrokeWith.set(g, conf.defaultColor);
   }
-  for (const p of mapData.powerlines) {
+  for (let p of mapData.powerlines) {
     toStrokeWith.set(p, conf.defaultColor);
   }
-  for (const s of mapData.switches) {
+  for (let s of mapData.switches) {
     toStrokeWith.set(s, conf.defaultColor);
   }
 
-  for (const s of safeAndTouched) {
+  for (let s of safeAndTouched) {
     const ptg = pathsToGenerator.get(s);
     if(ptg) {
-      for (const pathPiece of ptg.visited) {
+      for (let pathPiece of ptg.visited) {
         toStrokeWith.set(pathPiece, conf.happyColor);
       }
     }
   }
 
-  for (const piece of currentlyShockedPieces) {
+  for (let piece of currentlyShockedPieces) {
     toStrokeWith.set(piece, conf.shockColor);
   }
 
-  for (const [pathPiece, color] of toStrokeWith) {
+  for (let [pathPiece, color] of toStrokeWith) {
     pathPiece.element.style.stroke = color;
   }
 }
@@ -570,15 +570,15 @@ export function brrzzzl(durationInMs: number = 900) {
  */
 
 function markElementPositions(mapData: MapData) {
-  for (const s of mapData.sockets) {
+  for (let s of mapData.sockets) {
     markCoords(mapData.element, s.pos.x, s.pos.y);
   }
 
-  for (const g of mapData.generators) {
+  for (let g of mapData.generators) {
     markCoords(mapData.element, g.pos.x, g.pos.y);
   }
 
-  for (const p of mapData.powerlines) {
+  for (let p of mapData.powerlines) {
     markCoords(mapData.element, p.start.x, p.start.y);
     markCoords(mapData.element, p.end.x, p.end.y);
   }
@@ -589,7 +589,7 @@ function markElementPositions(mapData: MapData) {
  * that are powered (for debug-purposes)
  */
 function markPoweredSockets(mapData: MapData) {
-  for (const s of mapData.sockets) {
+  for (let s of mapData.sockets) {
     // mark powered sockets
     const unregister = markCoordsLive(
       mapData.element, s.pos.x, s.pos.y,
