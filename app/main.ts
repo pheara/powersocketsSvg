@@ -100,6 +100,7 @@ let timeLevel: number;
 let currentMapData: MapData;
 let unregisterDebugMarker: Array<() => void> = [];
 let touchedSockets: Set<Socket> = new Set<Socket>();
+let connectedSince: Map<Socket, number> = new Map<Socket, number>();
 let levelTimerId: number | undefined;
 let currentLevelNr: number = 0; // increase to start at higher level
 
@@ -339,11 +340,40 @@ function update(
     }
   );
 
-  const poweredSockets = new Set<Socket>(
+  /* sockets that have a path to a generator */
+  const connectedSockets = new Set<Socket>(
     data.sockets.filter(s => {
       const ptg = pathsToGenerator.get(s);
       return ptg && ptg.powered.size > 0;
     })
+  );
+
+  /* connection lost for these sockets. remove 
+   * them from the "connected" list. */
+  connectedSince.forEach((timestamp, socket) => {
+    if(!connectedSockets.has(socket)) {
+      connectedSince.delete(socket);
+    }   
+  });
+
+  /* Newly connected sockets. Add them to the list. */
+  const now = Date.now();
+  connectedSockets.forEach(socket => {
+    if(!connectedSince.has(socket)) {
+      connectedSince.set(socket, now);
+    } 
+  });
+
+  /* 
+   * sockets that have been connected to a generator for 
+   * at least <delayToBePowered> milliseconds. This is
+   * intended to make the game a bit more forgiving and
+   * less frustrating.
+   */
+  const poweredSockets = filterSet(
+    connectedSockets, 
+    socket => 
+      now >= (connectedSince.get(socket) + conf.delayToBePowered)
   );
 
   const enabled = new Set<Socket>(

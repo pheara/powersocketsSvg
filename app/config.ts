@@ -10,6 +10,8 @@ export const maxFps = 10;
 
 export const shockDuration = 0.9; // in seconds
 
+export const delayToBePowered = 100; // in milliseconds
+
 export const levels: Array<{
     timeLimit: number, // in seconds
     initialPoints: number,
