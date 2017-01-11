@@ -52,8 +52,8 @@ export const levels: Array<{
     timeLimit: 30,
     initialPoints: 30,
     shockPenalty: 31,
-    missedOpportunityPenalty: 8,
-    takenOpportunityPoints: 50,
+    missedOpportunityPenalty: 9,
+    takenOpportunityPoints: 20,
   },
   { // level5
     timeLimit: 30,
