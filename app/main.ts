@@ -100,6 +100,7 @@ let timeLevel: number;
 let currentMapData: MapData;
 let unregisterDebugMarker: Array<() => void> = [];
 let touchedSockets: Set<Socket> = new Set<Socket>();
+let poweredSince: Map<Socket, number> = new Map<Socket, number>();
 let levelTimerId: number | undefined;
 let currentLevelNr: number = 0; // increase to start at higher level
 
@@ -205,7 +206,7 @@ function gotoLevelN(levelNr: number) {
     // setupLevelTimer(); TODO clarify design for timer/scoring
     currentMapData = data;
     // markPoweredSockets(data);
-    for (const s of data.sockets) {
+    for (let s of data.sockets) {
       registerInputHandlers(s, data);
     }
 
@@ -290,7 +291,7 @@ function registerInputHandlers(s: Socket, data: MapData) {
     const ptg = pathToGenerator(s, data, resizeHasHappened);
     console.log("[dbg] is clicked socket powered? ", ptg.size > 0);
     console.log("[dbg] poweredVia: ", ptg);
-    for (const pathPiece of ptg) {
+    for (let pathPiece of ptg) {
       pathPiece.element.style.stroke = conf.shockColor;
       delay(900).then(() => {
         pathPiece.element.style.stroke = conf.defaultColor;
@@ -328,6 +329,8 @@ function update(
   data: MapData
 ) {
 
+  const now = Date.now();
+
   const pathsToGenerator = mapToMap(
     data.sockets,
     s => {
@@ -339,12 +342,28 @@ function update(
     }
   );
 
+  /* sockets that have a path to a generator */
   const poweredSockets = new Set<Socket>(
     data.sockets.filter(s => {
       const ptg = pathsToGenerator.get(s);
       return ptg && ptg.powered.size > 0;
     })
   );
+
+  /* connection lost for these sockets. remove 
+   * them from the "connected" list. */
+  poweredSince.forEach((timestamp, socket) => {
+    if(!poweredSockets.has(socket)) {
+      poweredSince.delete(socket);
+    }   
+  });
+
+  /* Newly connected sockets. Add them to the list. */
+  poweredSockets.forEach(socket => {
+    if(!poweredSince.has(socket)) {
+      poweredSince.set(socket, now);
+    } 
+  });
 
   const enabled = new Set<Socket>(
     data.sockets.filter(s =>
@@ -375,23 +394,32 @@ function update(
 
   const poweredAndTouched = filterSet(
     enabledTouched,
-    s => poweredSockets.has(s)
+    s => 
+      poweredSockets.has(s) && 
+      now >= (poweredSince.get(s) + conf.delayToBePowered)
+      /* ^^^
+       * only get shocket through sockets that have 
+       * been connected to a generator for at least 
+       * <delayToBePowered> milliseconds. This is
+       * intended to make the game a bit more forgiving 
+       * and less frustrating.
+       */
   );
 
-  for (const s of safeButUntouched) {
+  for (let s of safeButUntouched) {
     points -= conf.levels[levelNr].missedOpportunityPenalty * deltaT / 1000;
   }
 
-  for (const s of safeAndTouched) {
+  for (let s of safeAndTouched) {
     points += conf.levels[levelNr].takenOpportunityPoints * deltaT / 1000;
   }
 
-  for (const s of poweredAndTouched) {
+  for (let s of poweredAndTouched) {
     // vibration not yet started for that socket
 
     const ptg = pathsToGenerator.get(s);
     if(ptg) {
-      for (const pathPiece of ptg.visited) {
+      for (let pathPiece of ptg.visited) {
         currentlyShockedPieces.add(pathPiece);
         delay(conf.shockDuration * 1000).then(() => {
             currentlyShockedPieces.delete(pathPiece);
@@ -439,33 +467,33 @@ function updateStrokeColors(args) {
 
   const toStrokeWith = new Map<GamePiece, string>(); // maps to color-string
 
-  for (const s of mapData.sockets) {
+  for (let s of mapData.sockets) {
     toStrokeWith.set(s, conf.defaultColor);
   }
-  for (const g of mapData.generators) {
+  for (let g of mapData.generators) {
     toStrokeWith.set(g, conf.defaultColor);
   }
-  for (const p of mapData.powerlines) {
+  for (let p of mapData.powerlines) {
     toStrokeWith.set(p, conf.defaultColor);
   }
-  for (const s of mapData.switches) {
+  for (let s of mapData.switches) {
     toStrokeWith.set(s, conf.defaultColor);
   }
 
-  for (const s of safeAndTouched) {
+  for (let s of safeAndTouched) {
     const ptg = pathsToGenerator.get(s);
     if(ptg) {
-      for (const pathPiece of ptg.visited) {
+      for (let pathPiece of ptg.visited) {
         toStrokeWith.set(pathPiece, conf.happyColor);
       }
     }
   }
 
-  for (const piece of currentlyShockedPieces) {
+  for (let piece of currentlyShockedPieces) {
     toStrokeWith.set(piece, conf.shockColor);
   }
 
-  for (const [pathPiece, color] of toStrokeWith) {
+  for (let [pathPiece, color] of toStrokeWith) {
     pathPiece.element.style.stroke = color;
   }
 }
@@ -542,15 +570,15 @@ export function brrzzzl(durationInMs: number = 900) {
  */
 
 function markElementPositions(mapData: MapData) {
-  for (const s of mapData.sockets) {
+  for (let s of mapData.sockets) {
     markCoords(mapData.element, s.pos.x, s.pos.y);
   }
 
-  for (const g of mapData.generators) {
+  for (let g of mapData.generators) {
     markCoords(mapData.element, g.pos.x, g.pos.y);
   }
 
-  for (const p of mapData.powerlines) {
+  for (let p of mapData.powerlines) {
     markCoords(mapData.element, p.start.x, p.start.y);
     markCoords(mapData.element, p.end.x, p.end.y);
   }
@@ -561,7 +589,7 @@ function markElementPositions(mapData: MapData) {
  * that are powered (for debug-purposes)
  */
 function markPoweredSockets(mapData: MapData) {
-  for (const s of mapData.sockets) {
+  for (let s of mapData.sockets) {
     // mark powered sockets
     const unregister = markCoordsLive(
       mapData.element, s.pos.x, s.pos.y,

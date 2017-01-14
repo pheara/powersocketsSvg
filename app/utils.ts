@@ -11,7 +11,7 @@ export function contains<T>( xs: T[] | Iterable<T>, x: T): boolean {
     // assumes that internal implementation is more optimized
     return (<T[]>xs).indexOf(x) >= 0;
   } else {
-    for (const el of xs) {
+    for (let el of xs) {
       if (el === x) return true;
     }
     return false;
@@ -87,6 +87,12 @@ export function makeConverterToAbsoluteCoords(svgRoot, element) {
   };
 }
 
+let _idMat; 
+function idMat(svg: SVGSVGElement) {
+  if (!_idMat) _idMat = svg.createSVGMatrix();
+  return _idMat;
+}
+
 /**
  * NOTE the transformation matrix of the elemend is 
  * cached / closed over -- make sure to re-generate the
@@ -97,11 +103,14 @@ export function makeConverterToAbsoluteCoords(svgRoot, element) {
  *          viewbox-coordinates (viewbox = the svg's original
  *          coordinate-system)
  */
-export function makeLocal2VBox(svgRoot: SVGSVGElement, element, cacheCTM: boolean = false) {
+export function makeLocal2VBox(svgRoot: SVGSVGElement, element) {
   // v-- transform to viewport (vbox + transform of svgRoot)
   const elementCTM = element.getCTM();
+  // const rootCTM = svgRoot.getCTM();
+  const rootCTM = svgRoot.getCTM(); 
+
   // v-- viewport to viewbox
-  const inverseRootCTM = svgRoot.getCTM().inverse();
+  const inverseRootCTM = rootCTM.inverse();
   const transformationMatrix = inverseRootCTM.multiply(elementCTM)
 
   return (p: Point): Point => {
@@ -242,7 +251,7 @@ export function getIn(obj: any , path: string[]) {
  */
 export function deepFreeze(obj) {
     if (hasJSType("Array", obj)) {
-      for (const el of obj) {
+      for (let el of obj) {
         deepFreeze(el);
       }
     } else if (hasJSType("Object", obj)) {
@@ -275,7 +284,7 @@ export function filterSet(set, f) {
 
 export function mapToMap<A, B>(arr: Array<A>, f: (A) => B): Map<A, B> {
   const result = new Map<A, B>();
-  for (const x of arr) {
+  for (let x of arr) {
     result.set(x, f(x));
   }
   return result;
