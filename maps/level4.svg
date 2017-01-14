@@ -23,14 +23,14 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1920"
-     inkscape:window-height="1056"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
      id="namedview4153"
      showgrid="true"
-     inkscape:zoom="1.78098"
-     inkscape:cx="42.487518"
-     inkscape:cy="105.96714"
-     inkscape:window-x="0"
+     inkscape:zoom="2.670879"
+     inkscape:cx="74.255687"
+     inkscape:cy="173.78423"
+     inkscape:window-x="65"
      inkscape:window-y="24"
      inkscape:window-maximized="1"
      inkscape:current-layer="decorations"
@@ -332,15 +332,20 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:12.5px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="35.156155"
-       y="26.385059"
+       x="127.35889"
+       y="30.696228"
        id="text3407"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
-         x="35.156155"
-         y="26.385059"
-         style="font-size:12.5px;fill:#ffffff"
-         id="tspan4329">Try to touch every safe electrode </tspan></text>
+         x="127.35889"
+         y="30.696228"
+         style="font-size:12.5px;text-align:center;text-anchor:middle;fill:#ffffff"
+         id="tspan4329">Do you think you can touch every</tspan><tspan
+         sodipodi:role="line"
+         x="127.35889"
+         y="46.321228"
+         style="font-size:12.5px;text-align:center;text-anchor:middle;fill:#ffffff"
+         id="tspan4252">safe socket?</tspan></text>
     <g
        style="stroke:#ffffff;stroke-width:0.66092908;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        transform="matrix(0.45390647,0,0,0.45390647,85.385913,-17.9905)"
@@ -641,6 +646,18 @@
          d="M 317.77933,173.87808 C 319.04932,216.08414 275.34073,240.84885 245.83448,232.0438 C 274.76923,247.98202 328.84949,228.4878 317.77933,173.87808 Z"
          style="fill:#8d96a6;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.66092908;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:25px;line-height:1000%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="9.3896484"
+       y="18.296326"
+       id="text4170"
+       sodipodi:linespacing="1000%"><tspan
+         sodipodi:role="line"
+         id="tspan4172"
+         x="9.3896484"
+         y="18.296326"
+         style="font-size:12.5px;line-height:1000%;fill:#f9f9f9">4</tspan></text>
   </g>
   <g
      inkscape:groupmode="layer"
