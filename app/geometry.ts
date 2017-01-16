@@ -7,6 +7,7 @@ import {
 
 import {
   svgElementsAt,
+  pointInSvgElement,
 } from "svg-elements-at";
 
 /**
@@ -14,9 +15,17 @@ import {
  * @param pt x- and y- coordinates in vbox-
  *           coordinates (=the original svg coordinates)
  */
-export function piecesAt(map: MapData, pt: Point) {
+export function piecesAt(map: MapData, pt: Point, resizeHasHappened: boolean = false) {
   const svg = map.element;
-  const intersectedElements = svgElementsAt(pt, svg);
+
+  const dynamicElements = selectDynamicElements(map);
+
+  // TODO detect resize and pass on resizeHasHappened
+
+  const intersectedElements = svgElementsAt(
+    pt, svg, 
+    { dynamicElements, resizeHasHappened } 
+  );
   return {
     generators: map.generators.filter(g =>
       contains(intersectedElements, g.element)
@@ -30,13 +39,36 @@ export function piecesAt(map: MapData, pt: Point) {
   };
 }
 
+function selectDynamicElements(map: MapData) {
+  return selectElementsFrom([map.switches]);
+}
+function selectStaticElements(map: MapData) {
+  return selectElementsFrom([
+    map.powerlines, 
+    map.generators, 
+    map.sockets,
+  ]);
+}
+
+function selectElementsFrom(collectionsOfPieces) {
+  const selectedElements = new Set();
+
+  collectionsOfPieces.forEach((pieces: Array<Rectangle | Powerline>) => 
+    pieces && pieces.forEach(
+      p => selectedElements.add(p.element)
+    )
+  );
+
+  return selectedElements;
+
+}
 
 /**
  * Returns the powerlines connectected to a Generator/Socket/Switch
  */
-export function selectAttachedLines(piece: Rectangle | Switch, map): Powerline[] {
+export function selectAttachedLines(piece: Rectangle | Switch, map: MapData): Powerline[] {
   return map.powerlines.filter(p =>
-    attachedToShape(p, piece, map.element)
+    attachedToShape(p, piece, map)
   );
 }
 
@@ -44,15 +76,19 @@ export function attached(rect: Rectangle, powerline: Powerline): boolean {
     return insideRect(rect, powerline.start) || insideRect(rect, powerline.end);
 }
 
-export function attachedToShape(powerline: Powerline, shape: Rectangle | Switch, svg: SVGSVGElement) {
-  return insideShape(powerline.start, shape, svg) ||
-         insideShape(powerline.end, shape, svg);
+export function attachedToShape(powerline: Powerline, shape: Rectangle | Switch, map: MapData) {
+  return insideShape(powerline.start, shape, map) ||
+         insideShape(powerline.end, shape, map);
 }
 
-export function insideShape(point: Point, shape: Rectangle | Switch, svg: SVGSVGElement): boolean {
-  return contains(
-    svgElementsAt(point, svg),
-    shape.element
+export function insideShape(point: Point, shape: Rectangle | Switch, map: MapData): boolean {
+  const dynamicElements = selectDynamicElements(map);
+
+  // TODO detect resize and pass on resizeHasHappened
+  
+  return pointInSvgElement(
+    point, shape.element, map.element, 
+    { dynamicElements }
   );
 }
 

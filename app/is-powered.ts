@@ -2,7 +2,6 @@ import {
   piecesAt,
   selectAttachedLines,
   attached,
-  attachedToShape,
   insideShape,
   insideRect,
 } from "geometry";
@@ -20,9 +19,10 @@ import {
 
 export function isPowered(
   powerable: Rectangle | Switch,
-  map: MapData
+  map: MapData,
+  resizeHasHappened: boolean = false
 ): boolean {
-  const powered = pathToGenerator(powerable, map);
+  const powered = pathToGenerator(powerable, map, resizeHasHappened);
   return powered.size > 0;
 }
 
@@ -30,6 +30,7 @@ export function isPowered(
 export function pathToGenerator(
   powerable: Rectangle | Switch,
   map: MapData,
+  resizeHasHappened: boolean = false,
   visited = new Set<Rectangle | Switch>(),
   powered = new Set<Rectangle | Switch>()
 ): Set<Rectangle | Switch | Powerline> { // boolean {
@@ -42,12 +43,12 @@ export function pathToGenerator(
 
     visited.add(powerable);
     const attachedLines = selectAttachedLines(powerable, map);
-    for (const powLine of attachedLines) {
+    for (let powLine of attachedLines) {
       const otherEnd: Point =
-        insideShape(powLine.end, powerable, map.element) ?
+        insideShape(powLine.end, powerable, map) ?
           powLine.start :
           powLine.end;
-      const connectedWith = piecesAt(map, otherEnd);
+      const connectedWith = piecesAt(map, otherEnd, resizeHasHappened);
 
       visited.add(powLine);
 
@@ -70,12 +71,12 @@ export function pathToGenerator(
         return powered;
       } else if (connectedWith.switches.length > 0) {
         // markCoords(map.element, otherEnd.x, otherEnd.y);
-        for (const swtch of connectedWith.switches) {
+        for (let swtch of connectedWith.switches) {
           if (!visited.has(swtch)) {
             /* recurse into the switch (but avoid going back).
              * powered elements are added to `powered` by-reference
              */
-            pathToGenerator(swtch, map, visited, powered);
+            pathToGenerator(swtch, map, resizeHasHappened, visited, powered);
             if (powered.has(swtch)) {
 
               visited.add(swtch);

@@ -11,7 +11,7 @@ export function contains<T>( xs: T[] | Iterable<T>, x: T): boolean {
     // assumes that internal implementation is more optimized
     return (<T[]>xs).indexOf(x) >= 0;
   } else {
-    for (const el of xs) {
+    for (let el of xs) {
       if (el === x) return true;
     }
     return false;
@@ -70,11 +70,16 @@ export function nodeListToArray<T extends Node>(nodeList: NodeListOf<T>): Array<
  * adapted from <http://stackoverflow.com/questions/26049488/how-to-get-absolute-coordinates-of-object-inside-a-g-group>
  * Yields a function that converts from coordinates relative to the element to
  * those relative to the svg’s root.
+ *
+ * NOTE the transformation matrix of the elemend is 
+ * cached / closed over -- make sure to re-generate the
+ * function if the root's or element's transformation changes.
  */
 export function makeConverterToAbsoluteCoords(svgRoot, element) {
+  const offset = svgRoot.getBoundingClientRect();
+  const matrix = element.getScreenCTM();
+
   return function(p: Point): Point {
-    const offset = svgRoot.getBoundingClientRect();
-    const matrix = element.getScreenCTM();
     return {
       x: (matrix.a * p.x) + (matrix.c * p.y) + matrix.e - offset.left,
       y: (matrix.b * p.x) + (matrix.d * p.y) + matrix.f - offset.top
@@ -82,36 +87,73 @@ export function makeConverterToAbsoluteCoords(svgRoot, element) {
   };
 }
 
+let _idMat; 
+function idMat(svg: SVGSVGElement) {
+  if (!_idMat) _idMat = svg.createSVGMatrix();
+  return _idMat;
+}
+
 /**
+ * NOTE the transformation matrix of the elemend is 
+ * cached / closed over -- make sure to re-generate the
+ * function if the root's or element's transformation changes.
+ *
  * @returns a function that converts points from an elements
  *          own/local coordinate system, to their equivalent
  *          viewbox-coordinates (viewbox = the svg's original
  *          coordinate-system)
  */
 export function makeLocal2VBox(svgRoot: SVGSVGElement, element) {
+  // v-- transform to viewport (vbox + transform of svgRoot)
+  const elementCTM = element.getCTM();
+  // const rootCTM = svgRoot.getCTM();
+  const rootCTM = svgRoot.getCTM(); 
+
+  // v-- viewport to viewbox
+  const inverseRootCTM = rootCTM.inverse();
+  const transformationMatrix = inverseRootCTM.multiply(elementCTM)
+
   return (p: Point): Point => {
-    const svgPoint = svgRoot.createSVGPoint();
+    const svgPoint = tempPoint(svgRoot);
     svgPoint.x = p.x;
     svgPoint.y = p.y;
-    return svgPoint
-      // v-- transform to viewport (vbox + transform of svgRoot)
-      .matrixTransform(element.getCTM())
-      // v-- viewport to viewbox
-      .matrixTransform(svgRoot.getCTM().inverse());
+    return svgPoint.matrixTransform(transformationMatrix);
   };
 }
 
 /**
   * adapted from <https://www.sitepoint.com/how-to-translate-from-dom-to-svg-coordinates-and-back-again/>
+  * NOTE the screen-transformation-matrix of the elemend is 
+  * cached / closed over -- make sure to re-generate the
+  * function if the element's transformation changes.
   */
 export function makeDOM2VBox(svg: SVGSVGElement) {
+  const inverseScreenCTM = svg.getScreenCTM().inverse();
+
   return (pt: Point): Point => {
-    const svgPoint = svg.createSVGPoint();
+    const svgPoint = tempPoint(svg);
     svgPoint.x = pt.x;
     svgPoint.y = pt.y;
-    return svgPoint.matrixTransform(svg.getScreenCTM().inverse());
+    return svgPoint.matrixTransform(inverseScreenCTM);
   };
 }
+
+/**
+ * An svg-point to use in calculations. Creating
+ * one is expensive, so use this one and set its
+ * coordinates. Just make sure to never pass it
+ * out of utils functions or use it multiple times.
+ * Btw, `.matrixTransform` is safe, as it generates
+ * a new point internally.
+ */
+let tmpPoint: SVGPoint;
+function tempPoint(svg: SVGSVGElement) {
+  if (!tmpPoint) {
+    tmpPoint = svg.createSVGPoint();
+  }
+  return tmpPoint;
+}
+
 
 /**
  * Returns the bounding rectangle of the element
@@ -121,7 +163,7 @@ export function makeDOM2VBox(svg: SVGSVGElement) {
 export function boundingRectVBox(el: SVGElement, svg: SVGSVGElement) {
     const boundsClientRect = el.getBoundingClientRect();
 
-    const dom2vbox = makeDOM2VBox(svg);
+    const dom2vbox = makeDOM2VBox(svg); // TODO cache until resize?
     const leftUpper = dom2vbox({
       x: boundsClientRect.left,
       y: boundsClientRect.top
@@ -209,7 +251,7 @@ export function getIn(obj: any , path: string[]) {
  */
 export function deepFreeze(obj) {
     if (hasJSType("Array", obj)) {
-      for (const el of obj) {
+      for (let el of obj) {
         deepFreeze(el);
       }
     } else if (hasJSType("Object", obj)) {
@@ -242,8 +284,9 @@ export function filterSet(set, f) {
 
 export function mapToMap<A, B>(arr: Array<A>, f: (A) => B): Map<A, B> {
   const result = new Map<A, B>();
-  for (const x of arr) {
+  for (let x of arr) {
     result.set(x, f(x));
   }
   return result;
 }
+

@@ -1,6 +1,7 @@
 System.register("utils", [], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
+    var _idMat, tmpPoint;
     function valueOr(value, deflt) {
         return value ? value : deflt;
     }
@@ -15,7 +16,7 @@ System.register("utils", [], function(exports_1, context_1) {
             return xs.indexOf(x) >= 0;
         }
         else {
-            for (const el of xs) {
+            for (let el of xs) {
                 if (el === x)
                     return true;
             }
@@ -73,11 +74,15 @@ System.register("utils", [], function(exports_1, context_1) {
      * adapted from <http://stackoverflow.com/questions/26049488/how-to-get-absolute-coordinates-of-object-inside-a-g-group>
      * Yields a function that converts from coordinates relative to the element to
      * those relative to the svg’s root.
+     *
+     * NOTE the transformation matrix of the elemend is
+     * cached / closed over -- make sure to re-generate the
+     * function if the root's or element's transformation changes.
      */
     function makeConverterToAbsoluteCoords(svgRoot, element) {
+        const offset = svgRoot.getBoundingClientRect();
+        const matrix = element.getScreenCTM();
         return function (p) {
-            const offset = svgRoot.getBoundingClientRect();
-            const matrix = element.getScreenCTM();
             return {
                 x: (matrix.a * p.x) + (matrix.c * p.y) + matrix.e - offset.left,
                 y: (matrix.b * p.x) + (matrix.d * p.y) + matrix.f - offset.top
@@ -85,35 +90,59 @@ System.register("utils", [], function(exports_1, context_1) {
         };
     }
     exports_1("makeConverterToAbsoluteCoords", makeConverterToAbsoluteCoords);
+    function idMat(svg) {
+        if (!_idMat)
+            _idMat = svg.createSVGMatrix();
+        return _idMat;
+    }
     /**
+     * NOTE the transformation matrix of the elemend is
+     * cached / closed over -- make sure to re-generate the
+     * function if the root's or element's transformation changes.
+     *
      * @returns a function that converts points from an elements
      *          own/local coordinate system, to their equivalent
      *          viewbox-coordinates (viewbox = the svg's original
      *          coordinate-system)
      */
     function makeLocal2VBox(svgRoot, element) {
+        // v-- transform to viewport (vbox + transform of svgRoot)
+        const elementCTM = element.getCTM();
+        // const rootCTM = svgRoot.getCTM();
+        const rootCTM = svgRoot.getCTM();
+        // v-- viewport to viewbox
+        const inverseRootCTM = rootCTM.inverse();
+        const transformationMatrix = inverseRootCTM.multiply(elementCTM);
         return (p) => {
-            const svgPoint = svgRoot.createSVGPoint();
+            const svgPoint = tempPoint(svgRoot);
             svgPoint.x = p.x;
             svgPoint.y = p.y;
-            return svgPoint
-                .matrixTransform(element.getCTM())
-                .matrixTransform(svgRoot.getCTM().inverse());
+            return svgPoint.matrixTransform(transformationMatrix);
         };
     }
     exports_1("makeLocal2VBox", makeLocal2VBox);
     /**
       * adapted from <https://www.sitepoint.com/how-to-translate-from-dom-to-svg-coordinates-and-back-again/>
+      * NOTE the screen-transformation-matrix of the elemend is
+      * cached / closed over -- make sure to re-generate the
+      * function if the element's transformation changes.
       */
     function makeDOM2VBox(svg) {
+        const inverseScreenCTM = svg.getScreenCTM().inverse();
         return (pt) => {
-            const svgPoint = svg.createSVGPoint();
+            const svgPoint = tempPoint(svg);
             svgPoint.x = pt.x;
             svgPoint.y = pt.y;
-            return svgPoint.matrixTransform(svg.getScreenCTM().inverse());
+            return svgPoint.matrixTransform(inverseScreenCTM);
         };
     }
     exports_1("makeDOM2VBox", makeDOM2VBox);
+    function tempPoint(svg) {
+        if (!tmpPoint) {
+            tmpPoint = svg.createSVGPoint();
+        }
+        return tmpPoint;
+    }
     /**
      * Returns the bounding rectangle of the element
      * but in viewbox-coordinates (instead of the usual
@@ -121,7 +150,7 @@ System.register("utils", [], function(exports_1, context_1) {
      */
     function boundingRectVBox(el, svg) {
         const boundsClientRect = el.getBoundingClientRect();
-        const dom2vbox = makeDOM2VBox(svg);
+        const dom2vbox = makeDOM2VBox(svg); // TODO cache until resize?
         const leftUpper = dom2vbox({
             x: boundsClientRect.left,
             y: boundsClientRect.top
@@ -207,7 +236,7 @@ System.register("utils", [], function(exports_1, context_1) {
      */
     function deepFreeze(obj) {
         if (hasJSType("Array", obj)) {
-            for (const el of obj) {
+            for (let el of obj) {
                 deepFreeze(el);
             }
         }
@@ -238,7 +267,7 @@ System.register("utils", [], function(exports_1, context_1) {
     exports_1("filterSet", filterSet);
     function mapToMap(arr, f) {
         const result = new Map();
-        for (const x of arr) {
+        for (let x of arr) {
             result.set(x, f(x));
         }
         return result;
@@ -247,6 +276,14 @@ System.register("utils", [], function(exports_1, context_1) {
     return {
         setters:[],
         execute: function() {
+            /**
+             * An svg-point to use in calculations. Creating
+             * one is expensive, so use this one and set its
+             * coordinates. Just make sure to never pass it
+             * out of utils functions or use it multiple times.
+             * Btw, `.matrixTransform` is safe, as it generates
+             * a new point internally.
+             */
         }
     }
 });
@@ -254,7 +291,7 @@ System.register("config", ["utils"], function(exports_2, context_2) {
     "use strict";
     var __moduleName = context_2 && context_2.id;
     var utils_1;
-    var happyColor, shockColor, defaultColor, maxFps, shockDuration, levels;
+    var happyColor, shockColor, defaultColor, maxFps, shockDuration, delayToBePowered, levels;
     return {
         setters:[
             function (utils_1_1) {
@@ -266,48 +303,49 @@ System.register("config", ["utils"], function(exports_2, context_2) {
             exports_2("defaultColor", defaultColor = "#dadada"); // light grey
             exports_2("maxFps", maxFps = 10);
             exports_2("shockDuration", shockDuration = 0.9); // in seconds
+            exports_2("delayToBePowered", delayToBePowered = 100); // in milliseconds
             exports_2("levels", levels = utils_1.deepFreeze([
                 {
-                    timeLimit: 30,
-                    initialPoints: 30,
-                    shockPenalty: 27,
-                    missedOpportunityPenalty: 10,
-                    takenOpportunityPoints: 40,
+                    timeLimit: 10,
+                    initialPoints: 0,
+                    shockPenalty: 0,
+                    missedOpportunityPenalty: 0,
+                    takenOpportunityPoints: 200,
                 },
                 {
                     timeLimit: 30,
                     initialPoints: 30,
                     shockPenalty: 28,
-                    missedOpportunityPenalty: 10,
-                    takenOpportunityPoints: 50,
+                    missedOpportunityPenalty: 0,
+                    takenOpportunityPoints: 40,
                 },
                 {
                     timeLimit: 30,
                     initialPoints: 30,
-                    shockPenalty: 10,
-                    missedOpportunityPenalty: 2,
-                    takenOpportunityPoints: 50,
+                    shockPenalty: 20,
+                    missedOpportunityPenalty: 0,
+                    takenOpportunityPoints: 40,
                 },
                 {
                     timeLimit: 30,
                     initialPoints: 30,
-                    shockPenalty: 30,
-                    missedOpportunityPenalty: 8,
-                    takenOpportunityPoints: 50,
+                    shockPenalty: 20,
+                    missedOpportunityPenalty: 0,
+                    takenOpportunityPoints: 40,
                 },
                 {
                     timeLimit: 30,
                     initialPoints: 30,
                     shockPenalty: 31,
-                    missedOpportunityPenalty: 8,
-                    takenOpportunityPoints: 50,
+                    missedOpportunityPenalty: 9,
+                    takenOpportunityPoints: 20,
                 },
                 {
                     timeLimit: 30,
                     initialPoints: 30,
                     shockPenalty: 31,
                     missedOpportunityPenalty: 5,
-                    takenOpportunityPoints: 50,
+                    takenOpportunityPoints: 30,
                 },
                 {
                     timeLimit: 30,
@@ -370,43 +408,12 @@ System.register("fetch-map", ["fetch", "utils"], function(exports_3, context_3) 
         const mapDataPromise = fetchSvg(url).then(svg => {
             const backgroundDiv = document.getElementById(mountpoint);
             if (backgroundDiv) {
-                /**
-                 * Some parsing needs to happen before mounting,
-                 * as at that point the coordinate-systems for
-                 * the viewBox (coordinates used to draw the svg,
-                 * as specified in the root-element's property)
-                 * and viewport (the piece user's get to see,
-                 * including any scaling due to the screen's width)
-                 * see: <https://sarasoueidan.com/blog/svg-coordinate-systems/>
-                 */
-                const data = extractMapData(svg);
-                //delay(2000).then(() =>
-                //  console.log("map-data reextracted: ", extractMapData(svg))
-                //)
-                /*
-                let rect = data.sockets[0];
-                let toAbs = makeConverterToAbsoluteCoords(svg, rect.element);
-                console.log("to abs 1: ", toAbs(rect.pos));
-                console.log("to abs 1: ", toAbs({x: 0, y: 0}));
-                console.log("to abs 1: ", toAbs({x: 1, y: 1}));
-                */
                 /*
                  * mount the svg
                  */
                 backgroundDiv.appendChild(svg);
-                /*
-                toAbs = makeConverterToAbsoluteCoords(svg, rect.element);
-                console.log("to abs 2: ", toAbs(rect.pos)); // doesn't match up with the same vec above
-                console.log("to abs 2: ", toAbs({x: 0, y: 0}));
-                console.log("to abs 2: ", toAbs({x: 1, y: 1}));
-                */
-                /*
-                 * some parsing needs to happen after mounting,
-                 * e.g. clientRectangles (~bounding boxes) only
-                 * have a non-zero size then.
-                 */
-                parseAndSetRotationPivots(data);
-                return data;
+                // return delay(3000).then(() => extractMapData(svg));
+                return extractMapData(svg);
             }
             else {
                 throw new Error(`Couldn't mount map "${url}" at mountpoint with id "${mountpoint}".`);
@@ -451,20 +458,18 @@ System.register("fetch-map", ["fetch", "utils"], function(exports_3, context_3) 
         const switches = getSwitches(svg);
         const sockets = getRectanglesInLayer(svg, "sockets");
         const generators = getRectanglesInLayer(svg, "generators");
-        console.log("before mount: ", powerlines[0]);
-        utils_2.delay(1000).then(() => {
-            console.log("after mount: ", getPowerlines(svg)[0]);
-        });
-        return {
+        let data = {
             powerlines,
             generators,
             sockets,
             switches,
             element: svg,
         };
+        parseAndSetRotationPivots(data);
+        return data;
     }
     function parseAndSetRotationPivots(data) {
-        for (const s of data.switches) {
+        for (let s of data.switches) {
             const el = s.element;
             const getAttr = (attr) => {
                 const attrAsStr = utils_2.valueOr(el.getAttribute(attr), "");
@@ -492,7 +497,7 @@ System.register("fetch-map", ["fetch", "utils"], function(exports_3, context_3) 
         const layer = svg.querySelector("#switches");
         const elements = layer.getElementsByTagName("path");
         const switches = [];
-        for (const el of elements) {
+        for (let el of elements) {
             switches.push({
                 element: el,
             });
@@ -503,8 +508,8 @@ System.register("fetch-map", ["fetch", "utils"], function(exports_3, context_3) 
         const powerlinesLayer = svg.querySelector("#powerlines");
         const powerlineElements = powerlinesLayer.getElementsByTagName("path");
         const powerlines = [];
-        for (const el of powerlineElements) {
-            const toAbs = utils_2.makeConverterToAbsoluteCoords(svg, el);
+        for (let el of powerlineElements) {
+            const toAbs = utils_2.makeLocal2VBox(svg, el);
             const start = toAbs(el.getPointAtLength(0));
             const end = toAbs(el.getPointAtLength(el.getTotalLength()));
             powerlines.push({
@@ -519,7 +524,7 @@ System.register("fetch-map", ["fetch", "utils"], function(exports_3, context_3) 
         const layer = svg.querySelector("#" + layerId);
         const rectangleElements = layer.getElementsByTagName("rect");
         const rectangleData = [];
-        for (const el of rectangleElements) {
+        for (let el of rectangleElements) {
             const getAttr = (attr) => {
                 const attrAsStr = utils_2.valueOr(el.getAttribute(attr), "");
                 return utils_2.valueOr(Number.parseInt(attrAsStr), 0); // parse to number
@@ -528,7 +533,7 @@ System.register("fetch-map", ["fetch", "utils"], function(exports_3, context_3) 
             const height = getAttr("height");
             const relX = getAttr("x");
             const relY = getAttr("y");
-            const toAbs = utils_2.makeConverterToAbsoluteCoords(svg, el);
+            const toAbs = utils_2.makeLocal2VBox(svg, el);
             rectangleData.push({
                 pos: toAbs({ x: relX, y: relY }),
                 width,
@@ -553,58 +558,204 @@ System.register("svg-elements-at", ["svg-points", "utils"], function(exports_4, 
     "use strict";
     var __moduleName = context_4 && context_4.id;
     var svg_points_1, utils_3;
+    var localPointsCache, cachedLocal2VBox, cachedBoundingBoxes, cachedConv2AbsCoords;
     /**
       * @param pt the point in viewbox-coordinates (=pre-scaling coords).
       * @param svg the svg-root-element
-      * @param exactCollision if false will only check if the point is
-                 inside the bounding box. if true, additionally it will
-                 be checked if the point is really inside the element
-                 itself. This is relevant if you use non-rectangular
-                 shapes but also incurs additional runtime cost.
-                 NOTE: currently curvature is ignored, so only `rect`s
-                 and `path`s consisting of straight lines will be detected
-                 correctly (the game only consists of these atm, so this
-                 should be fine for now).
-      * adapted from source of
+      * @param config.exactCollision if false will only check if the point is
+      *          inside the bounding box. if true, additionally it will
+      *          be checked if the point is really inside the element
+      *          itself. This is relevant if you use non-rectangular
+      *          shapes but also incurs additional runtime cost.
+      *          NOTE: currently curvature is ignored, so only `rect`s
+      *          and `path`s consisting of straight lines will be detected
+      *          correctly (the game only consists of these atm, so this
+      *          should be fine for now). Defaults to `true`.
+      * @param config.cacheLocalPoints relevant if exactCollsion == true. If the
+      *          points themselves in your svg-elements, especially your
+      *          paths, don't change, the parsed results are cached, thus
+      *          improving performance. Transformations applied to the
+      *          elements themselves (e.g. rotations) will still be
+      *          respected even if this is true. Note that this makes
+      *          this function stateful. Defaults to `true`.
+      * @param config.onlyUprightRectangles relevant if exactCollision == true.
+      *          If all rectangles in your scene are without rotation,
+      *          their bounding-boxes equal their exact shapes and thus
+      *          the costly exact calculation can be skipped. Defaults
+      *          to `true`.
+      * @param config.cacheTransformations relevant if exactCollision == true. If
+      *          set to `true` (the default) all elements in the scene are assumed
+      *          static and the transformation matrices / functions for them are
+      *          cached. You can disable the caching for specific elements by
+      *          passing them via `config.dynamicElements`.
+      * @param config.dynamicElements see `config.cacheTransformations` above.
+      * @param config.resizeHasHappend relevant when using config.staticElements.
+      *          if this is set to true, the transformations of all elements
+      *          have changed and the cached transformation functions are
+      *          reinitialized.
+      *
+      * code for this function was adapted from the sources of
       * <http://xn--dahlstrm-t4a.net/svg/interactivity/intersection/sandbox_hover.svg>
       */
-    function svgElementsAt(pt, svg, exactCollision = true) {
+    function svgElementsAt(pt, svg, config = {}) {
+        config = Object.assign({
+            exactCollision: true,
+            cacheLocalPoints: true,
+            onlyUprightRectangles: true,
+            cacheTransformations: true,
+            dynamicElements: new Set(),
+            resizeHasHappend: false,
+        }, config); // copy the custom config over the defaults
         /*
          * getIntersectionList works on viewport-coordinates
          * we need to transform the svgRects coordinats from
          * viebox (=original) to viewport (=svg after scaling)
          * coordinates.
          */
-        const vbox2vportCoords = utils_3.makeConverterToAbsoluteCoords(svg, svg);
+        let vbox2vportCoords;
+        if (!config.cacheTransformations) {
+            // caching disabled generally or for this element
+            vbox2vportCoords = utils_3.makeConverterToAbsoluteCoords(svg, svg);
+        }
+        else if (!cachedConv2AbsCoords || config.resizeHasHappened) {
+            // caching active but cache miss or cache invalid
+            cachedConv2AbsCoords = utils_3.makeConverterToAbsoluteCoords(svg, svg);
+            vbox2vportCoords = cachedConv2AbsCoords;
+        }
+        else {
+            // caching active and item correctly cached
+            vbox2vportCoords = cachedConv2AbsCoords;
+        }
         const vportPt = vbox2vportCoords(pt);
         const svgRect = svg.createSVGRect();
         svgRect.x = vportPt.x;
         svgRect.y = vportPt.y;
         svgRect.width = svgRect.height = 1;
         const boundingBoxIntersections = utils_3.nodeListToArray(svg.getIntersectionList(svgRect, svg));
-        if (!exactCollision) {
+        if (!config.exactCollision) {
             return boundingBoxIntersections;
         }
         else {
-            const exactIntersection = boundingBoxIntersections.filter(el => {
-                if (el.tagName === "circle") {
-                    /*
-                    * `toPath`/`toPoints` only returns two points for
-                    * circles. So they would essentially intersect
-                    * like a line with our point, i.e. not at all.
-                    */
-                    return true;
-                }
-                const shape = toShape(el); // prepare for handing it svg-points
-                const localPoints = svg_points_1.toPoints(shape);
-                const local2VBox = utils_3.makeLocal2VBox(svg, el);
-                const vboxPoints = localPoints.map(p => local2VBox({ x: p.x, y: p.y }));
-                return utils_3.isPointInPoly(vboxPoints, pt);
-            });
-            return exactIntersection;
+            const exactIntersections = boundingBoxIntersections.filter(el => pointInShape(pt, el, svg, config));
+            return exactIntersections;
         }
     }
     exports_4("svgElementsAt", svgElementsAt);
+    /**
+     * Checks if a point is contained within a
+     * passed svg-element. The config-parameter
+     * works the same as in `svgElementsAt`.
+     */
+    function pointInSvgElement(pt, el, // the SVG*Element
+        svg, config = {}) {
+        config = Object.assign({
+            exactCollision: true,
+            cacheLocalPoints: true,
+            onlyUprightRectangles: true,
+            cacheTransformations: true,
+            dynamicElements: new Set(),
+            resizeHasHappend: false,
+        }, config); // copy the custom config over the defaults
+        // bounding box collision
+        const inBoundingBox = pointInBoundingBox(pt, el, svg, config);
+        if (!inBoundingBox) {
+            return false;
+        }
+        else if (!config.exactCollision) {
+            // in bounding box and that's enough for us
+            return true;
+        }
+        else {
+            // fine / exact collision if necessary
+            return pointInShape(pt, el, svg, config);
+        }
+    }
+    exports_4("pointInSvgElement", pointInSvgElement);
+    /**
+     * Checks if a given point is in the bounding box
+     * of the given element.
+     *
+     * @param config the same as svgElementsAt but
+     *    only the fields related to `cacheTransformations`
+     *    are used.
+     */
+    function pointInBoundingBox(pt, el, // the SVG*Element
+        svg, config) {
+        //const cachedBoundngBoxes = new Map(); // in vbox-space
+        let boundingBox;
+        if (!config.cacheTransformations || config.dynamicElements.has(el)) {
+            // caching disabled generally or for this element
+            boundingBox = utils_3.boundingRectVBox(el, svg);
+        }
+        else if (!cachedBoundingBoxes.has(el) || config.resizeHasHappened) {
+            // caching active but cache miss or cache invalid
+            boundingBox = utils_3.boundingRectVBox(el, svg);
+            cachedBoundingBoxes.set(el, boundingBox);
+        }
+        else {
+            // caching active and item correctly cached
+            boundingBox = cachedBoundingBoxes.get(el);
+        }
+        return boundingBox.x <= pt.x &&
+            pt.x <= (boundingBox.x + boundingBox.width) &&
+            boundingBox.y <= pt.y &&
+            pt.y <= (boundingBox.y + boundingBox.height);
+    }
+    /**
+     * NOTE: Make sure you have done bounding box collision
+     * first, as some shapes (e.g. circles) aren't
+     * currently matched correctly just with this function.
+     * For this reason this function *is not exported*.
+     * Use pointInSvgElement instead.
+     *
+     * @param config the same as svgElementsAt except for the
+     *          exactCollision-field that isn't used as you
+     *          shouldn't call this function if you don't
+     *          want exact collisions -- that's what it does.
+     */
+    function pointInShape(pt, el, // the SVG*Element
+        svg, config) {
+        if (el.tagName === "circle") {
+            /*
+            * `toPoints` only returns two points for
+            * circles. So they would essentially intersect
+            * like a line with our point, i.e. not at all.
+            * TODO properly deal with circles. don't treat
+            * them as rectangles.
+            */
+            return true;
+        }
+        if (config.onlyUprightRectangles && el.tagName === "rect") {
+            // for these bounding-box == exact shape
+            return true;
+        }
+        let localPoints;
+        if (config.cacheLocalPoints && localPointsCache.has(el)) {
+            localPoints = localPointsCache.get(el);
+        }
+        else {
+            const shape = toShape(el); // prepare for handing it svg-points
+            localPoints = svg_points_1.toPoints(shape);
+            localPointsCache.set(el, localPoints);
+        }
+        let local2VBox;
+        if (!config.cacheTransformations || config.dynamicElements.has(el)) {
+            // caching disabled or is a dynamic element.
+            // calculate transformations every time
+            local2VBox = utils_3.makeLocal2VBox(svg, el);
+        }
+        else if (!cachedLocal2VBox.has(el) || config.resizeHasHappened) {
+            // static but not yet in cache or cache invalidated due to resize
+            local2VBox = utils_3.makeLocal2VBox(svg, el);
+            cachedLocal2VBox.set(el, local2VBox);
+        }
+        else {
+            // static and cached
+            local2VBox = cachedLocal2VBox.get(el);
+        }
+        const vboxPoints = localPoints.map(p => local2VBox({ x: p.x, y: p.y }));
+        return utils_3.isPointInPoly(vboxPoints, pt);
+    }
     function toShape(el) {
         const getNumAttr = attr => Number.parseFloat(el.getAttribute(attr));
         switch (el.tagName) {
@@ -646,6 +797,9 @@ System.register("svg-elements-at", ["svg-points", "utils"], function(exports_4, 
                 utils_3 = utils_3_1;
             }],
         execute: function() {
+            localPointsCache = new Map();
+            cachedLocal2VBox = new Map();
+            cachedBoundingBoxes = new Map(); // in vbox-space
         }
     }
 });
@@ -658,9 +812,11 @@ System.register("geometry", ["utils", "svg-elements-at"], function(exports_5, co
      * @param pt x- and y- coordinates in vbox-
      *           coordinates (=the original svg coordinates)
      */
-    function piecesAt(map, pt) {
+    function piecesAt(map, pt, resizeHasHappened = false) {
         const svg = map.element;
-        const intersectedElements = svg_elements_at_1.svgElementsAt(pt, svg);
+        const dynamicElements = selectDynamicElements(map);
+        // TODO detect resize and pass on resizeHasHappened
+        const intersectedElements = svg_elements_at_1.svgElementsAt(pt, svg, { dynamicElements, resizeHasHappened });
         return {
             generators: map.generators.filter(g => utils_4.contains(intersectedElements, g.element)),
             sockets: map.sockets.filter(s => utils_4.contains(intersectedElements, s.element)),
@@ -668,24 +824,41 @@ System.register("geometry", ["utils", "svg-elements-at"], function(exports_5, co
         };
     }
     exports_5("piecesAt", piecesAt);
+    function selectDynamicElements(map) {
+        return selectElementsFrom([map.switches]);
+    }
+    function selectStaticElements(map) {
+        return selectElementsFrom([
+            map.powerlines,
+            map.generators,
+            map.sockets,
+        ]);
+    }
+    function selectElementsFrom(collectionsOfPieces) {
+        const selectedElements = new Set();
+        collectionsOfPieces.forEach((pieces) => pieces && pieces.forEach(p => selectedElements.add(p.element)));
+        return selectedElements;
+    }
     /**
      * Returns the powerlines connectected to a Generator/Socket/Switch
      */
     function selectAttachedLines(piece, map) {
-        return map.powerlines.filter(p => attachedToShape(p, piece, map.element));
+        return map.powerlines.filter(p => attachedToShape(p, piece, map));
     }
     exports_5("selectAttachedLines", selectAttachedLines);
     function attached(rect, powerline) {
         return insideRect(rect, powerline.start) || insideRect(rect, powerline.end);
     }
     exports_5("attached", attached);
-    function attachedToShape(powerline, shape, svg) {
-        return insideShape(powerline.start, shape, svg) ||
-            insideShape(powerline.end, shape, svg);
+    function attachedToShape(powerline, shape, map) {
+        return insideShape(powerline.start, shape, map) ||
+            insideShape(powerline.end, shape, map);
     }
     exports_5("attachedToShape", attachedToShape);
-    function insideShape(point, shape, svg) {
-        return utils_4.contains(svg_elements_at_1.svgElementsAt(point, svg), shape.element);
+    function insideShape(point, shape, map) {
+        const dynamicElements = selectDynamicElements(map);
+        // TODO detect resize and pass on resizeHasHappened
+        return svg_elements_at_1.pointInSvgElement(point, shape.element, map.element, { dynamicElements });
     }
     exports_5("insideShape", insideShape);
     function insideRect(rect, point) {
@@ -711,12 +884,12 @@ System.register("is-powered", ["geometry", "utils"], function(exports_6, context
     "use strict";
     var __moduleName = context_6 && context_6.id;
     var geometry_1, utils_5;
-    function isPowered(powerable, map) {
-        const powered = pathToGenerator(powerable, map);
+    function isPowered(powerable, map, resizeHasHappened = false) {
+        const powered = pathToGenerator(powerable, map, resizeHasHappened);
         return powered.size > 0;
     }
     exports_6("isPowered", isPowered);
-    function pathToGenerator(powerable, map, visited = new Set(), powered = new Set()) {
+    function pathToGenerator(powerable, map, resizeHasHappened = false, visited = new Set(), powered = new Set()) {
         if (utils_5.contains(map.generators, powerable)) {
             // reached a generator, stuff is powered.
             powered.add(powerable);
@@ -726,11 +899,11 @@ System.register("is-powered", ["geometry", "utils"], function(exports_6, context
         else {
             visited.add(powerable);
             const attachedLines = geometry_1.selectAttachedLines(powerable, map);
-            for (const powLine of attachedLines) {
-                const otherEnd = geometry_1.insideShape(powLine.end, powerable, map.element) ?
+            for (let powLine of attachedLines) {
+                const otherEnd = geometry_1.insideShape(powLine.end, powerable, map) ?
                     powLine.start :
                     powLine.end;
-                const connectedWith = geometry_1.piecesAt(map, otherEnd);
+                const connectedWith = geometry_1.piecesAt(map, otherEnd, resizeHasHappened);
                 visited.add(powLine);
                 // markCoords(map.element, otherEnd.x, otherEnd.y);
                 // console.log("powerable attached to: ", connectedWith.generators, connectedWith.switches);
@@ -750,12 +923,12 @@ System.register("is-powered", ["geometry", "utils"], function(exports_6, context
                 }
                 else if (connectedWith.switches.length > 0) {
                     // markCoords(map.element, otherEnd.x, otherEnd.y);
-                    for (const swtch of connectedWith.switches) {
+                    for (let swtch of connectedWith.switches) {
                         if (!visited.has(swtch)) {
                             /* recurse into the switch (but avoid going back).
                              * powered elements are added to `powered` by-reference
                              */
-                            pathToGenerator(swtch, map, visited, powered);
+                            pathToGenerator(swtch, map, resizeHasHappened, visited, powered);
                             if (powered.has(swtch)) {
                                 visited.add(swtch);
                                 powered.add(swtch);
@@ -852,7 +1025,7 @@ System.register("main", ["fetch", "geometry", "is-powered", "fetch-map", "run-ga
     "use strict";
     var __moduleName = context_8 && context_8.id;
     var geometry_2, is_powered_1, fetch_map_1, run_game_loop_1, svg_elements_at_2, utils_6, conf;
-    var scoreEl, score, points, pointsTimerId, stopGameLoop, timeLeftEl, fpsEl, progressEl, pointsIncEl, pointsDecEl, timeLevel, currentMapData, unregisterDebugMarker, touchedSockets, levelTimerId, currentLevelNr, iconPrototypes, iconElements, currentlyShockedPieces, shockedSvgP, happySvgP, boredSvgP;
+    var scoreEl, score, points, pointsTimerId, stopGameLoop, timeLeftEl, fpsEl, progressEl, pointsIncEl, pointsDecEl, resizeHasHappened, timeLevel, currentMapData, unregisterDebugMarker, touchedSockets, poweredSince, levelTimerId, currentLevelNr, iconPrototypes, iconElements, currentlyShockedPieces, shockedSvgP, happySvgP, boredSvgP;
     /*
      * establish default values to what they should
      * be at the start of a level.
@@ -901,7 +1074,7 @@ System.register("main", ["fetch", "geometry", "is-powered", "fetch-map", "run-ga
             // setupLevelTimer(); TODO clarify design for timer/scoring
             currentMapData = data;
             // markPoweredSockets(data);
-            for (const s of data.sockets) {
+            for (let s of data.sockets) {
                 registerInputHandlers(s, data);
             }
             // now, with everything configured, let's start up the updates
@@ -958,12 +1131,20 @@ System.register("main", ["fetch", "geometry", "is-powered", "fetch-map", "run-ga
     }
     function registerInputHandlers(s, data) {
         console.log("registering input handlers");
+        /* TODO find a solution to make this work with the svg-root
+         * to catch cases where the window stays the same but the
+         * svg resizes. (Shouldn't happen atm due to width=100vw)
+         */
+        window.addEventListener("resize", e => {
+            console.log("Resized svg, invalidating geometry-caches.");
+            resizeHasHappened = true;
+        });
         // setupDbgClickHandler(data);
         s.element.addEventListener("click", e => {
-            const ptg = is_powered_1.pathToGenerator(s, data);
+            const ptg = is_powered_1.pathToGenerator(s, data, resizeHasHappened);
             console.log("[dbg] is clicked socket powered? ", ptg.size > 0);
             console.log("[dbg] poweredVia: ", ptg);
-            for (const pathPiece of ptg) {
+            for (let pathPiece of ptg) {
                 pathPiece.element.style.stroke = conf.shockColor;
                 utils_6.delay(900).then(() => {
                     pathPiece.element.style.stroke = conf.defaultColor;
@@ -989,16 +1170,31 @@ System.register("main", ["fetch", "geometry", "is-powered", "fetch-map", "run-ga
      * All the game-logic around scoring and GUI-updates
      */
     function update(deltaT, stopGameLoop, levelNr, data) {
+        const now = Date.now();
         const pathsToGenerator = utils_6.mapToMap(data.sockets, s => {
             const visited = new Set();
             const powered = new Set();
-            is_powered_1.pathToGenerator(s, data, visited, powered);
+            is_powered_1.pathToGenerator(s, data, resizeHasHappened, visited, powered);
             return { visited, powered };
         });
+        /* sockets that have a path to a generator */
         const poweredSockets = new Set(data.sockets.filter(s => {
             const ptg = pathsToGenerator.get(s);
             return ptg && ptg.powered.size > 0;
         }));
+        /* connection lost for these sockets. remove
+         * them from the "connected" list. */
+        poweredSince.forEach((timestamp, socket) => {
+            if (!poweredSockets.has(socket)) {
+                poweredSince.delete(socket);
+            }
+        });
+        /* Newly connected sockets. Add them to the list. */
+        poweredSockets.forEach(socket => {
+            if (!poweredSince.has(socket)) {
+                poweredSince.set(socket, now);
+            }
+        });
         const enabled = new Set(data.sockets.filter(s => 
         // sockets that are currently being shocked, are exempt from scoring
         !currentlyShockedPieces.has(s)));
@@ -1006,18 +1202,19 @@ System.register("main", ["fetch", "geometry", "is-powered", "fetch-map", "run-ga
         const enabledUntouched = utils_6.filterSet(enabled, s => !touchedSockets.has(s));
         const safeButUntouched = utils_6.filterSet(enabledUntouched, s => !poweredSockets.has(s));
         const safeAndTouched = utils_6.filterSet(enabledTouched, s => !poweredSockets.has(s));
-        const poweredAndTouched = utils_6.filterSet(enabledTouched, s => poweredSockets.has(s));
-        for (const s of safeButUntouched) {
+        const poweredAndTouched = utils_6.filterSet(enabledTouched, s => poweredSockets.has(s) &&
+            now >= (poweredSince.get(s) + conf.delayToBePowered));
+        for (let s of safeButUntouched) {
             points -= conf.levels[levelNr].missedOpportunityPenalty * deltaT / 1000;
         }
-        for (const s of safeAndTouched) {
+        for (let s of safeAndTouched) {
             points += conf.levels[levelNr].takenOpportunityPoints * deltaT / 1000;
         }
-        for (const s of poweredAndTouched) {
+        for (let s of poweredAndTouched) {
             // vibration not yet started for that socket
             const ptg = pathsToGenerator.get(s);
             if (ptg) {
-                for (const pathPiece of ptg.visited) {
+                for (let pathPiece of ptg.visited) {
                     currentlyShockedPieces.add(pathPiece);
                     utils_6.delay(conf.shockDuration * 1000).then(() => {
                         currentlyShockedPieces.delete(pathPiece);
@@ -1046,34 +1243,35 @@ System.register("main", ["fetch", "geometry", "is-powered", "fetch-map", "run-ga
             bored: safeButUntouched.size,
             shocked: poweredAndTouched.size,
         });
+        resizeHasHappened = false; // all geometry-caches should have been updated by now.
     }
     function updateStrokeColors(args) {
         const { mapData, safeAndTouched, pathsToGenerator, currentlyShockedPieces, } = args;
         const toStrokeWith = new Map(); // maps to color-string
-        for (const s of mapData.sockets) {
+        for (let s of mapData.sockets) {
             toStrokeWith.set(s, conf.defaultColor);
         }
-        for (const g of mapData.generators) {
+        for (let g of mapData.generators) {
             toStrokeWith.set(g, conf.defaultColor);
         }
-        for (const p of mapData.powerlines) {
+        for (let p of mapData.powerlines) {
             toStrokeWith.set(p, conf.defaultColor);
         }
-        for (const s of mapData.switches) {
+        for (let s of mapData.switches) {
             toStrokeWith.set(s, conf.defaultColor);
         }
-        for (const s of safeAndTouched) {
+        for (let s of safeAndTouched) {
             const ptg = pathsToGenerator.get(s);
             if (ptg) {
-                for (const pathPiece of ptg.visited) {
+                for (let pathPiece of ptg.visited) {
                     toStrokeWith.set(pathPiece, conf.happyColor);
                 }
             }
         }
-        for (const piece of currentlyShockedPieces) {
+        for (let piece of currentlyShockedPieces) {
             toStrokeWith.set(piece, conf.shockColor);
         }
-        for (const [pathPiece, color] of toStrokeWith) {
+        for (let [pathPiece, color] of toStrokeWith) {
             pathPiece.element.style.stroke = color;
         }
     }
@@ -1143,13 +1341,13 @@ System.register("main", ["fetch", "geometry", "is-powered", "fetch-map", "run-ga
      * map with a circle.
      */
     function markElementPositions(mapData) {
-        for (const s of mapData.sockets) {
+        for (let s of mapData.sockets) {
             utils_6.markCoords(mapData.element, s.pos.x, s.pos.y);
         }
-        for (const g of mapData.generators) {
+        for (let g of mapData.generators) {
             utils_6.markCoords(mapData.element, g.pos.x, g.pos.y);
         }
-        for (const p of mapData.powerlines) {
+        for (let p of mapData.powerlines) {
             utils_6.markCoords(mapData.element, p.start.x, p.start.y);
             utils_6.markCoords(mapData.element, p.end.x, p.end.y);
         }
@@ -1159,9 +1357,9 @@ System.register("main", ["fetch", "geometry", "is-powered", "fetch-map", "run-ga
      * that are powered (for debug-purposes)
      */
     function markPoweredSockets(mapData) {
-        for (const s of mapData.sockets) {
+        for (let s of mapData.sockets) {
             // mark powered sockets
-            const unregister = utils_6.markCoordsLive(mapData.element, s.pos.x, s.pos.y, () => is_powered_1.isPowered(s, mapData));
+            const unregister = utils_6.markCoordsLive(mapData.element, s.pos.x, s.pos.y, () => is_powered_1.isPowered(s, mapData, resizeHasHappened));
             unregisterDebugMarker.push(unregister);
         }
     }
@@ -1177,9 +1375,9 @@ System.register("main", ["fetch", "geometry", "is-powered", "fetch-map", "run-ga
     function setupDbgClickHandler(data) {
         data.element.addEventListener("click", e => {
             const dom2vbox = utils_6.makeDOM2VBox(data.element);
-            const elements = svg_elements_at_2.svgElementsAt(dom2vbox({ x: e.clientX, y: e.clientY }), data.element);
+            const intersectedElements = svg_elements_at_2.svgElementsAt(dom2vbox({ x: e.clientX, y: e.clientY }), data.element);
             const pieces = geometry_2.piecesAt(data, dom2vbox({ x: e.clientX, y: e.clientY }));
-            console.log("clicked on the following: ", elements, pieces);
+            console.log("clicked on the following: ", intersectedElements, pieces);
         });
     }
     return {
@@ -1219,8 +1417,10 @@ System.register("main", ["fetch", "geometry", "is-powered", "fetch-map", "run-ga
             progressEl = document.getElementById("progress");
             pointsIncEl = document.getElementById("pointIncIcons");
             pointsDecEl = document.getElementById("pointDecIcons");
+            resizeHasHappened = false; // true if the size of the svg has changed before the frame.
             unregisterDebugMarker = [];
             touchedSockets = new Set();
+            poweredSince = new Map();
             currentLevelNr = 0; // increase to start at higher level
              // shocked, happy, bored
             iconElements = {

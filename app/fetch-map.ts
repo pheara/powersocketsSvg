@@ -8,7 +8,7 @@ import {
   hasJSType,
   delay,
   deepFreeze,
-  makeConverterToAbsoluteCoords,
+  makeLocal2VBox,
   makeDOM2VBox,
   boundingRectVBox,
  } from "utils";
@@ -18,49 +18,14 @@ export function loadMap(url: string, mountpoint: string) : Promise<MapData> {
   const mapDataPromise = fetchSvg(url).then(svg => {
     const backgroundDiv = document.getElementById(mountpoint);
     if (backgroundDiv) {
-      /**
-       * Some parsing needs to happen before mounting,
-       * as at that point the coordinate-systems for
-       * the viewBox (coordinates used to draw the svg,
-       * as specified in the root-element's property)
-       * and viewport (the piece user's get to see,
-       * including any scaling due to the screen's width)
-       * see: <https://sarasoueidan.com/blog/svg-coordinate-systems/>
-       */
-      const data = extractMapData(svg);
-
-      //delay(2000).then(() =>
-      //  console.log("map-data reextracted: ", extractMapData(svg))
-      //)
-
-      /*
-      let rect = data.sockets[0];
-      let toAbs = makeConverterToAbsoluteCoords(svg, rect.element);
-      console.log("to abs 1: ", toAbs(rect.pos));
-      console.log("to abs 1: ", toAbs({x: 0, y: 0}));
-      console.log("to abs 1: ", toAbs({x: 1, y: 1}));
-      */
 
       /*
        * mount the svg
        */
       backgroundDiv.appendChild(svg);
 
-      /*
-      toAbs = makeConverterToAbsoluteCoords(svg, rect.element);
-      console.log("to abs 2: ", toAbs(rect.pos)); // doesn't match up with the same vec above
-      console.log("to abs 2: ", toAbs({x: 0, y: 0}));
-      console.log("to abs 2: ", toAbs({x: 1, y: 1}));
-      */
-
-      /*
-       * some parsing needs to happen after mounting,
-       * e.g. clientRectangles (~bounding boxes) only
-       * have a non-zero size then.
-       */
-      parseAndSetRotationPivots(data);
-
-      return data;
+      // return delay(3000).then(() => extractMapData(svg));
+      return extractMapData(svg);
     } else {
       throw new Error(
         `Couldn't mount map "${url}" at mountpoint with id "${mountpoint}".`
@@ -108,21 +73,20 @@ function extractMapData(svg: SVGSVGElement): MapData {
   const sockets = getRectanglesInLayer(svg, "sockets");
   const generators = getRectanglesInLayer(svg, "generators");
 
-  console.log("before mount: ", powerlines[0]);
-  delay(1000).then(() => {
-    console.log("after mount: ", getPowerlines(svg)[0]);
-  });
-
-  return {
+  let data =  {
     powerlines,
     generators,
     sockets,
     switches,
     element: svg,
   };
+
+  parseAndSetRotationPivots(data);
+
+  return data;
 }
 function parseAndSetRotationPivots(data: MapData) {
-  for (const s of data.switches) {
+  for (let s of data.switches) {
     const el = s.element;
 
     const getAttr = (attr: string) => {
@@ -155,7 +119,7 @@ function getSwitches(svg: SVGSVGElement): Switch[] {
   const layer = svg.querySelector("#switches");
   const elements = layer.getElementsByTagName("path");
   const switches: Switch[] = [];
-  for (const el of elements) {
+  for (let el of elements) {
     switches.push({
       element: el,
     });
@@ -167,9 +131,9 @@ function getPowerlines(svg: SVGSVGElement): Powerline[] {
     const powerlinesLayer = svg.querySelector("#powerlines");
     const powerlineElements = powerlinesLayer.getElementsByTagName("path");
     const powerlines: Powerline[] = [];
-    for (const el of powerlineElements) {
+    for (let el of powerlineElements) {
 
-      const toAbs = makeConverterToAbsoluteCoords(svg, el);
+      const toAbs = makeLocal2VBox(svg, el);
       const start = toAbs(el.getPointAtLength(0));
       const end = toAbs(el.getPointAtLength(el.getTotalLength()));
 
@@ -186,7 +150,7 @@ function getRectanglesInLayer(svg: SVGSVGElement, layerId: string): Rectangle[] 
   const layer = svg.querySelector("#" + layerId);
   const rectangleElements = layer.getElementsByTagName("rect");
   const rectangleData: Rectangle[] = [];
-  for (const el of rectangleElements) {
+  for (let el of rectangleElements) {
     const getAttr = (attr: string) => {
       const attrAsStr = valueOr(el.getAttribute(attr), "");
       return valueOr(Number.parseInt(attrAsStr), 0); // parse to number
@@ -195,7 +159,7 @@ function getRectanglesInLayer(svg: SVGSVGElement, layerId: string): Rectangle[] 
     const height = getAttr("height");
     const relX = getAttr("x");
     const relY = getAttr("y");
-    const toAbs = makeConverterToAbsoluteCoords(svg, el);
+    const toAbs = makeLocal2VBox(svg, el);
     rectangleData.push({
       pos: toAbs({x: relX, y: relY}),
       width,

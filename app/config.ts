@@ -10,6 +10,8 @@ export const maxFps = 10;
 
 export const shockDuration = 0.9; // in seconds
 
+export const delayToBePowered = 100; // in milliseconds
+
 export const levels: Array<{
     timeLimit: number, // in seconds
     initialPoints: number,
@@ -19,49 +21,49 @@ export const levels: Array<{
 }> = deepFreeze([
 
   { // level0
-    timeLimit: 30,
-    initialPoints: 30,
-    shockPenalty: 27,
-    missedOpportunityPenalty: 10,
-    takenOpportunityPoints: 40,
+    timeLimit: 10,
+    initialPoints: 0,
+    shockPenalty: 0,
+    missedOpportunityPenalty: 0,
+    takenOpportunityPoints: 200,
   },
   { // level1
     timeLimit: 30,
     initialPoints: 30,
     shockPenalty: 28,
-    missedOpportunityPenalty: 10,
-    takenOpportunityPoints: 50,
+    missedOpportunityPenalty: 0,
+    takenOpportunityPoints: 40,
   },
   { // level2
     timeLimit: 30,
     initialPoints: 30,
-    shockPenalty: 10,
-    missedOpportunityPenalty: 2,
-    takenOpportunityPoints: 50,
+    shockPenalty: 20,
+    missedOpportunityPenalty: 0,
+    takenOpportunityPoints: 40,
   },
   { // level3
     timeLimit: 30,
     initialPoints: 30,
-    shockPenalty: 30,
-    missedOpportunityPenalty: 8,
-    takenOpportunityPoints: 50,
+    shockPenalty: 20,
+    missedOpportunityPenalty: 0,
+    takenOpportunityPoints: 40,
   },
   { // level4
     timeLimit: 30,
     initialPoints: 30,
     shockPenalty: 31,
-    missedOpportunityPenalty: 8,
-    takenOpportunityPoints: 50,
+    missedOpportunityPenalty: 9,
+    takenOpportunityPoints: 20,
   },
   { // level5
     timeLimit: 30,
     initialPoints: 30,
     shockPenalty: 31,
     missedOpportunityPenalty: 5,
-    takenOpportunityPoints: 50,
+    takenOpportunityPoints: 30,
   },
 
-    
+
   { // level6
     timeLimit: 30,
     initialPoints: 30,

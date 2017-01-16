@@ -13,7 +13,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="level0_1.svg">
+   sodipodi:docname="level1.svg">
   <sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -27,9 +27,9 @@
      inkscape:window-height="744"
      id="namedview4153"
      showgrid="false"
-     inkscape:zoom="2.1810049"
-     inkscape:cx="73.647309"
-     inkscape:cy="142.61952"
+     inkscape:zoom="1.8885967"
+     inkscape:cx="78.554638"
+     inkscape:cy="210.06157"
      inkscape:window-x="65"
      inkscape:window-y="24"
      inkscape:window-maximized="1"
@@ -248,6 +248,18 @@
          id="path4196"
          inkscape:connector-curvature="0" />
     </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:25px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="8.626709"
+       y="23.296326"
+       id="text4170"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4172"
+         x="8.626709"
+         y="23.296326"
+         style="font-size:12.5px;fill:#f9f9f9">1</tspan></text>
   </g>
   <g
      inkscape:groupmode="layer"
