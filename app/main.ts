@@ -522,7 +522,8 @@ function updateFeedbackIcons(counts) {
     }
   }
   updateIconType("shocked");
-  updateIconType("bored");
+  if (conf.levels[currentLevelNr].missedOpportunityPenalty > 0.01)
+    updateIconType("bored");
   updateIconType("happy");
 }
 
