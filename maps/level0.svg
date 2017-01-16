@@ -13,7 +13,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="level0_0.svg">
+   sodipodi:docname="level0.svg">
   <sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -23,14 +23,14 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1301"
-     inkscape:window-height="744"
+     inkscape:window-width="1920"
+     inkscape:window-height="1056"
      id="namedview4153"
      showgrid="false"
      inkscape:zoom="1.5422034"
-     inkscape:cx="110.71177"
+     inkscape:cx="-56.581338"
      inkscape:cy="113.97315"
-     inkscape:window-x="65"
+     inkscape:window-x="0"
      inkscape:window-y="24"
      inkscape:window-maximized="1"
      inkscape:current-layer="decorations"
@@ -249,7 +249,7 @@
          x="-92.550247"
          y="61.043224"
          style="font-size:12.5px;fill:#ffffff"
-         id="tspan3425">into a socket or touch a Tesla coil?</tspan><tspan
+         id="tspan3425">onto an electrode?</tspan><tspan
          sodipodi:role="line"
          x="-92.550247"
          y="76.668228"
