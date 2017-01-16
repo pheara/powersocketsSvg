@@ -23,14 +23,14 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1301"
-     inkscape:window-height="744"
+     inkscape:window-width="1920"
+     inkscape:window-height="1056"
      id="namedview4153"
      showgrid="false"
      inkscape:zoom="1.2593431"
-     inkscape:cx="105.35718"
+     inkscape:cx="-99.511533"
      inkscape:cy="198.91116"
-     inkscape:window-x="65"
+     inkscape:window-x="0"
      inkscape:window-y="24"
      inkscape:window-maximized="1"
      inkscape:current-layer="decorations"
@@ -61,7 +61,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -243,7 +243,7 @@
          x="21.664307"
          y="35.071228"
          style="font-size:12.5px;fill:#ffffff"
-         id="tspan3403">Watch out! The safe socket can</tspan><tspan
+         id="tspan3403">Watch out! The safe electrode can</tspan><tspan
          sodipodi:role="line"
          x="21.664307"
          y="50.696228"
