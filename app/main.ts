@@ -435,10 +435,6 @@ function update(
   points = Math.max(points, 0);
   points = Math.min(points, 100);
 
-  if (points >= 100) {
-    // score += timeLevel; TODO clarify design for timer/scoring
-    gotoNextLevel();
-  }
 
   updateFpsCounter(deltaT);
   updateProgressBar(points);
@@ -453,6 +449,11 @@ function update(
     bored: safeButUntouched.size,
     shocked: poweredAndTouched.size,
   });
+
+  if (points >= 100) {
+    // score += timeLevel; TODO clarify design for timer/scoring
+    gotoNextLevel();
+  }
 
   resizeHasHappened = false; // all geometry-caches should have been updated by now.
 }
