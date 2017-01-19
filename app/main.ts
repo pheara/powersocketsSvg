@@ -102,7 +102,7 @@ let unregisterDebugMarker: Array<() => void> = [];
 let touchedSockets: Set<Socket> = new Set<Socket>();
 let poweredSince: Map<Socket, number> = new Map<Socket, number>();
 let levelTimerId: number | undefined;
-let currentLevelNr: number = 0; // increase to start at higher level
+let currentLevelNr: number = 8; // increase to start at higher level
 
 let iconPrototypes: {
   shocked: SVGSVGElement,
@@ -277,7 +277,7 @@ function registerInputHandlers(s: Socket, data: MapData) {
   console.log("registering input handlers");
 
   /* TODO find a solution to make this work with the svg-root
-   * to catch cases where the window stays the same but the 
+   * to catch cases where the window stays the same but the
    * svg resizes. (Shouldn't happen atm due to width=100vw)
    */
   window.addEventListener("resize", e => {
@@ -350,19 +350,19 @@ function update(
     })
   );
 
-  /* connection lost for these sockets. remove 
+  /* connection lost for these sockets. remove
    * them from the "connected" list. */
   poweredSince.forEach((timestamp, socket) => {
     if(!poweredSockets.has(socket)) {
       poweredSince.delete(socket);
-    }   
+    }
   });
 
   /* Newly connected sockets. Add them to the list. */
   poweredSockets.forEach(socket => {
     if(!poweredSince.has(socket)) {
       poweredSince.set(socket, now);
-    } 
+    }
   });
 
   const enabled = new Set<Socket>(
@@ -394,14 +394,14 @@ function update(
 
   const poweredAndTouched = filterSet(
     enabledTouched,
-    s => 
-      poweredSockets.has(s) && 
+    s =>
+      poweredSockets.has(s) &&
       now >= (poweredSince.get(s) + conf.delayToBePowered)
       /* ^^^
-       * only get shocket through sockets that have 
-       * been connected to a generator for at least 
+       * only get shocket through sockets that have
+       * been connected to a generator for at least
        * <delayToBePowered> milliseconds. This is
-       * intended to make the game a bit more forgiving 
+       * intended to make the game a bit more forgiving
        * and less frustrating.
        */
   );
@@ -522,7 +522,7 @@ function updateFeedbackIcons(counts) {
     }
   }
   updateIconType("shocked");
-  if (conf.levels[currentLevelNr].missedOpportunityPenalty > 0.01)
+  if ((conf.levels[currentLevelNr].missedOpportunityPenalty > 0.01 ) || (conf.levels[currentLevelNr].missedOpportunityPenalty < -1.0 ))
     updateIconType("bored");
   updateIconType("happy");
 }

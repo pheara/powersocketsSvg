@@ -25,7 +25,7 @@ export const levels: Array<{
     initialPoints: 0,
     shockPenalty: 0,
     missedOpportunityPenalty: 0,
-    takenOpportunityPoints: 10000000000000000,
+    takenOpportunityPoints: 100000000000000000,
   },
   { // level1
     timeLimit: 30,
@@ -59,11 +59,9 @@ export const levels: Array<{
     timeLimit: 30,
     initialPoints: 30,
     shockPenalty: 31,
-    missedOpportunityPenalty: 5,
+    missedOpportunityPenalty: 8,
     takenOpportunityPoints: 30,
   },
-
-
   { // level6
     timeLimit: 30,
     initialPoints: 30,
@@ -89,7 +87,7 @@ export const levels: Array<{
     timeLimit: 30,
     initialPoints: 30,
     shockPenalty: 30,
-    missedOpportunityPenalty: 8,
+    missedOpportunityPenalty: -12,
     takenOpportunityPoints: 12,
   },
   { // level10
@@ -106,7 +104,90 @@ export const levels: Array<{
     missedOpportunityPenalty: 5,
     takenOpportunityPoints: 8,
   },
-
+  { // level12
+    timeLimit: 30,
+    initialPoints: 30,
+    shockPenalty: 31,
+    missedOpportunityPenalty: 8,
+    takenOpportunityPoints: 12,
+  },
+  { // level13
+    timeLimit: 30,
+    initialPoints: 30,
+    shockPenalty: 31,
+    missedOpportunityPenalty: 5,
+    takenOpportunityPoints: 8,
+  },
+  { // level14
+    timeLimit: 30,
+    initialPoints: 30,
+    shockPenalty: 31,
+    missedOpportunityPenalty: 8,
+    takenOpportunityPoints: 12,
+  },
+  { // level15
+    timeLimit: 30,
+    initialPoints: 30,
+    shockPenalty: 31,
+    missedOpportunityPenalty: 5,
+    takenOpportunityPoints: 8,
+  },
+  { // level16
+    timeLimit: 30,
+    initialPoints: 30,
+    shockPenalty: 31,
+    missedOpportunityPenalty: 8,
+    takenOpportunityPoints: 12,
+  },
+  { // level17
+    timeLimit: 30,
+    initialPoints: 30,
+    shockPenalty: 31,
+    missedOpportunityPenalty: 5,
+    takenOpportunityPoints: 8,
+  },
+  { // level18
+    timeLimit: 30,
+    initialPoints: 30,
+    shockPenalty: 31,
+    missedOpportunityPenalty: 8,
+    takenOpportunityPoints: 12,
+  },
+  { // level19
+    timeLimit: 30,
+    initialPoints: 30,
+    shockPenalty: 31,
+    missedOpportunityPenalty: 5,
+    takenOpportunityPoints: 8,
+  },
+  { // level20
+    timeLimit: 30,
+    initialPoints: 30,
+    shockPenalty: 31,
+    missedOpportunityPenalty: 8,
+    takenOpportunityPoints: 12,
+  },
+  { // level21
+    timeLimit: 30,
+    initialPoints: 30,
+    shockPenalty: 31,
+    missedOpportunityPenalty: 5,
+    takenOpportunityPoints: 8,
+  },
+  { // level22
+    timeLimit: 30,
+    initialPoints: 30,
+    shockPenalty: 31,
+    missedOpportunityPenalty: 8,
+    takenOpportunityPoints: 12,
+  },
+  { // level23
+    timeLimit: 30,
+    initialPoints: 30,
+    shockPenalty: 31,
+    missedOpportunityPenalty: 5,
+    takenOpportunityPoints: 8,
+  },
 
   { // level6 - end screen
     timeLimit: 999999,
