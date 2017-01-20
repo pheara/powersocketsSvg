@@ -76,6 +76,9 @@ import {
   levels,
 } from "config";
 
+
+let addition: number = -1;
+
 import * as conf from "config";
 
 /**
@@ -102,7 +105,7 @@ let unregisterDebugMarker: Array<() => void> = [];
 let touchedSockets: Set<Socket> = new Set<Socket>();
 let poweredSince: Map<Socket, number> = new Map<Socket, number>();
 let levelTimerId: number | undefined;
-let currentLevelNr: number = 8; // increase to start at higher level
+let currentLevelNr: number = 0; // increase to start at higher level
 
 let iconPrototypes: {
   shocked: SVGSVGElement,
@@ -430,6 +433,12 @@ function update(
     points -= conf.levels[levelNr].shockPenalty;
     brrzzzl(conf.shockDuration * 1000);
     //}
+  }
+
+  if ((safeButUntouched.size == 0) && (safeAndTouched.size == 0) && (poweredAndTouched.size == 0) && (conf.levels[levelNr].missedOpportunityPenalty < -0.1))
+  {
+    points -= (addition + conf.levels[levelNr].missedOpportunityPenalty) * deltaT / 1000;
+    addition -= 0.2;
   }
 
   points = Math.max(points, 0);
