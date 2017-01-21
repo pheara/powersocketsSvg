@@ -77,7 +77,7 @@ import {
 } from "config";
 
 
-let addition: number = -1;
+//let addition: number = -1;
 
 import * as conf from "config";
 
@@ -435,10 +435,10 @@ function update(
     //}
   }
 
-  if ((safeButUntouched.size == 0) && (safeAndTouched.size == 0) && (poweredAndTouched.size == 0) && (conf.levels[levelNr].missedOpportunityPenalty < -0.1))
+  if ((safeButUntouched.size == 0) && (safeAndTouched.size == 0) && (poweredAndTouched.size == 0) && (conf.levels[levelNr].missedOpportunityPenalty < -0.001))
   {
-    points -= (addition + conf.levels[levelNr].missedOpportunityPenalty) * deltaT / 1000;
-    addition -= 0.2;
+    points -= (conf.addition + conf.levels[levelNr].missedOpportunityPenalty) * deltaT / 1000;
+    conf.addition -= 0.2;
   }
 
   points = Math.max(points, 0);
