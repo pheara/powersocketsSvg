@@ -14,7 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="level10.svg">
+   sodipodi:docname="level13.svg">
   <sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -29,10 +29,10 @@
      id="namedview4153"
      showgrid="true"
      inkscape:zoom="1.6794917"
-     inkscape:cx="70.286255"
-     inkscape:cy="137.17793"
-     inkscape:window-x="146"
-     inkscape:window-y="147"
+     inkscape:cx="89.61401"
+     inkscape:cy="108.03066"
+     inkscape:window-x="75"
+     inkscape:window-y="24"
      inkscape:window-maximized="0"
      inkscape:current-layer="powerlines"
      inkscape:object-paths="true"
@@ -57,7 +57,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -80,21 +80,22 @@
      id="powerlines">
     <path
        style="fill:none;fill-rule:evenodd;stroke:#dadada;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 247.22771,62.5399 L 247.52571,112.33571"
+       d="m 211.86167,60.855803 0.298,49.795807"
        id="path4173"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
     <path
-       style="fill:none;fill-rule:evenodd;stroke:#dadada;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="M 268.24481,134.92081 L 282.77014,134.92081 L 282.77014,234.49048 L 146.77931,234.49048"
-       id="path4255"
+       style="fill:none;fill-rule:evenodd;stroke:#dadada;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 187.96367,133.16754 -22.47617,0.298"
+       id="path3382"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cccc" />
+       sodipodi:nodetypes="cc" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#dadada;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 114.81077,135.89256 83.06084,-0.29771 -0.59542,-66.68685 30.96175,0"
-       id="path4214"
-       inkscape:connector-curvature="0" />
+       d="m 193.09198,50.715954 -87.84522,0.344407 0.54435,98.396369 -49.357624,-0.0722 0.07224,86.55661 33.435312,0.0255"
+       id="path4301"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccc" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -106,8 +107,8 @@
        id="rect4210"
        width="54.2085"
        height="54.2085"
-       x="60.601707"
-       y="13.769149" />
+       x="25.235668"
+       y="-12.327097" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -119,16 +120,15 @@
        inkscape:transform-center-x="-9.331841"
        inkscape:connector-curvature="0"
        style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#dadada;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 199.31615,120.66688 L 210.16415,120.66688 L 210.16415,140.63688 L 230.97415,140.63688 L 230.97415,152.71388 L 199.42715,152.71388 Z"
+       d="m 163.95011,118.98278 10.848,0 0,19.97 20.81,0 0,12.077 -31.547,0 z"
        id="path4234" />
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer1"
-     inkscape:label="decorations"
-     style="display:inline">
+     inkscape:label="decorations">
     <g
-       transform="matrix(0.40673208,0,0,0.40673208,-51.918575,19.106976)"
+       transform="matrix(0.40673208,0,0,0.40673208,4.4097956,33.499172)"
        id="g4243-6"
        style="stroke:#ffffff;stroke-width:0.66092902;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">
       <path
@@ -229,13 +229,13 @@
     </g>
     <path
        style="fill:#dadada;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 206.91671,59.282748 10.925,0.3563 -9.381,14.0123 10.331,0 -19.238,19.3561 7.007,-14.2499 -8.907,-0.1187 z"
+       d="m 171.55067,33.186503 10.925,0.3563 -9.381,14.0123 10.331,0 -19.238,19.3561 7.007,-14.2499 -8.907,-0.1187 z"
        id="path4212"
        inkscape:connector-curvature="0" />
     <g
        style="stroke:#ffffff;stroke-width:0.66092902;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="g4213"
-       transform="matrix(0.40673208,0,0,0.40673208,-13.694247,118.54608)">
+       transform="matrix(0.40673208,0,0,0.40673208,-49.060286,116.86198)">
       <path
          style="fill:#b87b0a;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.66092902;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          d="m 241.495,314.36 c 12.637,27.178 60.537,16.32 65.003,-5.122 0,0 0.677,-0.508 1.376,0.698 0.719,1.228 -0.17,5.419 -0.17,5.419 -6.773,28.723 -61.891,27.792 -66.209,-0.995 z"
@@ -332,23 +332,6 @@
          id="path4251"
          inkscape:connector-curvature="0" />
     </g>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:12.5px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="21.664307"
-       y="21.071228"
-       id="text3407"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         x="21.664307"
-         y="21.071228"
-         style="font-size:12.5px;fill:#ffffff"
-         id="tspan3403">Watch out! The safe electrode can</tspan><tspan
-         sodipodi:role="line"
-         x="21.664307"
-         y="36.696228"
-         style="font-size:12.5px;fill:#ffffff"
-         id="tspan3433">turn into a deadly one!</tspan></text>
   </g>
   <g
      inkscape:groupmode="layer"
@@ -356,8 +339,8 @@
      transform="translate(8.7328066,16.887518)"
      id="sockets">
     <rect
-       y="55.714745"
-       x="25.525202"
+       y="70.106941"
+       x="81.853569"
        height="85.797554"
        width="48.152088"
        id="rect4171"
@@ -367,7 +350,7 @@
        id="rect4253"
        width="48.152088"
        height="85.797554"
-       x="63.749531"
-       y="155.15384" />
+       x="28.383492"
+       y="153.46974" />
   </g>
 </svg>

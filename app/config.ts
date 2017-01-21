@@ -90,14 +90,14 @@ export const levels: Array<{
     initialPoints: 30,
     shockPenalty: 21,
     missedOpportunityPenalty: 8,
-    takenOpportunityPoints: 12,
+    takenOpportunityPoints: 10,
   },
   { // level10
     timeLimit: 30,
     initialPoints: 30,
     shockPenalty: 21,
     missedOpportunityPenalty: 5,
-    takenOpportunityPoints: 8,
+    takenOpportunityPoints: 14,
   },
   { // level11
     timeLimit: 30,

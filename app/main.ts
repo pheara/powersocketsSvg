@@ -105,7 +105,7 @@ let unregisterDebugMarker: Array<() => void> = [];
 let touchedSockets: Set<Socket> = new Set<Socket>();
 let poweredSince: Map<Socket, number> = new Map<Socket, number>();
 let levelTimerId: number | undefined;
-let currentLevelNr: number = 0; // increase to start at higher level
+let currentLevelNr: number = 9; // increase to start at higher level
 
 let iconPrototypes: {
   shocked: SVGSVGElement,
