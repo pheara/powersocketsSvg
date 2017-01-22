@@ -12,8 +12,6 @@ export const shockDuration = 0.9; // in seconds
 
 export const delayToBePowered = 100; // in milliseconds
 
-export let addition: number = -0.5;
-
 export const levels: Array<{
     timeLimit: number, // in seconds
     initialPoints: number,
@@ -75,7 +73,7 @@ export const levels: Array<{
     timeLimit: 30,
     initialPoints: 30,
     shockPenalty: 50,
-    missedOpportunityPenalty: -1,
+    missedOpportunityPenalty: -2.5,
     takenOpportunityPoints: 12,
   },
   { // level8
@@ -155,7 +153,7 @@ export const levels: Array<{
     missedOpportunityPenalty: 5,
     takenOpportunityPoints: 8,
   },
-  { // level6 - end screen
+  { // level19 - end screen
     timeLimit: 999999,
     initialPoints: 0,
     shockPenalty: 0,

@@ -81,8 +81,6 @@ import * as conf from "config";
 /**
  * GLOBAL STATE :|
  */
-let scoreEl = document.getElementById("score");
-let score: number = 0;
 
 let points: number; ///points, adding according to how long someone is pressing the right socket
 let pointsTimerId;
@@ -90,12 +88,13 @@ let pointsTimerId;
 // let stopGameLoop: () => void;
 let stopGameLoop;
 
-const timeLeftEl = document.getElementById("timeLeft");
 const fpsEl = document.getElementById("fps");
 const progressEl = document.getElementById("progress");
 const pointsIncEl = document.getElementById("pointIncIcons");
 const pointsDecEl = document.getElementById("pointDecIcons");
 const levelEl = document.getElementById("levelNumm");
+const timeEl = document.getElementById("time");
+let totalTime = 0;
 let resizeHasHappened: boolean = false; // true if the size of the svg has changed before the frame.
 let timeLevel: number;
 let currentMapData: MapData;
@@ -204,7 +203,6 @@ function gotoLevelN(levelNr: number) {
 
     // markElementPositions(data);
     resetLevelData();
-    // setupLevelTimer(); TODO clarify design for timer/scoring
     currentMapData = data;
     // markPoweredSockets(data);
     for (let s of data.sockets) {
@@ -224,6 +222,7 @@ function gotoLevelN(levelNr: number) {
 
   if (levelEl)
     levelEl.innerHTML = "Level " + currentLevelNr;
+
 }
 
 function prepareFeedbackIcons(data: MapData) {
@@ -259,21 +258,6 @@ function prepareFeedbackIcons(data: MapData) {
       prepareIcons(pointsIncEl, "happy");
     });
 
-}
-
-function setupLevelTimer() {
-  levelTimerId = setInterval(() => {
-    timeLevel--;
-    if (timeLevel <= 0) {
-      // timed out everything gets reset to the start of the level
-      brrzzzl();
-      resetLevelData();
-    }
-    if (timeLeftEl && scoreEl && score) {
-      timeLeftEl.innerHTML = "Time left: " + Math.max(timeLevel, 0);
-      scoreEl.innerHTML = "Score: " + score;
-    }
-  }, 1000 );
 }
 
 function registerInputHandlers(s: Socket, data: MapData) {
@@ -433,20 +417,30 @@ function update(
 
     points -= conf.levels[levelNr].shockPenalty;
     brrzzzl(conf.shockDuration * 1000);
-    //}
+
   }
 
+  //for special levels when you should not touch anything
   if ((safeButUntouched.size == 0) && (safeAndTouched.size == 0) && (poweredAndTouched.size == 0) && (conf.levels[levelNr].missedOpportunityPenalty < -0.001))
   {
-    points -= (/*conf.addition + */conf.levels[levelNr].missedOpportunityPenalty) * deltaT / 1000;
-    //conf.addition -= 0.05;
+    points -= (conf.levels[levelNr].missedOpportunityPenalty) * deltaT / 1000;
   }
 
   points = Math.max(points, 0);
   points = Math.min(points, 100);
 
+  //if the last level
+  if (timeEl){
+    if (levelNr == conf.levels.length - 1){
+      timeEl.innerHTML = "You have accomplished it in " +  Math.round(totalTime/10) + " s!";
+    } else {
+      totalTime++;
+      timeEl.innerHTML = "Total time " + Math.round(totalTime/10);
+    }
+  }
+
+
   if (points >= 100) {
-    // score += timeLevel; TODO clarify design for timer/scoring
     gotoNextLevel();
   }
 
