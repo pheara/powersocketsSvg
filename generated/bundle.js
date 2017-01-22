@@ -1,7 +1,6 @@
-System.register("utils", [], function(exports_1, context_1) {
+System.register("utils", [], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var _idMat, tmpPoint;
     function valueOr(value, deflt) {
         return value ? value : deflt;
     }
@@ -273,31 +272,24 @@ System.register("utils", [], function(exports_1, context_1) {
         return result;
     }
     exports_1("mapToMap", mapToMap);
+    var _idMat, tmpPoint;
     return {
-        setters:[],
-        execute: function() {
-            /**
-             * An svg-point to use in calculations. Creating
-             * one is expensive, so use this one and set its
-             * coordinates. Just make sure to never pass it
-             * out of utils functions or use it multiple times.
-             * Btw, `.matrixTransform` is safe, as it generates
-             * a new point internally.
-             */
+        setters: [],
+        execute: function () {
         }
-    }
+    };
 });
-System.register("config", ["utils"], function(exports_2, context_2) {
+System.register("config", ["utils"], function (exports_2, context_2) {
     "use strict";
     var __moduleName = context_2 && context_2.id;
-    var utils_1;
-    var happyColor, shockColor, defaultColor, maxFps, shockDuration, delayToBePowered, levels;
+    var utils_1, happyColor, shockColor, defaultColor, maxFps, shockDuration, delayToBePowered, levels;
     return {
-        setters:[
+        setters: [
             function (utils_1_1) {
                 utils_1 = utils_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             exports_2("happyColor", happyColor = "#3cd348"); // light green
             exports_2("shockColor", shockColor = "#f9321d"); // almost pure red
             exports_2("defaultColor", defaultColor = "#dadada"); // light grey
@@ -310,7 +302,7 @@ System.register("config", ["utils"], function(exports_2, context_2) {
                     initialPoints: 0,
                     shockPenalty: 0,
                     missedOpportunityPenalty: 0,
-                    takenOpportunityPoints: 200,
+                    takenOpportunityPoints: 10000000000000000,
                 },
                 {
                     timeLimit: 30,
@@ -337,55 +329,104 @@ System.register("config", ["utils"], function(exports_2, context_2) {
                     timeLimit: 30,
                     initialPoints: 30,
                     shockPenalty: 31,
-                    missedOpportunityPenalty: 9,
-                    takenOpportunityPoints: 20,
-                },
-                {
-                    timeLimit: 30,
-                    initialPoints: 30,
-                    shockPenalty: 31,
-                    missedOpportunityPenalty: 5,
+                    missedOpportunityPenalty: 0,
                     takenOpportunityPoints: 30,
                 },
                 {
                     timeLimit: 30,
-                    initialPoints: 30,
-                    shockPenalty: 27,
-                    missedOpportunityPenalty: 20,
-                    takenOpportunityPoints: 40,
-                },
-                {
-                    timeLimit: 30,
-                    initialPoints: 30,
+                    initialPoints: 50,
                     shockPenalty: 28,
-                    missedOpportunityPenalty: 6,
+                    missedOpportunityPenalty: 10,
                     takenOpportunityPoints: 12,
                 },
                 {
                     timeLimit: 30,
                     initialPoints: 30,
                     shockPenalty: 10,
-                    missedOpportunityPenalty: 2,
-                    takenOpportunityPoints: 17,
+                    missedOpportunityPenalty: 25,
+                    takenOpportunityPoints: 10,
                 },
                 {
                     timeLimit: 30,
                     initialPoints: 30,
-                    shockPenalty: 30,
-                    missedOpportunityPenalty: 8,
+                    shockPenalty: 50,
+                    missedOpportunityPenalty: -2.5,
                     takenOpportunityPoints: 12,
                 },
                 {
                     timeLimit: 30,
                     initialPoints: 30,
                     shockPenalty: 31,
+                    missedOpportunityPenalty: 10,
+                    takenOpportunityPoints: 8,
+                },
+                {
+                    timeLimit: 30,
+                    initialPoints: 30,
+                    shockPenalty: 21,
+                    missedOpportunityPenalty: 8,
+                    takenOpportunityPoints: 10,
+                },
+                {
+                    timeLimit: 30,
+                    initialPoints: 30,
+                    shockPenalty: 21,
+                    missedOpportunityPenalty: 15,
+                    takenOpportunityPoints: 14,
+                },
+                {
+                    timeLimit: 30,
+                    initialPoints: 30,
+                    shockPenalty: 21,
+                    missedOpportunityPenalty: 10,
+                    takenOpportunityPoints: 12,
+                },
+                {
+                    timeLimit: 30,
+                    initialPoints: 30,
+                    shockPenalty: 21,
+                    missedOpportunityPenalty: 8,
+                    takenOpportunityPoints: 14,
+                },
+                {
+                    timeLimit: 30,
+                    initialPoints: 30,
+                    shockPenalty: 20,
+                    missedOpportunityPenalty: 8,
+                    takenOpportunityPoints: 34,
+                },
+                {
+                    timeLimit: 30,
+                    initialPoints: 30,
+                    shockPenalty: 20,
+                    missedOpportunityPenalty: 8,
+                    takenOpportunityPoints: 18,
+                },
+                {
+                    timeLimit: 30,
+                    initialPoints: 30,
+                    shockPenalty: 21,
+                    missedOpportunityPenalty: 5,
+                    takenOpportunityPoints: 14,
+                },
+                {
+                    timeLimit: 30,
+                    initialPoints: 30,
+                    shockPenalty: 21,
                     missedOpportunityPenalty: 8,
                     takenOpportunityPoints: 12,
                 },
                 {
                     timeLimit: 30,
                     initialPoints: 30,
-                    shockPenalty: 31,
+                    shockPenalty: 21,
+                    missedOpportunityPenalty: 5,
+                    takenOpportunityPoints: 8,
+                },
+                {
+                    timeLimit: 30,
+                    initialPoints: 30,
+                    shockPenalty: 21,
                     missedOpportunityPenalty: 5,
                     takenOpportunityPoints: 8,
                 },
@@ -398,12 +439,11 @@ System.register("config", ["utils"], function(exports_2, context_2) {
                 },
             ]));
         }
-    }
+    };
 });
-System.register("fetch-map", ["fetch", "utils"], function(exports_3, context_3) {
+System.register("fetch-map", ["fetch", "utils"], function (exports_3, context_3) {
     "use strict";
     var __moduleName = context_3 && context_3.id;
-    var utils_2;
     function loadMap(url, mountpoint) {
         const mapDataPromise = fetchSvg(url).then(svg => {
             const backgroundDiv = document.getElementById(mountpoint);
@@ -544,21 +584,22 @@ System.register("fetch-map", ["fetch", "utils"], function(exports_3, context_3) 
         // console.log(hasType(rectangleData));
         return rectangleData;
     }
+    var utils_2;
     return {
-        setters:[
-            function (_1) {},
+        setters: [
+            function (_1) {
+            },
             function (utils_2_1) {
                 utils_2 = utils_2_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
         }
-    }
+    };
 });
-System.register("svg-elements-at", ["svg-points", "utils"], function(exports_4, context_4) {
+System.register("svg-elements-at", ["svg-points", "utils"], function (exports_4, context_4) {
     "use strict";
     var __moduleName = context_4 && context_4.id;
-    var svg_points_1, utils_3;
-    var localPointsCache, cachedLocal2VBox, cachedBoundingBoxes, cachedConv2AbsCoords;
     /**
       * @param pt the point in viewbox-coordinates (=pre-scaling coords).
       * @param svg the svg-root-element
@@ -788,25 +829,26 @@ System.register("svg-elements-at", ["svg-points", "utils"], function(exports_4, 
                     "for the target format.");
         }
     }
+    var svg_points_1, utils_3, localPointsCache, cachedLocal2VBox, cachedBoundingBoxes, cachedConv2AbsCoords;
     return {
-        setters:[
+        setters: [
             function (svg_points_1_1) {
                 svg_points_1 = svg_points_1_1;
             },
             function (utils_3_1) {
                 utils_3 = utils_3_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             localPointsCache = new Map();
             cachedLocal2VBox = new Map();
             cachedBoundingBoxes = new Map(); // in vbox-space
         }
-    }
+    };
 });
-System.register("geometry", ["utils", "svg-elements-at"], function(exports_5, context_5) {
+System.register("geometry", ["utils", "svg-elements-at"], function (exports_5, context_5) {
     "use strict";
     var __moduleName = context_5 && context_5.id;
-    var utils_4, svg_elements_at_1;
     /**
      * @param map
      * @param pt x- and y- coordinates in vbox-
@@ -868,22 +910,23 @@ System.register("geometry", ["utils", "svg-elements-at"], function(exports_5, co
             point.y <= rect.pos.y + rect.height;
     }
     exports_5("insideRect", insideRect);
+    var utils_4, svg_elements_at_1;
     return {
-        setters:[
+        setters: [
             function (utils_4_1) {
                 utils_4 = utils_4_1;
             },
             function (svg_elements_at_1_1) {
                 svg_elements_at_1 = svg_elements_at_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
         }
-    }
+    };
 });
-System.register("is-powered", ["geometry", "utils"], function(exports_6, context_6) {
+System.register("is-powered", ["geometry", "utils"], function (exports_6, context_6) {
     "use strict";
     var __moduleName = context_6 && context_6.id;
-    var geometry_1, utils_5;
     function isPowered(powerable, map, resizeHasHappened = false) {
         const powered = pathToGenerator(powerable, map, resizeHasHappened);
         return powered.size > 0;
@@ -944,22 +987,23 @@ System.register("is-powered", ["geometry", "utils"], function(exports_6, context
         }
     }
     exports_6("pathToGenerator", pathToGenerator);
+    var geometry_1, utils_5;
     return {
-        setters:[
+        setters: [
             function (geometry_1_1) {
                 geometry_1 = geometry_1_1;
             },
             function (utils_5_1) {
                 utils_5 = utils_5_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
         }
-    }
+    };
 });
-System.register("run-game-loop", [], function(exports_7, context_7) {
+System.register("run-game-loop", [], function (exports_7, context_7) {
     "use strict";
     var __moduleName = context_7 && context_7.id;
-    var gameLoopTimeoutId, stopRequested, previousUpdateTime;
     /**
      * @param gameLoop a function that gets deltaT passed in
      * @return a function to stop the gameloop.
@@ -1011,21 +1055,20 @@ System.register("run-game-loop", [], function(exports_7, context_7) {
         previousUpdateTime = Date.now();
         return deltaT;
     }
+    var gameLoopTimeoutId, stopRequested, previousUpdateTime;
     return {
-        setters:[],
-        execute: function() {
+        setters: [],
+        execute: function () {
             ;
             stopRequested = false;
         }
-    }
+    };
 });
 // custom declarations / headers
 /// <reference path="declarations.d.ts"/>
-System.register("main", ["fetch", "geometry", "is-powered", "fetch-map", "run-game-loop", "svg-elements-at", "utils", "config"], function(exports_8, context_8) {
+System.register("main", ["fetch", "geometry", "is-powered", "fetch-map", "run-game-loop", "svg-elements-at", "utils", "config"], function (exports_8, context_8) {
     "use strict";
     var __moduleName = context_8 && context_8.id;
-    var geometry_2, is_powered_1, fetch_map_1, run_game_loop_1, svg_elements_at_2, utils_6, conf;
-    var scoreEl, score, points, pointsTimerId, stopGameLoop, timeLeftEl, fpsEl, progressEl, pointsIncEl, pointsDecEl, resizeHasHappened, timeLevel, currentMapData, unregisterDebugMarker, touchedSockets, poweredSince, levelTimerId, currentLevelNr, iconPrototypes, iconElements, currentlyShockedPieces, shockedSvgP, happySvgP, boredSvgP;
     /*
      * establish default values to what they should
      * be at the start of a level.
@@ -1071,7 +1114,6 @@ System.register("main", ["fetch", "geometry", "is-powered", "fetch-map", "run-ga
             utils_6.deepFreeze(data);
             // markElementPositions(data);
             resetLevelData();
-            // setupLevelTimer(); TODO clarify design for timer/scoring
             currentMapData = data;
             // markPoweredSockets(data);
             for (let s of data.sockets) {
@@ -1082,6 +1124,8 @@ System.register("main", ["fetch", "geometry", "is-powered", "fetch-map", "run-ga
             console.log("STOP: ", stopGameLoop);
             console.log(`Successfully imported level ${levelNr}: `, data);
         });
+        if (levelEl)
+            levelEl.innerHTML = "Level " + currentLevelNr;
     }
     function prepareFeedbackIcons(data) {
         /*
@@ -1114,20 +1158,6 @@ System.register("main", ["fetch", "geometry", "is-powered", "fetch-map", "run-ga
             prepareIcons(pointsDecEl, "bored");
             prepareIcons(pointsIncEl, "happy");
         });
-    }
-    function setupLevelTimer() {
-        levelTimerId = setInterval(() => {
-            timeLevel--;
-            if (timeLevel <= 0) {
-                // timed out everything gets reset to the start of the level
-                brrzzzl();
-                resetLevelData();
-            }
-            if (timeLeftEl && scoreEl && score) {
-                timeLeftEl.innerHTML = "Time left: " + Math.max(timeLevel, 0);
-                scoreEl.innerHTML = "Score: " + score;
-            }
-        }, 1000);
     }
     function registerInputHandlers(s, data) {
         console.log("registering input handlers");
@@ -1224,10 +1254,23 @@ System.register("main", ["fetch", "geometry", "is-powered", "fetch-map", "run-ga
             points -= conf.levels[levelNr].shockPenalty;
             brrzzzl(conf.shockDuration * 1000);
         }
+        //for special levels when you should not touch anything
+        if ((safeButUntouched.size == 0) && (safeAndTouched.size == 0) && (poweredAndTouched.size == 0) && (conf.levels[levelNr].missedOpportunityPenalty < -0.001)) {
+            points -= (conf.levels[levelNr].missedOpportunityPenalty) * deltaT / 1000;
+        }
         points = Math.max(points, 0);
         points = Math.min(points, 100);
+        //if the last level
+        if (timeEl) {
+            if (levelNr == conf.levels.length - 1) {
+                timeEl.innerHTML = "You have accomplished it in " + Math.round(totalTime / 10) + " s!";
+            }
+            else {
+                totalTime++;
+                timeEl.innerHTML = "Total time " + Math.round(totalTime / 10);
+            }
+        }
         if (points >= 100) {
-            // score += timeLevel; TODO clarify design for timer/scoring
             gotoNextLevel();
         }
         updateFpsCounter(deltaT);
@@ -1297,7 +1340,8 @@ System.register("main", ["fetch", "geometry", "is-powered", "fetch-map", "run-ga
             }
         }
         updateIconType("shocked");
-        updateIconType("bored");
+        if ((conf.levels[currentLevelNr].missedOpportunityPenalty > 0.01) || (conf.levels[currentLevelNr].missedOpportunityPenalty < -1.0))
+            updateIconType("bored");
         updateIconType("happy");
     }
     function updateProgressBar(points) {
@@ -1380,9 +1424,11 @@ System.register("main", ["fetch", "geometry", "is-powered", "fetch-map", "run-ga
             console.log("clicked on the following: ", intersectedElements, pieces);
         });
     }
+    var geometry_2, is_powered_1, fetch_map_1, run_game_loop_1, svg_elements_at_2, utils_6, conf, points, pointsTimerId, stopGameLoop, fpsEl, progressEl, pointsIncEl, pointsDecEl, levelEl, timeEl, totalTime, resizeHasHappened, timeLevel, currentMapData, unregisterDebugMarker, touchedSockets, poweredSince, levelTimerId, currentLevelNr, iconPrototypes, iconElements, currentlyShockedPieces, shockedSvgP, happySvgP, boredSvgP;
     return {
-        setters:[
-            function (_2) {},
+        setters: [
+            function (_2) {
+            },
             function (geometry_2_1) {
                 geometry_2 = geometry_2_1;
             },
@@ -1403,26 +1449,22 @@ System.register("main", ["fetch", "geometry", "is-powered", "fetch-map", "run-ga
             },
             function (conf_1) {
                 conf = conf_1;
-            }],
-        execute: function() {
-            /**
-             * GLOBAL STATE :|
-             */
-            scoreEl = document.getElementById("score");
-            score = 0;
-             ///points, adding according to how long someone is pressing the right socket
-            // let stopGameLoop: () => void;
-            timeLeftEl = document.getElementById("timeLeft");
+            }
+        ],
+        execute: function () {// custom declarations / headers
+            /// <reference path="declarations.d.ts"/>
             fpsEl = document.getElementById("fps");
             progressEl = document.getElementById("progress");
             pointsIncEl = document.getElementById("pointIncIcons");
             pointsDecEl = document.getElementById("pointDecIcons");
+            levelEl = document.getElementById("levelNumm");
+            timeEl = document.getElementById("time");
+            totalTime = 0;
             resizeHasHappened = false; // true if the size of the svg has changed before the frame.
             unregisterDebugMarker = [];
             touchedSockets = new Set();
             poweredSince = new Map();
             currentLevelNr = 0; // increase to start at higher level
-             // shocked, happy, bored
             iconElements = {
                 shocked: [],
                 happy: [],
@@ -1446,18 +1488,18 @@ System.register("main", ["fetch", "geometry", "is-powered", "fetch-map", "run-ga
              */
             gotoLevelN(currentLevelNr);
         }
-    }
+    };
 });
-System.register("test-import", [], function(exports_9, context_9) {
+System.register("test-import", [], function (exports_9, context_9) {
     "use strict";
     var __moduleName = context_9 && context_9.id;
     var foo;
     return {
-        setters:[],
-        execute: function() {
+        setters: [],
+        execute: function () {
             exports_9("foo", foo = 123);
         }
-    }
+    };
 });
 
 //# sourceMappingURL=bundle.js.map

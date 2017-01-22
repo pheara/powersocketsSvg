@@ -81,8 +81,6 @@ import * as conf from "config";
 /**
  * GLOBAL STATE :|
  */
-let scoreEl = document.getElementById("score");
-let score: number = 0;
 
 let points: number; ///points, adding according to how long someone is pressing the right socket
 let pointsTimerId;
@@ -90,11 +88,13 @@ let pointsTimerId;
 // let stopGameLoop: () => void;
 let stopGameLoop;
 
-const timeLeftEl = document.getElementById("timeLeft");
 const fpsEl = document.getElementById("fps");
 const progressEl = document.getElementById("progress");
 const pointsIncEl = document.getElementById("pointIncIcons");
 const pointsDecEl = document.getElementById("pointDecIcons");
+const levelEl = document.getElementById("levelNumm");
+const timeEl = document.getElementById("time");
+let totalTime = 0;
 let resizeHasHappened: boolean = false; // true if the size of the svg has changed before the frame.
 let timeLevel: number;
 let currentMapData: MapData;
@@ -203,7 +203,6 @@ function gotoLevelN(levelNr: number) {
 
     // markElementPositions(data);
     resetLevelData();
-    // setupLevelTimer(); TODO clarify design for timer/scoring
     currentMapData = data;
     // markPoweredSockets(data);
     for (let s of data.sockets) {
@@ -220,6 +219,10 @@ function gotoLevelN(levelNr: number) {
 
     console.log(`Successfully imported level ${levelNr}: `, data);
   });
+
+  if (levelEl)
+    levelEl.innerHTML = "Level " + currentLevelNr;
+
 }
 
 function prepareFeedbackIcons(data: MapData) {
@@ -257,27 +260,12 @@ function prepareFeedbackIcons(data: MapData) {
 
 }
 
-function setupLevelTimer() {
-  levelTimerId = setInterval(() => {
-    timeLevel--;
-    if (timeLevel <= 0) {
-      // timed out everything gets reset to the start of the level
-      brrzzzl();
-      resetLevelData();
-    }
-    if (timeLeftEl && scoreEl && score) {
-      timeLeftEl.innerHTML = "Time left: " + Math.max(timeLevel, 0);
-      scoreEl.innerHTML = "Score: " + score;
-    }
-  }, 1000 );
-}
-
 function registerInputHandlers(s: Socket, data: MapData) {
 
   console.log("registering input handlers");
 
   /* TODO find a solution to make this work with the svg-root
-   * to catch cases where the window stays the same but the 
+   * to catch cases where the window stays the same but the
    * svg resizes. (Shouldn't happen atm due to width=100vw)
    */
   window.addEventListener("resize", e => {
@@ -350,19 +338,19 @@ function update(
     })
   );
 
-  /* connection lost for these sockets. remove 
+  /* connection lost for these sockets. remove
    * them from the "connected" list. */
   poweredSince.forEach((timestamp, socket) => {
     if(!poweredSockets.has(socket)) {
       poweredSince.delete(socket);
-    }   
+    }
   });
 
   /* Newly connected sockets. Add them to the list. */
   poweredSockets.forEach(socket => {
     if(!poweredSince.has(socket)) {
       poweredSince.set(socket, now);
-    } 
+    }
   });
 
   const enabled = new Set<Socket>(
@@ -394,14 +382,14 @@ function update(
 
   const poweredAndTouched = filterSet(
     enabledTouched,
-    s => 
-      poweredSockets.has(s) && 
+    s =>
+      poweredSockets.has(s) &&
       now >= (poweredSince.get(s) + conf.delayToBePowered)
       /* ^^^
-       * only get shocket through sockets that have 
-       * been connected to a generator for at least 
+       * only get shocket through sockets that have
+       * been connected to a generator for at least
        * <delayToBePowered> milliseconds. This is
-       * intended to make the game a bit more forgiving 
+       * intended to make the game a bit more forgiving
        * and less frustrating.
        */
   );
@@ -429,14 +417,30 @@ function update(
 
     points -= conf.levels[levelNr].shockPenalty;
     brrzzzl(conf.shockDuration * 1000);
-    //}
+
+  }
+
+  //for special levels when you should not touch anything
+  if ((safeButUntouched.size == 0) && (safeAndTouched.size == 0) && (poweredAndTouched.size == 0) && (conf.levels[levelNr].missedOpportunityPenalty < -0.001))
+  {
+    points -= (conf.levels[levelNr].missedOpportunityPenalty) * deltaT / 1000;
   }
 
   points = Math.max(points, 0);
   points = Math.min(points, 100);
 
+  //if the last level
+  if (timeEl){
+    if (levelNr == conf.levels.length - 1){
+      timeEl.innerHTML = "You have accomplished it in " +  Math.round(totalTime/10) + " s!";
+    } else {
+      totalTime++;
+      timeEl.innerHTML = "Total time " + Math.round(totalTime/10);
+    }
+  }
+
+
   if (points >= 100) {
-    // score += timeLevel; TODO clarify design for timer/scoring
     gotoNextLevel();
   }
 
@@ -522,7 +526,8 @@ function updateFeedbackIcons(counts) {
     }
   }
   updateIconType("shocked");
-  updateIconType("bored");
+  if ((conf.levels[currentLevelNr].missedOpportunityPenalty > 0.01 ) || (conf.levels[currentLevelNr].missedOpportunityPenalty < -1.0 ))
+    updateIconType("bored");
   updateIconType("happy");
 }
 
