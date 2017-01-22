@@ -32,6 +32,13 @@ body.dark-theme {
   right: 1rem;
 }
 
+#levelNumm{
+  color: #dadada;
+  position: absolute;
+  top: 3rem;
+  right: 2rem;
+}
+
 .progress.above-icons{
   margin-bottom: 0;
 }
@@ -97,6 +104,9 @@ body.dark-theme {
   display: block;
 }
 
+.progress{
+  height: 30px !important;;
+}
 
 @-webkit-keyframes spin1 {
   0% { -webkit-transform: rotate(0deg);}

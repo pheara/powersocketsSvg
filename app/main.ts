@@ -95,6 +95,7 @@ const fpsEl = document.getElementById("fps");
 const progressEl = document.getElementById("progress");
 const pointsIncEl = document.getElementById("pointIncIcons");
 const pointsDecEl = document.getElementById("pointDecIcons");
+const levelEl = document.getElementById("levelNumm");
 let resizeHasHappened: boolean = false; // true if the size of the svg has changed before the frame.
 let timeLevel: number;
 let currentMapData: MapData;
@@ -220,6 +221,9 @@ function gotoLevelN(levelNr: number) {
 
     console.log(`Successfully imported level ${levelNr}: `, data);
   });
+
+  if (levelEl)
+    levelEl.innerHTML = "Level " + currentLevelNr;
 }
 
 function prepareFeedbackIcons(data: MapData) {
@@ -434,8 +438,8 @@ function update(
 
   if ((safeButUntouched.size == 0) && (safeAndTouched.size == 0) && (poweredAndTouched.size == 0) && (conf.levels[levelNr].missedOpportunityPenalty < -0.001))
   {
-    points -= (conf.addition + conf.levels[levelNr].missedOpportunityPenalty) * deltaT / 1000;
-    conf.addition -= 0.05;
+    points -= (/*conf.addition + */conf.levels[levelNr].missedOpportunityPenalty) * deltaT / 1000;
+    //conf.addition -= 0.05;
   }
 
   points = Math.max(points, 0);
