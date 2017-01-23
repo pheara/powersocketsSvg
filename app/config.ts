@@ -50,17 +50,17 @@ export const levels: Array<{
   },
   { // level4
     timeLimit: 30,
-    initialPoints: 30,
+    initialPoints: 0,
     shockPenalty: 31,
     missedOpportunityPenalty: 0,
-    takenOpportunityPoints: 30,
+    takenOpportunityPoints: 40,
   },
   { // level5
     timeLimit: 30,
-    initialPoints: 50,
+    initialPoints: 0,
     shockPenalty: 28,
-    missedOpportunityPenalty: 10,
-    takenOpportunityPoints: 12,
+    missedOpportunityPenalty: 0,
+    takenOpportunityPoints: 40,
   },
 
 
@@ -90,7 +90,7 @@ export const levels: Array<{
     initialPoints: 30,
     shockPenalty: 21,
     missedOpportunityPenalty: 8,
-    takenOpportunityPoints: 10,
+    takenOpportunityPoints: 15,
   },
   { // level10
     timeLimit: 30,
@@ -104,7 +104,7 @@ export const levels: Array<{
     initialPoints: 30,
     shockPenalty: 21,
     missedOpportunityPenalty: 10,
-    takenOpportunityPoints: 12,
+    takenOpportunityPoints: 15,
   },
   { // level12
     timeLimit: 30,
