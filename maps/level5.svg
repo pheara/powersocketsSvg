@@ -13,7 +13,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="level7.svg">
+   sodipodi:docname="level5.svg">
   <sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -23,17 +23,17 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1301"
-     inkscape:window-height="744"
+     inkscape:window-width="1920"
+     inkscape:window-height="1056"
      id="namedview4153"
      showgrid="true"
-     inkscape:zoom="1.3354395"
-     inkscape:cx="90.807459"
-     inkscape:cy="164.54956"
-     inkscape:window-x="65"
+     inkscape:zoom="3.7771933"
+     inkscape:cx="121.62853"
+     inkscape:cy="153.00023"
+     inkscape:window-x="0"
      inkscape:window-y="24"
      inkscape:window-maximized="1"
-     inkscape:current-layer="sockets"
+     inkscape:current-layer="generators"
      inkscape:object-paths="true"
      inkscape:snap-intersection-paths="true"
      inkscape:object-nodes="true"
@@ -107,8 +107,15 @@
        inkscape:connector-curvature="0" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#dadada;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 199.5819,222.81042 -48.64517,-0.14582 -0.50261,-90.77921 49.92857,0 0.11893,-41.617995 -50.0475,0.118929"
+       d="M 200.51792,222.81042 L 150.93673,222.6646 L 150.43412,131.88539 L 200.36269,131.88539 L 200.48162,90.267395 L 150.43412,90.386324"
        id="path4278"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccc" />
+    <path
+       transform="translate(-15.381923,0.3800421)"
+       style="opacity:1;fill:none;fill-rule:evenodd;stroke:#dadada;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 80.591422,215.50436 L 80.525232,238.61717 L 153.14113,238.27488 L 152.8952,129.72867 L 101.06354,129.4185 L 101.15994,75.533109"
+       id="path4215"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccc" />
   </g>
@@ -490,11 +497,5 @@
          y="48.316185"
          style="font-size:12.5px;text-align:center;text-anchor:middle;fill:#ffffff"
          id="tspan4278">you do not do anything</tspan></text>
-    <path
-       style="fill:none;fill-rule:evenodd;stroke:#dadada;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 89.577228,207.64178 -0.06619,30.97539 63.630089,-0.34229 -0.24593,-108.54621 -51.83166,-0.31017 0.0964,-53.885391 12.54726,0.342289"
-       id="path4215"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccccccc" />
   </g>
 </svg>
