@@ -73,9 +73,9 @@ export const levels: Array<{
   },
   { // level7
     timeLimit: 30,
-    initialPoints: 30,
+    initialPoints: 0,
     shockPenalty: 50,
-    missedOpportunityPenalty: -2.5,
+    missedOpportunityPenalty: -3.5,
     takenOpportunityPoints: 12,
   },
   { // level8
