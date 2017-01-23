@@ -81,8 +81,6 @@ import * as conf from "config";
 /**
  * GLOBAL STATE :|
  */
-let scoreEl = document.getElementById("score");
-let score: number = 0;
 
 let points: number; ///points, adding according to how long someone is pressing the right socket
 let pointsTimerId;
@@ -90,7 +88,6 @@ let pointsTimerId;
 // let stopGameLoop: () => void;
 let stopGameLoop;
 
-const timeLeftEl = document.getElementById("timeLeft");
 const fpsEl = document.getElementById("fps");
 const progressEl = document.getElementById("progress");
 const pointsIncEl = document.getElementById("pointIncIcons");
@@ -206,7 +203,6 @@ function gotoLevelN(levelNr: number) {
 
     // markElementPositions(data);
     resetLevelData();
-    // setupLevelTimer(); TODO clarify design for timer/scoring
     currentMapData = data;
     // markPoweredSockets(data);
     for (let s of data.sockets) {
@@ -262,21 +258,6 @@ function prepareFeedbackIcons(data: MapData) {
       prepareIcons(pointsIncEl, "happy");
     });
 
-}
-
-function setupLevelTimer() {
-  levelTimerId = setInterval(() => {
-    timeLevel--;
-    if (timeLevel <= 0) {
-      // timed out everything gets reset to the start of the level
-      brrzzzl();
-      resetLevelData();
-    }
-    if (timeLeftEl && scoreEl && score) {
-      timeLeftEl.innerHTML = "Time left: " + Math.max(timeLevel, 0);
-      scoreEl.innerHTML = "Score: " + score;
-    }
-  }, 1000 );
 }
 
 function registerInputHandlers(s: Socket, data: MapData) {

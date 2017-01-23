@@ -27,10 +27,17 @@
      inkscape:window-height="744"
      id="namedview4153"
      showgrid="false"
+<<<<<<< HEAD
+     inkscape:zoom="1.8885967"
+     inkscape:cx="-46.405868"
+     inkscape:cy="219.59246"
+     inkscape:window-x="0"
+=======
      inkscape:zoom="0.81769589"
      inkscape:cx="-108.90349"
      inkscape:cy="236.92618"
      inkscape:window-x="65"
+>>>>>>> ed62e1b9ea99bf629f8f15ae58689a125781e1dd
      inkscape:window-y="24"
      inkscape:window-maximized="1"
      inkscape:current-layer="decorations"
@@ -142,7 +149,7 @@
          x="22.036621"
          y="35.071228"
          style="font-size:12.5px;fill:#ffffff"
-         id="tspan3356">The more you press, the happier </tspan><tspan
+         id="tspan3356">The longer you press, the happier </tspan><tspan
          sodipodi:role="line"
          x="22.036621"
          y="50.696228"
