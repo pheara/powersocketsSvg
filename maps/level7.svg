@@ -13,7 +13,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="level_n6.svg">
+   sodipodi:docname="level7.svg">
   <sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -23,14 +23,14 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1301"
-     inkscape:window-height="744"
+     inkscape:window-width="1920"
+     inkscape:window-height="1056"
      id="namedview4153"
      showgrid="true"
      inkscape:zoom="1.8885966"
-     inkscape:cx="121.57067"
+     inkscape:cx="20.967245"
      inkscape:cy="148.63686"
-     inkscape:window-x="65"
+     inkscape:window-x="0"
      inkscape:window-y="24"
      inkscape:window-maximized="1"
      inkscape:current-layer="powerlines"
@@ -65,7 +65,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -96,9 +96,10 @@
        sodipodi:nodetypes="cccccc" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#9e9e9e;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="M 70.952156,61.616821 70.422662,41.49606 145.08127,40.966567 146.14026,231.0548"
+       d="M 70.952156,61.616821 L 70.422662,44.143528 L 145.08127,43.614035 L 146.14026,231.0548"
        id="path4280"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccc" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#9e9e9e;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="m 197.50115,201.93265 -46.06595,-0.52949 0,-92.6614 -37.06456,0 0,28.59266 -50.301902,-0.52949 0,-32.29912"
@@ -108,15 +109,15 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:25px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="155.14165"
-       y="48.908974"
+       x="18.535057"
+       y="30.083149"
        id="text4322"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4324"
-         x="155.14165"
-         y="48.908974"
-         style="font-size:17.5px;fill:#ffffff">Hmm...</tspan></text>
+         x="18.535057"
+         y="30.083149"
+         style="font-size:17.5px;fill:#ffffff">The only winning move...</tspan></text>
   </g>
   <g
      inkscape:groupmode="layer"
