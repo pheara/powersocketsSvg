@@ -1,5 +1,7 @@
 Prototype by Jana Vareckova and Kevin Singer for the course “Game Design”.
 
+Play it at: <http://m0ru.github.io/powersocketsSvg/>
+
 To run once: `npm start` or `yarn start`.
 
 For development: `npm/yarn start` in one terminal, `npm/yarn run watch` in another.
