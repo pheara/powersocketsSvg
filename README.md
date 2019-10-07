@@ -1,6 +1,6 @@
 Prototype by Jana Vareckova and Kevin Singer for the course “Game Design”.
 
-Play it at: <http://m0ru.github.io/powersocketsSvg/>
+Play it at: <http://pheara.github.io/powersocketsSvg/>
 
 To run once: `npm start` or `yarn start`.
 
